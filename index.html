@@ -747,6 +747,10 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 </div>
 
 <script>
+// Scroll-Wiederherstellung des Browsers deaktivieren
+if (history.scrollRestoration) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+
 // ══════════════════════════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════════════════════════
@@ -1515,7 +1519,6 @@ function applyHeroImages() {
 }
 
 function init() {
-  window.scrollTo(0, 0);
   loadAll();
   applyHeroImages();
   getHeroH();
