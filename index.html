@@ -59,10 +59,10 @@ body {
 }
 #bar-bg {
   position:absolute; inset:0;
-  background:rgba(10,10,10,.94);
-  opacity:0; transition:opacity .4s; pointer-events:none; z-index:-1;
+  background:rgba(10,10,10,.0);
+  opacity:0; pointer-events:none; z-index:-1;
 }
-#bar-bg.visible { opacity:1; }
+/* Hintergrund bleibt transparent – mix-blend-mode Effekt */
 #bar-name {
   display:block; width:100%;
   font-family:'Druk Wide Super','Impact','Arial Black',sans-serif;
@@ -185,9 +185,12 @@ body {
 #bar-name {
   transform: translateY(70vh);
   opacity: 0;
-  transition: opacity 1.6s ease;
+  will-change: transform;
+  text-shadow: 0 0 120px rgba(240,237,232,0.28), 0 0 40px rgba(240,237,232,0.12);
+  transition: opacity 2.0s ease, text-shadow 1.4s ease;
 }
 #name-bar.loaded #bar-name { opacity:1; }
+#name-bar.sticky #bar-name { text-shadow: none; }
 
 /* ── INFO PAGE ── */
 #page-info { padding:140px 48px 120px; }
@@ -1156,29 +1159,37 @@ window.addEventListener('resize', ()=>{ getHeroH(); fitName(); });
 function updateNameScroll() {
   if (!document.getElementById('page-home').classList.contains('active')) return;
   if (heroH === 0) { getHeroH(); }
-  if (heroH === 0) return; // noch nicht bereit
+  if (heroH === 0) return;
   const s = window.scrollY;
-  const threshold = heroH * 0.62;
+  const threshold = heroH * 0.80;   // längere Scroll-Strecke → sanftere Animation
   if (s < threshold) {
     const progress = s / threshold;
     const startY = heroH * 0.70;
-    const ty = startY * (1-progress);
+    const ty = startY * (1 - progress);
     barName.style.transform = `translateY(${ty}px)`;
     barName.style.mixBlendMode = 'normal';
-    barBg.classList.remove('visible');
     barNav.classList.remove('visible');
     nameBar.style.pointerEvents = 'none';
+    nameBar.classList.remove('sticky');
     nameIsSticky = false;
   } else {
     barName.style.transform = 'translateY(0)';
     if (currentBlend !== 'none') barName.style.mixBlendMode = currentBlend;
-    barBg.classList.add('visible');
     barNav.classList.add('visible');
     nameBar.style.pointerEvents = 'all';
+    nameBar.classList.add('sticky');
     nameIsSticky = true;
   }
 }
-window.addEventListener('scroll', updateNameScroll, {passive:true});
+
+let _rafId = null;
+window.addEventListener('scroll', () => {
+  if (_rafId) return;
+  _rafId = requestAnimationFrame(() => {
+    updateNameScroll();
+    _rafId = null;
+  });
+}, {passive:true});
 
 // ══════════════════════════════════════════════════════════════
 // FIT NAME FULL WIDTH
