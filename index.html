@@ -13,11 +13,17 @@
 }
 
 :root {
-  --bg: #0a0a0a;
-  --fg: #f0ede8;
-  --grey: #555;
-  --mid: #888;
-  --accent: #c8b89a;
+  /* ── FARBEN ── hier kannst du alle Farben anpassen */
+  --bg:     #0a0a0a;   /* Seitenhintergrund */
+  --fg:     #f0ede8;   /* Hauptschriftfarbe */
+  --grey:   #666;      /* dezente Texte (Jahr, Labels) */
+  --mid:    #999;      /* mittlere Texte (Serie, Nav) */
+  --accent: #c8b89a;   /* Akzentfarbe */
+
+  /* ── SCHRIFTGRÖSSEN ── */
+  --fs-label: 11px;    /* kleine Labels (Serie, Jahr) */
+  --fs-nav:   11px;    /* Navigation */
+  --fs-meta:  11px;    /* Metadaten unter Projekten */
 }
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
@@ -78,7 +84,7 @@ body {
 #bar-nav.visible { opacity:1; transform:translateY(0); pointer-events:all; }
 .nav-link {
   font-family:'DM Sans',sans-serif;
-  font-size:10px; letter-spacing:.26em; text-transform:uppercase;
+  font-size:var(--fs-nav); letter-spacing:.26em; text-transform:uppercase;
   color:var(--mid); text-decoration:none; cursor:none; transition:color .3s;
 }
 .nav-link:hover { color:var(--fg); }
@@ -125,20 +131,26 @@ body {
 }
 
 /* ── PROJECT ENTRIES ── */
-.project-entry { display:grid; margin-bottom:110px; cursor:none; }
-.project-entry.la { grid-template-columns:58% 1fr; grid-template-rows:1fr auto; min-height:62vh; }
-.project-entry.la .pm { grid-column:1; grid-row:1/3; margin-right:-6%; z-index:1; }
-.project-entry.la .ps { grid-column:2; grid-row:1; margin-top:12%; z-index:2; }
-.project-entry.la .pi { grid-column:2; grid-row:2; padding:28px 0 0 9%; z-index:2; align-self:end; }
-.project-entry.lb { grid-template-columns:1fr 53%; align-items:center; min-height:58vh; }
-.project-entry.lb .pm { grid-column:2; grid-row:1; z-index:1; }
-.project-entry.lb .ps { grid-column:1; grid-row:1; margin-right:-9%; margin-top:15%; z-index:2; max-width:62%; }
-.project-entry.lb .pi { grid-column:1; grid-row:1; align-self:start; padding-top:5%; padding-right:14%; z-index:3; }
+.project-entry { display:grid; margin-bottom:140px; cursor:none; gap:0; }
+
+/* Layout A: großes Bild links (62%), Info + kleines Bild rechts */
+.project-entry.la { grid-template-columns:62% 1fr; grid-template-rows:1fr auto; min-height:65vh; }
+.project-entry.la .pm { grid-column:1; grid-row:1/3; }
+.project-entry.la .ps { grid-column:2; grid-row:1; margin-top:8%; margin-left:5%; }
+.project-entry.la .pi { grid-column:2; grid-row:2; padding:32px 0 0 5%; align-self:end; }
+
+/* Layout B: Info links, großes Bild rechts (60%) */
+.project-entry.lb { grid-template-columns:1fr 60%; align-items:start; min-height:60vh; gap:5%; }
+.project-entry.lb .pm { grid-column:2; grid-row:1; }
+.project-entry.lb .ps { display:none; }
+.project-entry.lb .pi { grid-column:1; grid-row:1; padding-top:8%; }
+
+/* Layout C: Vollbild mit Text-Overlay unten */
 .project-entry.lc { grid-template-columns:1fr; min-height:78vh; position:relative; }
 .project-entry.lc .pm { grid-column:1; grid-row:1; }
 .project-entry.lc .pi {
   grid-column:1; grid-row:1; position:absolute; bottom:0; left:0; right:0;
-  padding:56px 48px; background:linear-gradient(transparent,rgba(10,10,10,.82)); z-index:2;
+  padding:56px 48px; background:linear-gradient(transparent,rgba(10,10,10,.85)); z-index:2;
 }
 .pm,.ps { overflow:hidden; }
 .pm img,.ps img {
@@ -152,7 +164,7 @@ body {
 .pi { display:flex; flex-direction:column; justify-content:flex-end; }
 .p-series {
   font-family:'DM Sans',sans-serif;
-  font-size:9px; letter-spacing:.28em; text-transform:uppercase;
+  font-size:var(--fs-label); letter-spacing:.22em; text-transform:uppercase;
   color:var(--mid); margin-bottom:10px;
 }
 .p-title {
@@ -164,10 +176,19 @@ body {
 .p-title:hover { opacity:.45; }
 .p-year {
   font-family:'DM Sans',sans-serif;
-  font-size:9px; letter-spacing:.18em; color:var(--grey); margin-top:14px;
+  font-size:var(--fs-meta); letter-spacing:.18em; color:var(--grey); margin-top:14px;
 }
 .reveal { opacity:0; transform:translateY(30px); transition:opacity .9s,transform .9s; }
 .reveal.in { opacity:1; transform:translateY(0); }
+
+/* ── NAME INTRO ANIMATION ── */
+@keyframes nameAppear {
+  from { opacity:0; transform:translateY(calc(var(--ty,0px) + 18px)); }
+  to   { opacity:1; transform:translateY(var(--ty,0px)); }
+}
+#name-bar.loaded #bar-name {
+  animation: nameAppear 1.4s cubic-bezier(.22,.8,.36,1) both;
+}
 
 /* ── INFO PAGE ── */
 #page-info { padding:140px 48px 120px; }
@@ -358,16 +379,36 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 #settings-toggle:hover { background:#1e1e1e; }
 
 @media(max-width:768px) {
-  #bar-name { font-size:clamp(14px,5.5vw,44px); letter-spacing:.1em; }
-  #work { padding:80px 24px 100px; }
-  .project-entry.la,.project-entry.lb { grid-template-columns:1fr; }
-  .project-entry.la .ps,.project-entry.lb .ps { display:none; }
-  .project-entry.la .pm { margin-right:0; }
-  .project-entry.lb .pm { grid-column:1; }
-  .project-entry.lb .pi,.project-entry.la .pi { padding:16px 0 0; }
-  .info-grid { grid-template-columns:1fr; }
+  /* Cursor auf Mobile ausblenden */
+  #cur-dot, #cur-ring { display:none; }
+  body { cursor:auto; }
+  a, button { cursor:pointer; }
+
+  #bar-name { letter-spacing:.06em; padding-left:.06em; }
+  #work { padding:60px 20px 80px; }
+  .section-label { margin-bottom:48px; }
+
+  /* Alle Projektlayouts auf Mobile einspaltrig */
+  .project-entry.la,
+  .project-entry.lb { grid-template-columns:1fr; gap:16px; min-height:auto; }
+  .project-entry.la .pm,
+  .project-entry.lb .pm { grid-column:1; grid-row:1; }
+  .project-entry.la .ps,
+  .project-entry.lb .ps { display:none; }
+  .project-entry.la .pi,
+  .project-entry.lb .pi { grid-column:1; grid-row:2; padding:16px 0 0; }
+  .project-entry.lc { min-height:55vw; }
+
+  .project-entry { margin-bottom:80px; }
+  .p-title { font-size:clamp(20px,5vw,36px); }
+
+  .info-grid { grid-template-columns:1fr; gap:40px; }
+  #page-info { padding:80px 20px 80px; }
   .ep-pane { grid-template-columns:1fr; }
+  #editor-panel { width:100vw; left:0; right:0; }
   .media-item { position:relative!important; left:0!important; top:0!important; width:100%!important; height:auto!important; margin-bottom:4px; }
+  #edit-toolbar { flex-wrap:wrap; }
+  #settings-toggle, #edit-toggle { bottom:16px; right:16px; }
 }
 </style>
 </head>
@@ -479,6 +520,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   <div id="edit-toolbar">
     <button class="tb-btn" onclick="triggerUpload('image')">+ Foto / GIF</button>
     <button class="tb-btn" onclick="triggerUpload('video')">+ Video</button>
+    <button class="tb-btn" onclick="addEmbed()">+ Vimeo / YouTube</button>
     <button class="tb-btn" onclick="autoLayout()">Auto-Layout</button>
     <button class="tb-btn ac" onclick="saveCurrentProject()">Speichern ✓</button>
   </div>
@@ -725,10 +767,10 @@ let state = {
   },
   projects: [
     { id:'p1', title:'GIL GELPI',              series:'ARTTYCO | STUDIO VISIT',    year:'2024', desc:'', meta:'2024 — Barcelona', layout:'la', cover:'', secondary:'', canvas:[] },
-    { id:'p2', title:'WHAT WAS I LOOKING FOR?',series:'ZEITMAGAZIN',               year:'2023', desc:'', meta:'2023',             layout:'lb', cover:'', secondary:'', canvas:[] },
+    { id:'p2', title:'WHAT WAS I LOOKING FOR?',series:'ZEITMAGAZIN',               year:'ongoing', desc:'', meta:'ongoing',         layout:'lb', cover:'', secondary:'', canvas:[] },
     { id:'p3', title:'FELIPE HERA',            series:'LAMP DESIGNER',             year:'2023', desc:'', meta:'2023',             layout:'lc', cover:'', secondary:'', canvas:[] },
     { id:'p4', title:'JORDI DIEZ FERNANDEZ',   series:'STUDIO VISIT',              year:'2023', desc:'', meta:'2023 — Barcelona', layout:'la', cover:'', secondary:'', canvas:[] },
-    { id:'p5', title:"I DON'T CARE",           series:'PERSONAL PROJECT',          year:'2022', desc:'', meta:'2022',             layout:'lb', cover:'', secondary:'', canvas:[] },
+    { id:'p5', title:"I DON'T CARE",           series:'PERSONAL PROJECT',          year:'ongoing', desc:'', meta:'ongoing',         layout:'lb', cover:'', secondary:'', canvas:[] },
     { id:'p6', title:'ISMET DOGAN',            series:'STUDIO VISIT',              year:'2022', desc:'', meta:'2022',             layout:'lc', cover:'', secondary:'', canvas:[] },
     { id:'p7', title:'SAMUEL SALCEDO',         series:'STUDIO VISIT',              year:'2022', desc:'', meta:'2022 — Barcelona', layout:'la', cover:'', secondary:'', canvas:[] },
     { id:'p8', title:'WALDEN7',                series:'RICARDO BOFILL',            year:'2021', desc:'', meta:'2021 — Barcelona', layout:'lb', cover:'', secondary:'', canvas:[] },
@@ -1013,6 +1055,29 @@ function dupeSel() {
   const copy={...d,id:'ci-'+(canvasNextId++),left:d.left+30,top:d.top+30};
   canvasItems.push(copy); renderCanvasItem(copy);
 }
+function addEmbed() {
+  const raw = prompt('Vimeo oder YouTube URL einfügen:');
+  if (!raw) return;
+  let src = '';
+  const yt = raw.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([A-Za-z0-9_-]{11})/);
+  const vm = raw.match(/vimeo\.com\/(\d+)/);
+  if (yt) src = `https://www.youtube.com/embed/${yt[1]}?autoplay=0&rel=0`;
+  else if (vm) src = `https://player.vimeo.com/video/${vm[1]}?color=c8b89a&title=0&byline=0`;
+  else { alert('URL nicht erkannt. Bitte eine YouTube oder Vimeo URL eingeben.'); return; }
+  const id = 'ci'+(canvasNextId++);
+  const d = { id, type:'embed', src, x:40, y:40, w:70, h:500, z:1, fit:'cover' };
+  canvasItems.push(d);
+  const wrap = document.createElement('div');
+  wrap.className = 'media-item';
+  wrap.id = d.id;
+  wrap.style.cssText = `position:absolute;left:${d.x}px;top:${d.y}px;width:${d.w}%;height:${d.h}px;z-index:${d.z}`;
+  wrap.innerHTML = `<iframe src="${src}" style="width:100%;height:100%;border:none;" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+  const rh = document.createElement('div'); rh.className='resize-handle'; wrap.appendChild(rh);
+  document.getElementById('proj-canvas').appendChild(wrap);
+  makeDraggable(wrap, d);
+  saveCurrentProject();
+}
+
 function autoLayout() {
   const cw=document.getElementById('proj-canvas').offsetWidth;
   const pad=48, gap=4; let y=40;
@@ -1461,6 +1526,7 @@ if(document.fonts&&document.fonts.ready) {
     fitName();
     renderProjects();
     requestAnimationFrame(updateNameScroll);
+    setTimeout(()=>{ document.getElementById('name-bar').classList.add('loaded'); }, 100);
   });
 } else {
   setTimeout(()=>{
@@ -1469,6 +1535,7 @@ if(document.fonts&&document.fonts.ready) {
     fitName();
     renderProjects();
     requestAnimationFrame(updateNameScroll);
+    document.getElementById('name-bar').classList.add('loaded');
   },300);
 }
 </script>
