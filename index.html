@@ -1406,23 +1406,15 @@ function renderProjList() {
 }
 
 function uploadProjImage(pid, field) {
-  const inp = document.createElement('input');
-  inp.type='file'; inp.accept='image/*';
-  inp.onchange = e => {
-    const f=e.target.files[0]; if(!f) return;
-    const r=new FileReader();
-    r.onload = ev => {
-      const url=ev.target.result;
-      const p=state.projects.find(x=>x.id===pid);
-      if(!p) return;
-      p[field]=url;
-      saveAll();
-      renderProjects();
-      renderProjList();
-    };
-    r.readAsDataURL(f);
-  };
-  inp.click();
+  const p = state.projects.find(x=>x.id===pid);
+  if (!p) return;
+  const current = (p[field]||'').startsWith('data:') ? '' : (p[field]||'');
+  askImagePath(current, path => {
+    p[field] = path;
+    saveAll();
+    renderProjects();
+    renderProjList();
+  });
 }
 
 function setProjLayout(pid, layout) {
@@ -1447,24 +1439,50 @@ function removeProject(id) {
 }
 
 // ══════════════════════════════════════════════════════════════
+// PFAD-EINGABE DIALOG (für Hero + Projektbilder)
+// ══════════════════════════════════════════════════════════════
+function askImagePath(currentPath, callback) {
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center';
+  ov.innerHTML = `<div style="background:#141414;border:1px solid #2a2a2a;padding:28px 32px;width:460px;max-width:92vw">
+    <div style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:14px">Bildpfad</div>
+    <input id="_pi" value="${currentPath}" placeholder="bilder/projekte/projektname/cover.jpg"
+      style="width:100%;background:rgba(255,255,255,.05);border:1px solid #333;color:var(--fg);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 12px;outline:none;box-sizing:border-box">
+    <div style="font-family:'DM Sans',sans-serif;font-size:9px;color:#444;margin-top:8px;line-height:1.6">
+      Pfad relativ zu index.html — z.B. <span style="color:#666">bilder/projekte/gil-gelpi/cover.jpg</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button id="_pi-ok" style="background:var(--accent);color:#0a0a0a;border:none;padding:8px 22px;font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer">Speichern</button>
+      <button id="_pi-cl" style="background:none;border:1px solid #333;color:var(--mid);padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer">Abbrechen</button>
+      ${currentPath ? `<button id="_pi-rm" style="background:none;border:none;color:#844;font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;margin-left:auto">Entfernen</button>` : ''}
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+  const inp = ov.querySelector('#_pi');
+  inp.focus(); inp.select();
+  const close = () => document.body.removeChild(ov);
+  const save = () => { const v=inp.value.trim(); close(); if(v) callback(v); };
+  ov.querySelector('#_pi-ok').onclick = save;
+  ov.querySelector('#_pi-cl').onclick = close;
+  const rmBtn = ov.querySelector('#_pi-rm');
+  if (rmBtn) rmBtn.onclick = () => { close(); callback(''); };
+  inp.onkeydown = e => { if(e.key==='Enter') save(); if(e.key==='Escape') close(); };
+  ov.onclick = e => { if(e.target===ov) close(); };
+}
+
+// ══════════════════════════════════════════════════════════════
 // HERO IMAGE UPLOAD
 // ══════════════════════════════════════════════════════════════
 function uploadSlide(idx) {
-  const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
-  inp.onchange=e=>{
-    const f=e.target.files[0]; if(!f) return;
-    const r=new FileReader();
-    r.onload=ev=>{
-      const url=ev.target.result;
-      state.site.heroImages[idx]=url;
-      document.getElementById('slide-'+idx).style.backgroundImage=`url(${url})`;
-      const slot=document.getElementById('hs'+idx);
-      slot.innerHTML=`<img src="${url}" alt="">`;
-      saveAll();
-    };
-    r.readAsDataURL(f);
-  };
-  inp.click();
+  const current = (state.site.heroImages[idx]||'').startsWith('data:') ? '' : (state.site.heroImages[idx]||'');
+  askImagePath(current, path => {
+    state.site.heroImages[idx] = path;
+    const slide = document.getElementById('slide-'+idx);
+    if (slide) slide.style.backgroundImage = path ? `url(${path})` : '';
+    const slot = document.getElementById('hs'+idx);
+    if (slot) slot.innerHTML = path ? `<img src="${path}" alt="">` : '<span>+</span>';
+    saveAll();
+  });
 }
 
 // ══════════════════════════════════════════════════════════════
