@@ -166,6 +166,15 @@ body {
 .project-entry.le .pi { grid-column:1/4; grid-row:2; padding:20px 0 0; }
 .project-entry.le .pm .img-ph,
 .project-entry.le .ps .img-ph { min-height:50vh; }
+
+/* Layout F: 2 gleich große Bilder nebeneinander, Info darunter */
+.project-entry.lf { grid-template-columns:1fr 1fr; gap:2px; }
+.project-entry.lf .pm { grid-column:1; grid-row:1; }
+.project-entry.lf .ps { grid-column:2; grid-row:1; display:block; }
+.project-entry.lf .pt { display:none; }
+.project-entry.lf .pi { grid-column:1/3; grid-row:2; padding:20px 0 0; }
+.project-entry.lf .pm .img-ph,
+.project-entry.lf .ps .img-ph { min-height:65vh; }
 .pi { display:flex; flex-direction:column; justify-content:flex-end; }
 .p-series {
   font-family:'DM Sans',sans-serif;
@@ -839,7 +848,7 @@ function renderProjects() {
     div.className = `project-entry ${p.layout} reveal`;
     div.style.transitionDelay = `${i * 0.06}s`;
     const c = SHADES[i % SHADES.length];
-    const mh = p.layout==='lc' ? '72vh' : p.layout==='la' ? '520px' : p.layout==='ld' ? '600px' : '420px';
+    const mh = p.layout==='lc' ? '72vh' : p.layout==='la' ? '520px' : p.layout==='ld' ? '600px' : p.layout==='lf' ? '65vh' : '420px';
     const coverEl = p.cover ? `<img src="${p.cover}" alt="${p.title}">` : `<div class="img-ph" style="background:${c};min-height:${mh}"></div>`;
     const secEl   = p.secondary ? `<img src="${p.secondary}" alt="">` : `<div class="img-ph" style="background:${c==='#141414'?'#111':'#141414'};min-height:280px"></div>`;
     const tertEl  = p.tertiary ? `<img src="${p.tertiary}" alt="">` : `<div class="img-ph" style="background:#111;min-height:280px"></div>`;
@@ -1389,11 +1398,11 @@ function renderProjList() {
     const layoutRow = document.createElement('div');
     layoutRow.style.cssText='padding:8px 12px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;border-top:1px solid #1e1e1e';
     layoutRow.innerHTML=`<span style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-right:4px">Layout</span>
-      ${['la','lb','lc','ld','le'].map(l=>`
+      ${['la','lb','lc','ld','le','lf'].map(l=>`
         <button onclick="setProjLayout('${p.id}','${l}')"
           style="padding:3px 8px;background:${p.layout===l?'var(--accent)':'none'};border:1px solid ${p.layout===l?'var(--accent)':'#333'};
           color:${p.layout===l?'#0a0a0a':'var(--mid)'};font-family:'DM Sans',sans-serif;font-size:9px;cursor:pointer;transition:all .2s"
-          id="layout-btn-${p.id}-${l}">${l==='la'?'Links groß':l==='lb'?'Rechts groß':l==='lc'?'Vollbild':l==='ld'?'Portrait':'3 Bilder'}</button>`).join('')}`;
+          id="layout-btn-${p.id}-${l}">${l==='la'?'Links groß':l==='lb'?'Rechts groß':l==='lc'?'Vollbild':l==='ld'?'Portrait':l==='le'?'3 Bilder':'2 gleich'}</button>`).join('')}`;
 
     imgs.appendChild(coverSlot);
     imgs.appendChild(secSlot);
