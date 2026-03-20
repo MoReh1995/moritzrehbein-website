@@ -57,7 +57,6 @@ body {
   letter-spacing:0.18em; text-transform:uppercase;
   text-align:center; color:var(--fg);
   line-height:0.9; padding:0 0 4px;
-  padding-left:0.18em;
   white-space:nowrap; overflow:visible;
   user-select:none;
 }
@@ -141,7 +140,7 @@ body {
 }
 .pm,.ps { overflow:hidden; }
 .pm img,.ps img {
-  width:100%; height:100%; object-fit:cover; display:block;
+  width:100%; height:auto; display:block;
   transition:transform 1.1s cubic-bezier(.25,.46,.45,.94);
 }
 .project-entry:hover .pm img,.project-entry:hover .ps img { transform:scale(1.04); }
@@ -161,7 +160,7 @@ body {
 .project-entry.le .pm { grid-column:1; grid-row:1; }
 .project-entry.le .ps { grid-column:2; grid-row:1; display:block; }
 .project-entry.le .pt { grid-column:3; grid-row:1; overflow:hidden; }
-.project-entry.le .pt img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 1.1s cubic-bezier(.25,.46,.45,.94); }
+.project-entry.le .pt img { width:100%; height:auto; display:block; transition:transform 1.1s cubic-bezier(.25,.46,.45,.94); }
 .project-entry.le:hover .pt img { transform:scale(1.04); }
 .project-entry.le .pi { grid-column:1/4; grid-row:2; padding:20px 0 0; }
 .project-entry.le .pm .img-ph,
@@ -197,7 +196,6 @@ body {
 
 /* ── NAME: startet unten im Hero, scrollt nach oben ── */
 #bar-name {
-  transform: translateY(70vh);
   opacity: 0;
   will-change: transform;
   text-shadow: 0 0 120px rgba(240,237,232,0.28), 0 0 40px rgba(240,237,232,0.12);
@@ -390,9 +388,15 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   position:fixed; bottom:28px; right:28px;
   background:rgba(16,16,16,.97); border:1px solid #2a2a2a; color:var(--accent);
   font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:.14em; text-transform:uppercase;
-  padding:10px 18px; cursor:pointer; z-index:3001; transition:background .2s;
+  padding:10px 18px; cursor:pointer; z-index:3001;
+  opacity:0; pointer-events:none; transition:background .2s, opacity .3s;
 }
 #settings-toggle:hover { background:#1e1e1e; }
+#settings-toggle.visible { opacity:1; pointer-events:all; }
+
+/* Edit-Toggle auf Projektseite ebenfalls versteckt */
+#edit-toggle { opacity:0; pointer-events:none; transition:background .2s, color .2s, opacity .3s; }
+#edit-toggle:hover, #edit-toggle.visible { opacity:1; pointer-events:all; }
 
 @media(max-width:768px) {
 
@@ -765,6 +769,23 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 // Scroll-Wiederherstellung des Browsers deaktivieren
 if (history.scrollRestoration) history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
+
+// Name-Startposition sofort setzen (verhindert CSS→JS Sprung)
+(function(){
+  var bn = document.getElementById('bar-name');
+  if (bn) bn.style.transform = 'translateY(' + (window.innerHeight * 0.70) + 'px)';
+})();
+
+// E-Taste: Bearbeitungsmodus öffnen/schließen
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'e' || e.key === 'E') {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+    var st = document.getElementById('settings-toggle');
+    var et = document.getElementById('edit-toggle');
+    if (st && st.offsetParent !== null) { st.classList.add('visible'); toggleSettings(); }
+    else if (et) { et.classList.add('visible'); toggleEditMode(); }
+  }
+});
 
 // ══════════════════════════════════════════════════════════════
 // DATA
@@ -1262,6 +1283,8 @@ let settingsOpen=false;
 function toggleSettings() {
   settingsOpen=!settingsOpen;
   document.getElementById('editor-panel').classList.toggle('open',settingsOpen);
+  const btn = document.getElementById('settings-toggle');
+  btn.classList.toggle('visible', settingsOpen);
 }
 function switchTab(el,paneId) {
   document.querySelectorAll('.ep-tab').forEach(t=>t.classList.remove('active'));
@@ -1324,8 +1347,12 @@ function renderProjList() {
 
     // Header row
     const header = document.createElement('div');
-    header.style.cssText='display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid #1e1e1e';
+    header.style.cssText='display:grid;grid-template-columns:auto 1fr auto auto auto auto;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid #1e1e1e';
     header.innerHTML=`
+      <div style="display:flex;flex-direction:column;gap:1px">
+        <button onclick="moveProject('${p.id}',-1)" ${i===0?'disabled':''} style="background:none;border:none;color:${i===0?'#333':'var(--mid)'};font-size:10px;padding:0 4px;cursor:${i===0?'default':'pointer'};line-height:1">▲</button>
+        <button onclick="moveProject('${p.id}',1)" ${i===state.projects.length-1?'disabled':''} style="background:none;border:none;color:${i===state.projects.length-1?'#333':'var(--mid)'};font-size:10px;padding:0 4px;cursor:${i===state.projects.length-1?'default':'pointer'};line-height:1">▼</button>
+      </div>
       <input value="${p.title}" oninput="state.projects[${i}].title=this.value;renderProjects()"
         style="background:none;border:none;color:var(--fg);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;width:100%">
       <button onclick="navigate('project','${p.id}')" style="background:none;border:1px solid #333;color:var(--mid);font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.1em;padding:4px 8px;cursor:pointer;white-space:nowrap">Öffnen →</button>
@@ -1444,6 +1471,14 @@ function addProject() {
 function removeProject(id) {
   if(!confirm('Projekt löschen?')) return;
   state.projects=state.projects.filter(x=>x.id!==id);
+  saveAll(); renderProjects(); renderProjList();
+}
+function moveProject(id, dir) {
+  const idx = state.projects.findIndex(p=>p.id===id);
+  if (idx<0) return;
+  const ni = idx+dir;
+  if (ni<0||ni>=state.projects.length) return;
+  [state.projects[idx],state.projects[ni]]=[state.projects[ni],state.projects[idx]];
   saveAll(); renderProjects(); renderProjList();
 }
 
