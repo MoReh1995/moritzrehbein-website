@@ -596,6 +596,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
     <div class="ep-tab" onclick="switchTab(this,'pane-projekte')">Projekte</div>
     <div class="ep-tab" onclick="switchTab(this,'pane-bilder')">Hero-Bilder</div>
     <div class="ep-tab" onclick="switchTab(this,'pane-settings')">Einstellungen</div>
+    <div class="ep-tab" onclick="switchTab(this,'pane-publish')" style="color:var(--accent)">↑ Veröffentlichen</div>
   </div>
 
   <!-- NAME -->
@@ -763,6 +764,18 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
       <button class="ep-btn" onclick="saveAll();toggleSettings()">Alles speichern & schließen</button>
     </div>
   </div>
+
+  <!-- VERÖFFENTLICHEN -->
+  <div class="ep-pane" id="pane-publish">
+    <div style="grid-column:1/-1">
+      <div class="ep-col-title">Für alle Besucher veröffentlichen</div>
+      <p style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--grey);line-height:1.8;margin-bottom:20px">
+        Deine Änderungen (Bilder, Reihenfolge, Layouts) sind bisher nur in <em>diesem Browser</em> gespeichert.<br>
+        Um sie für alle sichtbar zu machen, klick auf den Button — dann bekommst du einen Code-Block den du in die <strong style="color:var(--fg)">index.html</strong> einfügst und via GitHub Desktop committest.
+      </p>
+      <button class="ep-btn" onclick="publishState()">Code generieren & kopieren</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -776,14 +789,23 @@ window.scrollTo(0, 0);
   if (bn) bn.style.transform = 'translateY(' + (window.innerHeight * 0.70) + 'px)';
 })();
 
-// E-Taste: Bearbeitungsmodus öffnen/schließen
+// Shift+E: Bearbeitungsmodus (passwortgeschützt, einmal pro Session)
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'e' || e.key === 'E') {
+  if ((e.key === 'e' || e.key === 'E') && e.shiftKey) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
-    var st = document.getElementById('settings-toggle');
-    var et = document.getElementById('edit-toggle');
-    if (st && st.offsetParent !== null) { st.classList.add('visible'); toggleSettings(); }
-    else if (et) { et.classList.add('visible'); toggleEditMode(); }
+    if (!sessionStorage.getItem('mr_auth')) {
+      var pwd = prompt('Passwort:');
+      if (!pwd || pwd.trim() !== 'moritz') return;
+      sessionStorage.setItem('mr_auth', '1');
+    }
+    var isHome = document.getElementById('page-home').classList.contains('active');
+    if (isHome) {
+      document.getElementById('settings-toggle').classList.add('visible');
+      toggleSettings();
+    } else {
+      document.getElementById('edit-toggle').classList.add('visible');
+      toggleEditMode();
+    }
   }
 });
 
@@ -813,6 +835,7 @@ let state = {
 };
 
 let currentProjectId = null;
+let activeProjId = null;
 let editMode = false;
 let selItem = null;
 let dragSt = null, resizeSt = null;
@@ -1339,106 +1362,90 @@ function updateTextStyle(id,val) {
 // PROJECT LIST IN SETTINGS
 // ══════════════════════════════════════════════════════════════
 function renderProjList() {
+  if (!activeProjId || !state.projects.find(x=>x.id===activeProjId))
+    activeProjId = state.projects.length > 0 ? state.projects[0].id : null;
+
   const list = document.getElementById('proj-list');
   list.innerHTML = '';
-  state.projects.forEach((p,i) => {
-    const block = document.createElement('div');
-    block.style.cssText='background:#161616;border:1px solid #222;margin-bottom:4px;overflow:hidden';
+  if (!state.projects.length) return;
 
-    // Header row
-    const header = document.createElement('div');
-    header.style.cssText='display:grid;grid-template-columns:auto 1fr auto auto auto auto;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid #1e1e1e';
-    header.innerHTML=`
-      <div style="display:flex;flex-direction:column;gap:1px">
-        <button onclick="moveProject('${p.id}',-1)" ${i===0?'disabled':''} style="background:none;border:none;color:${i===0?'#333':'var(--mid)'};font-size:10px;padding:0 4px;cursor:${i===0?'default':'pointer'};line-height:1">▲</button>
-        <button onclick="moveProject('${p.id}',1)" ${i===state.projects.length-1?'disabled':''} style="background:none;border:none;color:${i===state.projects.length-1?'#333':'var(--mid)'};font-size:10px;padding:0 4px;cursor:${i===state.projects.length-1?'default':'pointer'};line-height:1">▼</button>
-      </div>
-      <input value="${p.title}" oninput="state.projects[${i}].title=this.value;renderProjects()"
-        style="background:none;border:none;color:var(--fg);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;width:100%">
-      <button onclick="navigate('project','${p.id}')" style="background:none;border:1px solid #333;color:var(--mid);font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.1em;padding:4px 8px;cursor:pointer;white-space:nowrap">Öffnen →</button>
-      <button onclick="removeProject('${p.id}')" style="background:none;border:none;color:#844;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 8px;cursor:pointer">✕</button>`;
-
-    // Image upload row
-    const imgs = document.createElement('div');
-    imgs.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:1px';
-
-    // Cover slot
-    const coverSlot = document.createElement('div');
-    coverSlot.style.cssText='position:relative;aspect-ratio:3/2;background:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;border-right:1px solid #1e1e1e';
-    coverSlot.id = `cover-slot-${p.id}`;
-    if (p.cover) {
-      coverSlot.innerHTML=`<img src="${p.cover}" style="width:100%;height:100%;object-fit:cover;display:block">
-        <div style="position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .2s">
-          <span style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg)">Ändern</span>
-        </div>`;
-      coverSlot.querySelector('div').style.opacity='0';
-      coverSlot.addEventListener('mouseenter',()=>coverSlot.querySelector('div').style.opacity='1');
-      coverSlot.addEventListener('mouseleave',()=>coverSlot.querySelector('div').style.opacity='0');
-    } else {
-      coverSlot.innerHTML=`<div style="text-align:center">
-        <div style="font-size:22px;color:#333">+</div>
-        <div style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-top:4px">Cover</div>
-      </div>`;
-    }
-    coverSlot.addEventListener('click', ()=>uploadProjImage(p.id,'cover'));
-
-    // Secondary slot
-    const secSlot = document.createElement('div');
-    secSlot.style.cssText='position:relative;aspect-ratio:3/2;background:#0f0f0f;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden';
-    secSlot.id = `sec-slot-${p.id}`;
-    if (p.secondary) {
-      secSlot.innerHTML=`<img src="${p.secondary}" style="width:100%;height:100%;object-fit:cover;display:block">
-        <div style="position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .2s">
-          <span style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg)">Ändern</span>
-        </div>`;
-      secSlot.querySelector('div').style.opacity='0';
-      secSlot.addEventListener('mouseenter',()=>secSlot.querySelector('div').style.opacity='1');
-      secSlot.addEventListener('mouseleave',()=>secSlot.querySelector('div').style.opacity='0');
-    } else {
-      secSlot.innerHTML=`<div style="text-align:center">
-        <div style="font-size:22px;color:#2a2a2a">+</div>
-        <div style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-top:4px">2. Bild</div>
-      </div>`;
-    }
-    secSlot.addEventListener('click', ()=>uploadProjImage(p.id,'secondary'));
-
-    // Tertiary slot (for 3-image layout)
-    const tertSlot = document.createElement('div');
-    tertSlot.style.cssText='position:relative;aspect-ratio:3/2;background:#0d0d0d;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;grid-column:1/3';
-    if (p.tertiary) {
-      tertSlot.innerHTML=`<img src="${p.tertiary}" style="width:100%;height:100%;object-fit:cover;display:block">
-        <div style="position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .2s">
-          <span style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg)">Ändern</span>
-        </div>`;
-      tertSlot.querySelector('div').style.opacity='0';
-      tertSlot.addEventListener('mouseenter',()=>tertSlot.querySelector('div').style.opacity='1');
-      tertSlot.addEventListener('mouseleave',()=>tertSlot.querySelector('div').style.opacity='0');
-    } else {
-      tertSlot.innerHTML=`<div style="text-align:center">
-        <div style="font-size:18px;color:#2a2a2a">+</div>
-        <div style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#333;margin-top:4px">3. Bild (für Layout "3 Bilder")</div>
-      </div>`;
-    }
-    tertSlot.addEventListener('click', ()=>uploadProjImage(p.id,'tertiary'));
-
-    // Layout selector
-    const layoutRow = document.createElement('div');
-    layoutRow.style.cssText='padding:8px 12px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;border-top:1px solid #1e1e1e';
-    layoutRow.innerHTML=`<span style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-right:4px">Layout</span>
-      ${['la','lb','lc','ld','le','lf'].map(l=>`
-        <button onclick="setProjLayout('${p.id}','${l}')"
-          style="padding:3px 8px;background:${p.layout===l?'var(--accent)':'none'};border:1px solid ${p.layout===l?'var(--accent)':'#333'};
-          color:${p.layout===l?'#0a0a0a':'var(--mid)'};font-family:'DM Sans',sans-serif;font-size:9px;cursor:pointer;transition:all .2s"
-          id="layout-btn-${p.id}-${l}">${l==='la'?'Links groß':l==='lb'?'Rechts groß':l==='lc'?'Vollbild':l==='ld'?'Portrait':l==='le'?'3 Bilder':'2 gleich'}</button>`).join('')}`;
-
-    imgs.appendChild(coverSlot);
-    imgs.appendChild(secSlot);
-    imgs.appendChild(tertSlot);
-    block.appendChild(header);
-    block.appendChild(imgs);
-    block.appendChild(layoutRow);
-    list.appendChild(block);
+  // ── Schnell-Navigation: Projekt-Buttons ──
+  const nav = document.createElement('div');
+  nav.style.cssText = 'display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #1e1e1e';
+  state.projects.forEach(p => {
+    const btn = document.createElement('button');
+    const on = p.id === activeProjId;
+    btn.textContent = p.title || '—';
+    btn.style.cssText = `padding:5px 11px;background:${on?'var(--accent)':'none'};border:1px solid ${on?'var(--accent)':'#333'};color:${on?'#0a0a0a':'var(--mid)'};font-family:'DM Sans',sans-serif;font-size:9px;cursor:pointer;transition:all .2s;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap`;
+    btn.onclick = () => { activeProjId = p.id; renderProjList(); };
+    nav.appendChild(btn);
   });
+  list.appendChild(nav);
+
+  // ── Detail: nur das aktive Projekt ──
+  const p = state.projects.find(x => x.id === activeProjId);
+  const i = state.projects.findIndex(x => x.id === activeProjId);
+  if (!p) return;
+
+  const block = document.createElement('div');
+  block.style.cssText = 'background:#161616;border:1px solid #222;overflow:hidden';
+
+  // Header
+  const header = document.createElement('div');
+  header.style.cssText = 'display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid #1e1e1e';
+  header.innerHTML = `
+    <div style="display:flex;gap:4px">
+      <button onclick="moveProject('${p.id}',-1)" ${i===0?'disabled':''} title="Nach oben" style="background:none;border:1px solid ${i===0?'#1e1e1e':'#333'};color:${i===0?'#333':'var(--mid)'};padding:3px 8px;cursor:${i===0?'default':'pointer'}">◀</button>
+      <button onclick="moveProject('${p.id}',1)" ${i===state.projects.length-1?'disabled':''} title="Nach unten" style="background:none;border:1px solid ${i===state.projects.length-1?'#1e1e1e':'#333'};color:${i===state.projects.length-1?'#333':'var(--mid)'};padding:3px 8px;cursor:${i===state.projects.length-1?'default':'pointer'}">▶</button>
+    </div>
+    <input value="${p.title}" oninput="state.projects[${i}].title=this.value;renderProjects();renderProjList()"
+      style="background:none;border:none;color:var(--fg);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%">
+    <button onclick="navigate('project','${p.id}');toggleSettings()" style="background:none;border:1px solid #333;color:var(--mid);font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.1em;padding:5px 10px;cursor:pointer;white-space:nowrap">Öffnen →</button>
+    <button onclick="removeProject('${p.id}')" style="background:none;border:none;color:#844;font-size:16px;padding:2px 8px;cursor:pointer">✕</button>`;
+
+  // Image slots
+  const imgs = document.createElement('div');
+  imgs.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:1px';
+
+  function makeSlot(field, label, bg, fullWidth) {
+    const slot = document.createElement('div');
+    slot.style.cssText = `position:relative;aspect-ratio:${fullWidth?'5/1':'3/2'};background:${bg};display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;${fullWidth?'grid-column:1/3':''}`;
+    if (p[field]) {
+      slot.innerHTML = `<img src="${p[field]}" style="width:100%;height:100%;object-fit:cover;display:block">
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s">
+          <span style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg)">Ändern</span>
+        </div>`;
+      const ov = slot.querySelector('div');
+      slot.addEventListener('mouseenter', () => ov.style.opacity = '1');
+      slot.addEventListener('mouseleave', () => ov.style.opacity = '0');
+    } else {
+      slot.innerHTML = `<div style="text-align:center;pointer-events:none">
+        <div style="font-size:18px;color:#333">+</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#555;margin-top:3px">${label}</div>
+      </div>`;
+    }
+    slot.addEventListener('click', () => uploadProjImage(p.id, field));
+    return slot;
+  }
+
+  imgs.appendChild(makeSlot('cover', 'Titelbild', '#111', false));
+  imgs.appendChild(makeSlot('secondary', '2. Bild', '#0f0f0f', false));
+  imgs.appendChild(makeSlot('tertiary', '3. Bild  (nur für Layout "3 Bilder")', '#0d0d0d', true));
+
+  // Layout selector
+  const layoutRow = document.createElement('div');
+  layoutRow.style.cssText = 'padding:10px 14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;border-top:1px solid #1e1e1e';
+  layoutRow.innerHTML = `<span style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-right:4px">Layout</span>
+    ${['la','lb','lc','ld','le','lf'].map(l=>`
+      <button onclick="setProjLayout('${p.id}','${l}')"
+        style="padding:4px 10px;background:${p.layout===l?'var(--accent)':'none'};border:1px solid ${p.layout===l?'var(--accent)':'#333'};
+        color:${p.layout===l?'#0a0a0a':'var(--mid)'};font-family:'DM Sans',sans-serif;font-size:9px;cursor:pointer;transition:all .2s">
+        ${l==='la'?'Links groß':l==='lb'?'Rechts groß':l==='lc'?'Vollbild':l==='ld'?'Portrait':l==='le'?'3 Bilder':'2 gleich'}</button>`).join('')}`;
+
+  block.appendChild(header);
+  block.appendChild(imgs);
+  block.appendChild(layoutRow);
+  list.appendChild(block);
 }
 
 function uploadProjImage(pid, field) {
@@ -1464,13 +1471,16 @@ function setProjLayout(pid, layout) {
 function addProject() {
   const id='p'+(Date.now());
   state.projects.push({id,title:'NEUES PROJEKT',series:'SERIE',year:new Date().getFullYear().toString(),desc:'',meta:'',layout:'la',cover:'',secondary:'',tertiary:'',canvas:[]});
+  activeProjId = id;
   saveAll(); renderProjects(); renderProjList();
   navigate('project',id);
   toggleSettings();
 }
 function removeProject(id) {
   if(!confirm('Projekt löschen?')) return;
+  const idx = state.projects.findIndex(p=>p.id===id);
   state.projects=state.projects.filter(x=>x.id!==id);
+  activeProjId = state.projects[Math.max(0,idx-1)]?.id || null;
   saveAll(); renderProjects(); renderProjList();
 }
 function moveProject(id, dir) {
@@ -1479,6 +1489,7 @@ function moveProject(id, dir) {
   const ni = idx+dir;
   if (ni<0||ni>=state.projects.length) return;
   [state.projects[idx],state.projects[ni]]=[state.projects[ni],state.projects[idx]];
+  activeProjId = id;
   saveAll(); renderProjects(); renderProjList();
 }
 
@@ -1629,6 +1640,45 @@ if(document.fonts&&document.fonts.ready) {
   document.fonts.ready.then(init);
 } else {
   setTimeout(init, 300);
+}
+
+// ══════════════════════════════════════════════════════════════
+// VERÖFFENTLICHEN
+// ══════════════════════════════════════════════════════════════
+function publishState() {
+  saveAll();
+  const stateStr = JSON.stringify(state, null, 2);
+  const hasBase64 = stateStr.includes('"data:');
+  const code = 'let state = ' + stateStr + ';';
+
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
+  ov.innerHTML = `<div style="background:#141414;border:1px solid #2a2a2a;padding:28px 32px;width:660px;max-width:96vw;max-height:85vh;display:flex;flex-direction:column;gap:14px">
+    <div style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)">Veröffentlichen — Schritt für Schritt</div>
+    ${hasBase64 ? '<div style="color:#e06;font-family:DM Sans,sans-serif;font-size:11px;line-height:1.6">⚠ Einige Bilder sind noch als base64 gespeichert — bitte ersetze diese durch Dateipfade (z.B. bilder/projekte/...) bevor du veröffentlichst.</div>' : ''}
+    <ol style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--grey);line-height:2;margin:0;padding-left:18px">
+      <li>Klick auf <strong style="color:var(--fg)">Kopieren</strong></li>
+      <li>Öffne <strong style="color:var(--fg)">index.html</strong> im Texteditor (z.B. VS Code)</li>
+      <li>Suche nach <code style="color:var(--accent);background:#0a0a0a;padding:1px 5px">let state = {</code> (Zeile ~795)</li>
+      <li>Ersetze den gesamten <code style="color:var(--accent);background:#0a0a0a;padding:1px 5px">let state = {...};</code> Block mit dem kopierten Code</li>
+      <li>Datei speichern → GitHub Desktop → Commit → Push</li>
+    </ol>
+    <textarea readonly id="_pub-code" style="flex:1;background:#0a0a0a;border:1px solid #222;color:#666;font-family:monospace;font-size:10px;padding:10px;resize:none;outline:none;min-height:160px">${code.replace(/</g,'&lt;')}</textarea>
+    <div style="display:flex;gap:8px">
+      <button id="_pub-copy" style="background:var(--accent);color:#0a0a0a;border:none;padding:9px 24px;font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer">Kopieren</button>
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="background:none;border:1px solid #333;color:var(--mid);padding:9px 18px;font-family:'DM Sans',sans-serif;font-size:9px;cursor:pointer">Schließen</button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+
+  const ta = ov.querySelector('#_pub-code');
+  ta.value = code;
+  ov.querySelector('#_pub-copy').onclick = () => {
+    navigator.clipboard.writeText(code).then(() => {
+      ov.querySelector('#_pub-copy').textContent = '✓ Kopiert!';
+    }).catch(() => { ta.select(); document.execCommand('copy'); });
+  };
+  ov.onclick = e => { if (e.target === ov) ov.remove(); };
 }
 </script>
 </body>
