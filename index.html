@@ -936,29 +936,18 @@ function renderProjects() {
     const coverEl = p.cover ? `<img src="${p.cover}" alt="${p.title}">` : `<div class="img-ph" style="background:${c};min-height:${mh}"></div>`;
     const secEl   = p.secondary ? `<img src="${p.secondary}" alt="">` : `<div class="img-ph" style="background:${c==='#141414'?'#111':'#141414'};min-height:280px"></div>`;
     const tertEl  = p.tertiary ? `<img src="${p.tertiary}" alt="">` : `<div class="img-ph" style="background:#111;min-height:280px"></div>`;
-    const yearEl  = p.year === 'ongoing' ? `<div class="p-year">Ongoing</div>` : '';
+    const metaLabel = p.year === 'ongoing' ? `ONGOING | ${p.series}` : p.series;
+    const piHTML = `<div class="pi">
+          <div class="p-series">${metaLabel}</div>
+          <a class="p-title" data-pid="${p.id}">${p.title}</a>
+        </div>`;
 
     if (p.layout === 'lc' || p.layout === 'li') {
-      div.innerHTML = `<div class="pm">${coverEl}</div>
-        <div class="pi">
-          <div class="p-series">${p.series}</div>
-          <a class="p-title" data-pid="${p.id}">${p.title}</a>
-          ${yearEl}
-        </div>`;
+      div.innerHTML = `<div class="pm">${coverEl}</div>${piHTML}`;
     } else if (p.layout === 'le') {
-      div.innerHTML = `<div class="pm">${coverEl}</div><div class="ps">${secEl}</div><div class="pt">${tertEl}</div>
-        <div class="pi">
-          <div class="p-series">${p.series}</div>
-          <a class="p-title" data-pid="${p.id}">${p.title}</a>
-          ${yearEl}
-        </div>`;
+      div.innerHTML = `<div class="pm">${coverEl}</div><div class="ps">${secEl}</div><div class="pt">${tertEl}</div>${piHTML}`;
     } else {
-      div.innerHTML = `<div class="pm">${coverEl}</div><div class="ps">${secEl}</div>
-        <div class="pi">
-          <div class="p-series">${p.series}</div>
-          <a class="p-title" data-pid="${p.id}">${p.title}</a>
-          ${yearEl}
-        </div>`;
+      div.innerHTML = `<div class="pm">${coverEl}</div><div class="ps">${secEl}</div>${piHTML}`;
     }
     div.querySelector('.p-title').addEventListener('click', e => {
       e.preventDefault();
