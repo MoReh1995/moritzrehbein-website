@@ -182,13 +182,8 @@ body {
 .reveal.in { opacity:1; transform:translateY(0); }
 
 /* ── NAME INTRO ANIMATION ── */
-@keyframes nameAppear {
-  from { opacity:0; transform:translateY(calc(var(--ty,0px) + 18px)); }
-  to   { opacity:1; transform:translateY(var(--ty,0px)); }
-}
-#name-bar.loaded #bar-name {
-  animation: nameAppear 1.4s cubic-bezier(.22,.8,.36,1) both;
-}
+#bar-name { opacity:0; transition:opacity 1.8s ease; }
+#name-bar.loaded #bar-name { opacity:1; }
 
 /* ── INFO PAGE ── */
 #page-info { padding:140px 48px 120px; }
@@ -1519,24 +1514,21 @@ function applyHeroImages() {
   });
 }
 
+function init() {
+  window.scrollTo(0, 0);
+  loadAll();
+  applyHeroImages();
+  getHeroH();
+  fitName();
+  renderProjects();
+  updateNameScroll();
+  setTimeout(()=>{ document.getElementById('name-bar').classList.add('loaded'); }, 200);
+}
+
 if(document.fonts&&document.fonts.ready) {
-  document.fonts.ready.then(()=>{
-    loadAll();
-    applyHeroImages();
-    fitName();
-    renderProjects();
-    requestAnimationFrame(updateNameScroll);
-    setTimeout(()=>{ document.getElementById('name-bar').classList.add('loaded'); }, 100);
-  });
+  document.fonts.ready.then(init);
 } else {
-  setTimeout(()=>{
-    loadAll();
-    applyHeroImages();
-    fitName();
-    renderProjects();
-    requestAnimationFrame(updateNameScroll);
-    document.getElementById('name-bar').classList.add('loaded');
-  },300);
+  setTimeout(init, 300);
 }
 </script>
 </body>
