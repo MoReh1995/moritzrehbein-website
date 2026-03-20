@@ -72,7 +72,7 @@ body {
   line-height:0.9; padding:0 0 4px;
   padding-left:0.18em;
   white-space:nowrap; overflow:visible;
-  user-select:none; will-change:transform;
+  user-select:none;
 }
 #bar-nav {
   display:flex; justify-content:center; gap:40px;
@@ -181,8 +181,12 @@ body {
 .reveal { opacity:0; transform:translateY(30px); transition:opacity .9s,transform .9s; }
 .reveal.in { opacity:1; transform:translateY(0); }
 
-/* ── NAME INTRO ANIMATION ── */
-#bar-name { opacity:0; transition:opacity 1.8s ease; }
+/* ── NAME: startet unten im Hero, scrollt nach oben ── */
+#bar-name {
+  transform: translateY(70vh);
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
 #name-bar.loaded #bar-name { opacity:1; }
 
 /* ── INFO PAGE ── */
@@ -1151,6 +1155,8 @@ window.addEventListener('resize', ()=>{ getHeroH(); fitName(); });
 
 function updateNameScroll() {
   if (!document.getElementById('page-home').classList.contains('active')) return;
+  if (heroH === 0) { getHeroH(); }
+  if (heroH === 0) return; // noch nicht bereit
   const s = window.scrollY;
   const threshold = heroH * 0.62;
   if (s < threshold) {
