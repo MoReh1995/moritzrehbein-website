@@ -34,19 +34,6 @@ body {
 }
 
 /* CURSOR */
-#cur-dot {
-  position:fixed; width:5px; height:5px; background:var(--fg);
-  border-radius:50%; pointer-events:none; z-index:99999;
-  transform:translate(-50%,-50%);
-}
-#cur-ring {
-  position:fixed; width:32px; height:32px;
-  border:1px solid rgba(240,237,232,.4); border-radius:50%;
-  pointer-events:none; z-index:99998;
-  transform:translate(-50%,-50%);
-  transition:width .25s,height .25s,border-color .25s;
-}
-.cr-big { width:52px!important;height:52px!important;border-color:rgba(240,237,232,.8)!important; }
 
 /* ── PAGES ── each .page is hidden by default */
 .page { display:none; }
@@ -399,10 +386,6 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 #settings-toggle:hover { background:#1e1e1e; }
 
 @media(max-width:768px) {
-  /* Cursor auf Mobile ausblenden */
-  #cur-dot, #cur-ring { display:none; }
-  body { cursor:auto; }
-  a, button { cursor:pointer; }
 
   #bar-name { letter-spacing:.06em; padding-left:.06em; }
   #work { padding:60px 20px 80px; }
@@ -434,8 +417,6 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 </head>
 <body>
 
-<div id="cur-dot"></div>
-<div id="cur-ring"></div>
 
 <!-- ── STICKY NAME BAR (always present) ── -->
 <div id="name-bar">
@@ -1544,16 +1525,6 @@ document.getElementById('editor-panel').addEventListener('input', saveAll);
 // ══════════════════════════════════════════════════════════════
 // CURSOR
 // ══════════════════════════════════════════════════════════════
-const dot=document.getElementById('cur-dot'), ring=document.getElementById('cur-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{
-  mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';
-});
-(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
-document.addEventListener('mouseover',e=>{
-  if(e.target.matches('a,button,.p-title,.media-item,.hero-slot,.blend-opt,.ep-btn,.tb-btn,.ic-btn')) ring.classList.add('cr-big');
-  else ring.classList.remove('cr-big');
-});
 
 // ══════════════════════════════════════════════════════════════
 // NOTIFY
