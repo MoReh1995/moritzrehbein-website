@@ -443,6 +443,17 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 .footer-links a { font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--footer-color, var(--mid)); text-decoration:none; cursor:pointer; transition:color .2s; }
 .footer-links a:hover { color:var(--fg); }
 
+/* ── AUTO-SAVE TOAST ── */
+#save-toast {
+  position:fixed; bottom:80px; right:28px; z-index:4000;
+  background:#1a1a1a; border:1px solid #2a2a2a;
+  color:var(--mid); font-family:'DM Sans',sans-serif;
+  font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  padding:8px 16px; opacity:0; pointer-events:none;
+  transition:opacity .4s ease;
+}
+#save-toast.visible { opacity:1; }
+
 /* ── DATENSCHUTZ-BANNER ── */
 #privacy-banner {
   position:fixed; bottom:0; left:0; right:0; z-index:3000;
@@ -812,6 +823,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 <!-- ══════════════════════════════════════
      SETTINGS PANEL (home page only)
 ══════════════════════════════════════ -->
+<div id="save-toast">✓ Gespeichert</div>
 <div id="privacy-banner" class="hidden">
   <span>Diese Seite lädt Schriftarten von Google Fonts (Google LLC, USA). Dabei wird deine IP-Adresse übertragen. Es werden keine Tracking-Cookies gesetzt.</span>
   <button onclick="acceptPrivacy()">Verstanden</button>
@@ -1721,11 +1733,24 @@ function setupReveal() {
 // SETTINGS PANEL
 // ══════════════════════════════════════════════════════════════
 let settingsOpen=false;
+let _autoSaveInterval=null;
+function showSaveToast() {
+  let t = document.getElementById('save-toast');
+  if(!t) return;
+  t.classList.add('visible');
+  setTimeout(()=>t.classList.remove('visible'), 2000);
+}
 function toggleSettings() {
   settingsOpen=!settingsOpen;
   document.getElementById('editor-panel').classList.toggle('open',settingsOpen);
   const btn = document.getElementById('settings-toggle');
   btn.classList.toggle('visible', settingsOpen);
+  if(settingsOpen) {
+    _autoSaveInterval = setInterval(()=>{ saveAll(); showSaveToast(); }, 2*60*1000);
+  } else {
+    clearInterval(_autoSaveInterval);
+    _autoSaveInterval = null;
+  }
 }
 function acceptPrivacy() {
   localStorage.setItem('privacyAccepted','1');
