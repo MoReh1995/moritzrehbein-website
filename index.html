@@ -680,8 +680,8 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 <!-- ══════════════════════════════════════
      SETTINGS PANEL (home page only)
 ══════════════════════════════════════ -->
-<button id="settings-toggle" onclick="toggleSettings()" class="visible">✦ Bearbeiten</button>
-<div id="editor-panel" class="open">
+<button id="settings-toggle" onclick="toggleSettings()">✦ Bearbeiten</button>
+<div id="editor-panel">
   <button class="ep-close" onclick="toggleSettings()">×</button>
   <div class="ep-tabs">
     <div class="ep-tab" onclick="switchTab(this,'pane-name')">Name</div>
@@ -736,6 +736,10 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
           <div class="blend-opt" onclick="setBlend(this,'none')">Kein</div>
         </div>
         <div style="font-size:9px;color:var(--grey);margin-top:10px;letter-spacing:.08em;font-family:'DM Sans',sans-serif">"Invertiert" lässt Bilder durch den Namen scheinen.</div>
+        <div style="margin-top:14px;">
+          <div style="font-size:9px;color:var(--mid);letter-spacing:.08em;font-family:'DM Sans',sans-serif;margin-bottom:6px;">Deckkraft: <span id="blend-opacity-display">100%</span></div>
+          <input type="range" id="blend-opacity" min="0" max="100" value="100" style="width:100%;accent-color:var(--accent);cursor:pointer" oninput="setBlendOpacity(this.value)">
+        </div>
       </div>
     </div>
   </div>
@@ -1457,6 +1461,7 @@ const barNav  = document.getElementById('bar-nav');
 const barBg   = document.getElementById('bar-bg');
 const nameBar = document.getElementById('name-bar');
 let currentBlend = 'difference';
+let currentBlendOpacity = 1;
 let nameIsSticky = false;
 let heroH = 0;
 
@@ -1476,13 +1481,20 @@ function updateNameScroll() {
     const ty = startY * (1 - progress);
     barName.style.transform = `translateY(${ty}px)`;
     nameBar.style.mixBlendMode = 'normal';
+    nameBar.style.opacity = '1';
     barNav.classList.remove('visible');
     nameBar.style.pointerEvents = 'none';
     nameBar.classList.remove('sticky');
     nameIsSticky = false;
   } else {
     barName.style.transform = 'translateY(0)';
-    if (currentBlend !== 'none') nameBar.style.mixBlendMode = currentBlend;
+    if (currentBlend !== 'none') {
+      nameBar.style.mixBlendMode = currentBlend;
+      nameBar.style.opacity = currentBlendOpacity;
+    } else {
+      nameBar.style.mixBlendMode = 'normal';
+      nameBar.style.opacity = '1';
+    }
     barNav.classList.add('visible');
     nameBar.style.pointerEvents = 'all';
     nameBar.classList.add('sticky');
@@ -1582,7 +1594,15 @@ function updateLH(val) {
 function setBlend(el,mode) {
   document.querySelectorAll('.blend-opt').forEach(x=>x.classList.remove('active'));
   el.classList.add('active'); currentBlend=mode;
-  nameBar.style.mixBlendMode=mode==='none'?'normal':mode;
+  if (nameIsSticky) {
+    nameBar.style.mixBlendMode = mode==='none' ? 'normal' : mode;
+    nameBar.style.opacity = mode==='none' ? '1' : currentBlendOpacity;
+  }
+}
+function setBlendOpacity(val) {
+  currentBlendOpacity = val/100;
+  document.getElementById('blend-opacity-display').textContent = val + '%';
+  if (nameIsSticky && currentBlend !== 'none') nameBar.style.opacity = currentBlendOpacity;
 }
 function updateSpeed(val) {
   slideSpeed=val*1000; document.getElementById('speed-display').textContent=val+'s'; startSlideshow();
@@ -1797,7 +1817,8 @@ function saveAll() {
   state.site.email     = document.getElementById('ep-email').value;
   state.site.nameSize  = document.getElementById('ep-size').value;
   state.site.nameLs    = barName.style.letterSpacing || '0.18em';
-  state.site.blend     = currentBlend;
+  state.site.blend        = currentBlend;
+  state.site.blendOpacity = currentBlendOpacity;
   state.site.slideSpeed= document.getElementById('ep-speed').value;
   ['nav-size','nav-ls','pt-size','pt-ls','sl-size','sl-ls','yr-size'].forEach(id=>{
     const el=document.getElementById(id); if(el) state.site[id]=el.value;
@@ -1823,7 +1844,18 @@ function loadAll() {
     barName.textContent=s.name; _msr.textContent=s.name;
     if(s.nameLs) { barName.style.letterSpacing=s.nameLs; _msr.style.letterSpacing=s.nameLs; document.getElementById('ep-ls').value=Math.round(parseFloat(s.nameLs)*100); document.getElementById('ls-display').textContent=s.nameLs; }
     if(s.nameSize) { document.getElementById('ep-size').value=s.nameSize; nameSizeScale=s.nameSize/100; }
-    if(s.blend) { currentBlend=s.blend; }
+    if(s.blend) {
+      currentBlend = s.blend;
+      document.querySelectorAll('.blend-opt').forEach(x => {
+        x.classList.toggle('active', x.getAttribute('onclick').includes("'"+s.blend+"'"));
+      });
+    }
+    if(s.blendOpacity != null) {
+      currentBlendOpacity = s.blendOpacity;
+      const pct = Math.round(s.blendOpacity * 100);
+      document.getElementById('blend-opacity').value = pct;
+      document.getElementById('blend-opacity-display').textContent = pct + '%';
+    }
     if(s.slideSpeed) { document.getElementById('ep-speed').value=s.slideSpeed; slideSpeed=s.slideSpeed*1000; startSlideshow(); }
     ['nav-size','nav-ls','pt-size','pt-ls','sl-size','sl-ls','yr-size'].forEach(id=>{
       if(s[id]) { const el=document.getElementById(id); if(el) { el.value=s[id]; updateTextStyle(id,s[id]); } }
@@ -1887,6 +1919,19 @@ function applyHeroImages() {
 }
 
 function init() {
+  // Reset any frozen UI state from outerHTML snapshot
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-home').classList.add('active');
+  document.getElementById('editor-panel').classList.remove('open');
+  settingsOpen = false;
+  document.getElementById('settings-toggle').style.opacity = '';
+  document.getElementById('settings-toggle').style.pointerEvents = '';
+  document.getElementById('settings-toggle').classList.remove('visible');
+  document.getElementById('edit-toggle').style.opacity = '';
+  document.getElementById('edit-toggle').style.pointerEvents = '';
+  document.getElementById('edit-toggle').classList.remove('visible');
+  nameBar.style.mixBlendMode = 'normal';
+
   loadAll();
   applyHeroImages();
   getHeroH();
