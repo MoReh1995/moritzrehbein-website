@@ -317,16 +317,93 @@ body {
   text-transform:uppercase; color:var(--grey);
 }
 
-/* ── FREE CANVAS ── */
+/* ── FREE CANVAS (legacy) ── */
 #proj-canvas {
-  position:relative; width:100%; min-height:100vh; padding:40px 0 160px;
+  position:relative; width:100%; padding:20px 0 160px;
 }
-.media-item {
-  position:absolute; user-select:none;
+.media-item { position:absolute; user-select:none; }
+.media-item img,.media-item video { display:block; width:100%; height:100%; object-fit:cover; }
+
+/* ── PROJECT SECTIONS ── */
+.proj-section { padding:0 48px 90px; position:relative; }
+.proj-section:first-child { padding-top:10px; }
+.sec-inner { width:100%; }
+.sec-slot { overflow:hidden; position:relative; }
+.sec-slot img { width:100%; height:auto; display:block; }
+.sec-slot video { width:100%; height:auto; display:block; }
+.sec-slot iframe { width:100%; aspect-ratio:16/9; display:block; border:none; }
+.sec-empty { background:#161616; aspect-ratio:4/5; width:100%; }
+.sec-caption {
+  font-family:'DM Sans',sans-serif; font-size:11px;
+  letter-spacing:.08em; color:var(--grey); margin-top:12px;
+  outline:none;
 }
-.media-item img,.media-item video {
-  display:block; width:100%; height:100%; object-fit:cover;
+.sec-text {
+  font-family:'DM Sans',sans-serif; font-size:14px;
+  line-height:1.9; color:var(--mid); max-width:52%; outline:none;
 }
+
+/* S1 – single centered */
+.sec-s1 .sec-inner { display:flex; justify-content:center; }
+.sec-s1 .sec-slot { width:46%; }
+/* S2 – full width */
+.sec-s2 .sec-slot { width:100%; }
+/* D1 – small left + large right, top */
+.sec-d1 .sec-inner { display:grid; grid-template-columns:28fr 52fr; gap:3%; max-width:88%; margin:0 auto; }
+/* D2 – large left + small right, bottom */
+.sec-d2 .sec-inner { display:grid; grid-template-columns:44fr 32fr; gap:4%; align-items:end; max-width:84%; margin:0 auto; }
+/* D3 – two equal */
+.sec-d3 .sec-inner { display:grid; grid-template-columns:1fr 1fr; gap:3%; max-width:88%; margin:0 auto; }
+/* T1 – large left + two stacked right */
+.sec-t1 .sec-inner { display:grid; grid-template-columns:44fr 26fr; gap:3%; max-width:82%; margin:0 auto; }
+.sec-stack { display:flex; flex-direction:column; gap:10px; }
+/* T2 – three equal */
+.sec-t2 .sec-inner { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2%; max-width:92%; margin:0 auto; }
+/* T3 – tall + small center + tall */
+.sec-t3 .sec-inner { display:grid; grid-template-columns:34fr 22fr 34fr; gap:2%; align-items:center; max-width:94%; margin:0 auto; }
+/* SV – video */
+.sec-sv .sec-slot { width:100%; }
+/* TX – text block */
+.sec-tx .sec-inner { max-width:52%; margin:0 auto; }
+
+/* Section edit controls */
+.sec-ctrl { display:none; position:absolute; top:10px; right:56px; gap:4px; z-index:20; }
+body.editing .sec-ctrl { display:flex; }
+.sec-ctrl-btn {
+  background:rgba(10,10,10,.94); border:1px solid #333; color:var(--mid);
+  font-size:11px; padding:4px 9px; cursor:pointer;
+  font-family:'DM Sans',sans-serif; letter-spacing:.04em; transition:color .2s,border-color .2s;
+}
+.sec-ctrl-btn:hover { color:var(--fg); border-color:#555; }
+.sec-ctrl-btn.del { color:#844; }
+.sec-ctrl-btn.del:hover { color:#e66; }
+/* Upload overlay */
+body.editing .sec-slot { cursor:pointer; }
+body.editing .sec-slot::after {
+  content:'+ Bild wählen'; position:absolute; inset:0;
+  background:rgba(0,0,0,.44); display:flex; align-items:center; justify-content:center;
+  font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:.1em;
+  color:var(--accent); opacity:0; transition:opacity .2s; pointer-events:none; z-index:5;
+}
+body.editing .sec-slot:hover::after { opacity:1; }
+
+/* Section picker panel */
+#section-picker {
+  position:fixed; bottom:0; left:0; right:0;
+  background:#0f0f0f; border-top:2px solid rgba(240,237,232,.12);
+  z-index:4500; padding:24px 48px 36px;
+  transform:translateY(100%); transition:transform .4s cubic-bezier(.77,0,.175,1);
+}
+#section-picker.open { transform:translateY(0); }
+.sp-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+.sp-title { font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--grey); }
+.sp-close { background:none; border:none; color:var(--grey); font-size:20px; cursor:pointer; line-height:1; transition:color .2s; }
+.sp-close:hover { color:var(--fg); }
+.sp-grid { display:flex; flex-wrap:wrap; gap:10px; }
+.sp-item { cursor:pointer; border:1px solid #222; padding:10px 10px 8px; transition:border-color .2s; width:90px; }
+.sp-item:hover { border-color:var(--accent); }
+.sp-thumb { height:50px; display:flex; align-items:flex-end; gap:3px; margin-bottom:7px; }
+.sp-label { font-family:'DM Sans',sans-serif; font-size:8px; letter-spacing:.05em; color:var(--grey); text-align:center; line-height:1.4; }
 .media-item.selected { outline:2px solid var(--accent); outline-offset:2px; z-index:50!important; }
 body.editing .media-item { cursor:move; }
 .resize-handle {
@@ -536,6 +613,18 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   .media-item { position:relative!important; left:0!important; top:0!important; width:100%!important; height:auto!important; margin-bottom:4px; }
   #edit-toolbar { flex-wrap:wrap; }
   #settings-toggle, #edit-toggle { bottom:16px; right:16px; }
+  /* Sections mobile */
+  .proj-section { padding:0 20px 60px; }
+  .sec-s1 .sec-slot { width:80%; }
+  .sec-d1 .sec-inner,.sec-d2 .sec-inner,.sec-d3 .sec-inner,
+  .sec-t1 .sec-inner,.sec-t2 .sec-inner,.sec-t3 .sec-inner {
+    display:flex; flex-direction:column; gap:10px; max-width:100%;
+  }
+  .sec-stack { display:contents; }
+  .sec-text { max-width:100%; }
+  #section-picker { padding:20px 20px 28px; }
+  .sp-grid { gap:8px; }
+  .sp-item { width:80px; }
 }
 </style>
 </head>
@@ -768,11 +857,94 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 
   <!-- Canvas edit toolbar -->
   <div id="edit-toolbar">
-    <button class="tb-btn" onclick="triggerUpload('image')">+ Foto / GIF</button>
-    <button class="tb-btn" onclick="triggerUpload('video')">+ Video</button>
-    <button class="tb-btn" onclick="addEmbed()">+ Vimeo / YouTube</button>
-    <button class="tb-btn" onclick="autoLayout()">Auto-Layout</button>
+    <button class="tb-btn" onclick="openSectionPicker()">+ Sektion</button>
     <button class="tb-btn ac" onclick="saveCurrentProject()">Speichern ✓</button>
+  </div>
+
+  <!-- Section layout picker -->
+  <div id="section-picker">
+    <div class="sp-head">
+      <div class="sp-title">Layout wählen</div>
+      <button class="sp-close" onclick="closeSectionPicker()">×</button>
+    </div>
+    <div class="sp-grid">
+      <div class="sp-item" onclick="selectLayout('s1')">
+        <div class="sp-thumb" style="justify-content:center">
+          <div style="width:46%;background:#3a3a3a;height:100%"></div>
+        </div>
+        <div class="sp-label">Einzeln<br>zentriert</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('s2')">
+        <div class="sp-thumb">
+          <div style="width:100%;background:#3a3a3a;height:100%"></div>
+        </div>
+        <div class="sp-label">Voll-<br>breite</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('d1')">
+        <div class="sp-thumb" style="gap:4px;align-items:flex-start">
+          <div style="width:34%;background:#3a3a3a;height:80%"></div>
+          <div style="width:56%;background:#3a3a3a;height:100%"></div>
+        </div>
+        <div class="sp-label">Klein links,<br>groß rechts</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('d2')">
+        <div class="sp-thumb" style="gap:4px;align-items:flex-end">
+          <div style="width:56%;background:#3a3a3a;height:100%"></div>
+          <div style="width:38%;background:#3a3a3a;height:70%"></div>
+        </div>
+        <div class="sp-label">Groß links,<br>klein rechts</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('d3')">
+        <div class="sp-thumb" style="gap:4px">
+          <div style="flex:1;background:#3a3a3a;height:100%"></div>
+          <div style="flex:1;background:#3a3a3a;height:100%"></div>
+        </div>
+        <div class="sp-label">Zwei<br>gleiche</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('t1')">
+        <div class="sp-thumb" style="gap:4px">
+          <div style="width:52%;background:#3a3a3a;height:100%"></div>
+          <div style="width:32%;display:flex;flex-direction:column;gap:3px">
+            <div style="flex:1;background:#3a3a3a"></div>
+            <div style="flex:1;background:#3a3a3a"></div>
+          </div>
+        </div>
+        <div class="sp-label">Groß links,<br>2× rechts</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('t2')">
+        <div class="sp-thumb" style="gap:3px">
+          <div style="flex:1;background:#3a3a3a;height:100%"></div>
+          <div style="flex:1;background:#3a3a3a;height:100%"></div>
+          <div style="flex:1;background:#3a3a3a;height:100%"></div>
+        </div>
+        <div class="sp-label">Drei<br>gleiche</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('t3')">
+        <div class="sp-thumb" style="gap:3px;align-items:center">
+          <div style="flex:2;background:#3a3a3a;height:100%"></div>
+          <div style="flex:1.3;background:#3a3a3a;height:70%"></div>
+          <div style="flex:2;background:#3a3a3a;height:100%"></div>
+        </div>
+        <div class="sp-label">Groß–Klein<br>–Groß</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('tx')">
+        <div class="sp-thumb" style="flex-direction:column;gap:5px;justify-content:center;align-items:flex-start">
+          <div style="width:85%;height:3px;background:#3a3a3a"></div>
+          <div style="width:70%;height:3px;background:#3a3a3a"></div>
+          <div style="width:80%;height:3px;background:#3a3a3a"></div>
+          <div style="width:60%;height:3px;background:#3a3a3a"></div>
+        </div>
+        <div class="sp-label">Text-<br>block</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('sv')">
+        <div class="sp-thumb" style="position:relative">
+          <div style="width:100%;background:#3a3a3a;height:100%;display:flex;align-items:center;justify-content:center">
+            <div style="width:0;height:0;border-style:solid;border-width:7px 0 7px 14px;border-color:transparent transparent transparent #666"></div>
+          </div>
+        </div>
+        <div class="sp-label">Video /<br>Embed</div>
+      </div>
+    </div>
   </div>
 
   <!-- Item controls -->
@@ -1358,20 +1530,23 @@ function renderProjects() {
 function loadProjectPage(pid) {
   const p = state.projects.find(x => x.id === pid);
   if (!p) return;
-  canvasNextId = 1;
 
   document.getElementById('proj-series').textContent = p.series;
   document.getElementById('proj-title').textContent  = p.title;
   document.getElementById('proj-desc').textContent   = p.desc || '';
   document.getElementById('proj-meta').textContent   = p.meta || '';
 
-  // Clear and re-render canvas
   const canvas = document.getElementById('proj-canvas');
   canvas.innerHTML = '';
-  if (p.canvas && p.canvas.length) {
+
+  if (p.sections && p.sections.length > 0) {
+    renderProjectSections(p);
+  } else if (p.canvas && p.canvas.length) {
+    // Legacy absolute canvas
+    canvasNextId = 1;
+    canvas.style.minHeight = '100vh';
     p.canvas.forEach(d => renderCanvasItem(d));
     expandCanvas();
-    // Set nextId beyond existing
     canvasNextId = Math.max(...p.canvas.map(d => parseInt(d.id.replace('ci-',''))||0)) + 1;
   }
 }
@@ -1384,8 +1559,18 @@ function saveCurrentProject() {
   p.title  = document.getElementById('proj-title').textContent;
   p.desc   = document.getElementById('proj-desc').textContent;
   p.meta   = document.getElementById('proj-meta').textContent;
-  // Save canvas item positions
-  p.canvas = canvasItems.map(d => ({...d}));
+  if (p.sections) {
+    // Save editable text/caption content from DOM
+    document.querySelectorAll('#proj-canvas .proj-section').forEach((el, idx) => {
+      if (!p.sections[idx]) return;
+      const txt = el.querySelector('.sec-text');
+      if (txt) p.sections[idx].text = txt.innerHTML;
+      const cap = el.querySelector('.sec-caption');
+      if (cap) p.sections[idx].caption = cap.textContent;
+    });
+  } else {
+    p.canvas = canvasItems.map(d => ({...d}));
+  }
   saveAll();
   notify('Projekt gespeichert ✓');
 }
@@ -1589,6 +1774,178 @@ function expandCanvas() {
 }
 
 // ══════════════════════════════════════════════════════════════
+// PROJECT SECTIONS
+// ══════════════════════════════════════════════════════════════
+const SEC_SLOTS = { s1:1, s2:1, sv:1, tx:0, d1:2, d2:2, d3:2, t1:3, t2:3, t3:3 };
+let _pickerSecIdx = null;
+
+function renderProjectSections(p) {
+  const canvas = document.getElementById('proj-canvas');
+  canvas.innerHTML = '';
+  canvas.style.minHeight = '';
+  (p.sections || []).forEach((s, idx) => canvas.appendChild(buildSectionEl(s, idx)));
+}
+
+function buildSectionEl(s, idx) {
+  const wrap = document.createElement('div');
+  wrap.className = `proj-section sec-${s.type}`;
+  wrap.dataset.idx = idx;
+
+  // Controls
+  const ctrl = document.createElement('div');
+  ctrl.className = 'sec-ctrl';
+  ctrl.innerHTML = `
+    <button class="sec-ctrl-btn" onclick="moveSec(${idx},-1)" title="Nach oben">↑</button>
+    <button class="sec-ctrl-btn" onclick="moveSec(${idx},1)" title="Nach unten">↓</button>
+    <button class="sec-ctrl-btn" onclick="openSectionPicker(${idx})" title="Layout ändern">⊞</button>
+    <button class="sec-ctrl-btn del" onclick="removeSec(${idx})" title="Löschen">✕</button>`;
+  wrap.appendChild(ctrl);
+
+  const inner = document.createElement('div');
+  inner.className = 'sec-inner';
+
+  if (s.type === 'tx') {
+    const txt = document.createElement('div');
+    txt.className = 'sec-text';
+    txt.contentEditable = editMode ? 'true' : 'false';
+    txt.innerHTML = s.text || '<p>Textblock – im Bearbeitungsmodus klicken zum Bearbeiten.</p>';
+    inner.appendChild(txt);
+    wrap.appendChild(inner);
+    return wrap;
+  }
+
+  if (s.type === 'sv') {
+    const slot = document.createElement('div');
+    slot.className = 'sec-slot';
+    const url = s.imgs && s.imgs[0];
+    if (url) {
+      if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('vimeo.com')) {
+        slot.innerHTML = `<iframe src="${url}" allowfullscreen allow="autoplay; fullscreen"></iframe>`;
+      } else {
+        slot.innerHTML = `<video src="${url}" autoplay loop muted playsinline></video>`;
+      }
+    } else {
+      const ph = document.createElement('div'); ph.className='sec-empty'; slot.appendChild(ph);
+      slot.addEventListener('click', () => { if(editMode) uploadSecImg(idx, 0); });
+    }
+    if (url && editMode) slot.addEventListener('click', () => promptVideoEmbed(idx));
+    inner.appendChild(slot);
+    wrap.appendChild(inner);
+    return wrap;
+  }
+
+  const nSlots = SEC_SLOTS[s.type] || 1;
+
+  if (s.type === 't1') {
+    inner.appendChild(buildSlot(s, idx, 0));
+    const stack = document.createElement('div');
+    stack.className = 'sec-stack';
+    stack.appendChild(buildSlot(s, idx, 1));
+    stack.appendChild(buildSlot(s, idx, 2));
+    inner.appendChild(stack);
+  } else {
+    for (let i = 0; i < nSlots; i++) inner.appendChild(buildSlot(s, idx, i));
+  }
+  wrap.appendChild(inner);
+
+  if (s.caption !== undefined) {
+    const cap = document.createElement('div');
+    cap.className = 'sec-caption';
+    cap.contentEditable = editMode ? 'true' : 'false';
+    cap.textContent = s.caption || '';
+    if (!s.caption && editMode) cap.setAttribute('data-placeholder','Caption (optional)…');
+    wrap.appendChild(cap);
+  }
+  return wrap;
+}
+
+function buildSlot(s, idx, slotIdx) {
+  const slot = document.createElement('div');
+  slot.className = 'sec-slot';
+  const url = s.imgs && s.imgs[slotIdx];
+  if (url) {
+    const img = document.createElement('img'); img.src = url; img.alt = '';
+    slot.appendChild(img);
+  } else {
+    const ph = document.createElement('div'); ph.className = 'sec-empty'; slot.appendChild(ph);
+  }
+  slot.addEventListener('click', () => { if(editMode) uploadSecImg(idx, slotIdx); });
+  return slot;
+}
+
+function uploadSecImg(sectionIdx, slotIdx) {
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = 'image/*,video/mp4,video/webm';
+  inp.onchange = e => {
+    const f = e.target.files[0]; if(!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      const p = state.projects.find(x => x.id === currentProjectId);
+      if(!p || !p.sections[sectionIdx]) return;
+      if(!p.sections[sectionIdx].imgs) p.sections[sectionIdx].imgs = [];
+      p.sections[sectionIdx].imgs[slotIdx] = ev.target.result;
+      saveAll(); renderProjectSections(p);
+    };
+    r.readAsDataURL(f);
+  };
+  inp.click();
+}
+
+function promptVideoEmbed(sectionIdx) {
+  const url = prompt('YouTube oder Vimeo URL einfügen:');
+  if(!url) return;
+  let src = url;
+  // Convert YouTube watch URL to embed
+  src = src.replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/');
+  // Convert Vimeo URL to embed
+  src = src.replace('vimeo.com/','player.vimeo.com/video/');
+  const p = state.projects.find(x => x.id === currentProjectId);
+  if(!p || !p.sections[sectionIdx]) return;
+  if(!p.sections[sectionIdx].imgs) p.sections[sectionIdx].imgs = [];
+  p.sections[sectionIdx].imgs[0] = src;
+  saveAll(); renderProjectSections(p);
+}
+
+function openSectionPicker(idx = null) {
+  _pickerSecIdx = (idx !== null && idx !== undefined) ? idx : null;
+  document.getElementById('section-picker').classList.add('open');
+}
+function closeSectionPicker() {
+  document.getElementById('section-picker').classList.remove('open');
+  _pickerSecIdx = null;
+}
+function selectLayout(type) {
+  const p = state.projects.find(x => x.id === currentProjectId);
+  if(!p) return;
+  if(!p.sections) p.sections = [];
+  const nSlots = SEC_SLOTS[type] || 0;
+  if(_pickerSecIdx === null) {
+    p.sections.push({ type, imgs: new Array(nSlots).fill(''), caption: type !== 'tx' ? '' : undefined });
+  } else {
+    const old = p.sections[_pickerSecIdx];
+    const newImgs = new Array(nSlots).fill('');
+    if(old.imgs) old.imgs.forEach((v,i) => { if(i < nSlots) newImgs[i] = v; });
+    p.sections[_pickerSecIdx] = { ...old, type, imgs: newImgs };
+  }
+  saveAll(); renderProjectSections(p); closeSectionPicker();
+}
+function removeSec(idx) {
+  const p = state.projects.find(x => x.id === currentProjectId);
+  if(!p || !p.sections) return;
+  if(!confirm('Sektion löschen?')) return;
+  p.sections.splice(idx, 1);
+  saveAll(); renderProjectSections(p);
+}
+function moveSec(idx, dir) {
+  const p = state.projects.find(x => x.id === currentProjectId);
+  if(!p || !p.sections) return;
+  const n = idx + dir;
+  if(n < 0 || n >= p.sections.length) return;
+  [p.sections[idx], p.sections[n]] = [p.sections[n], p.sections[idx]];
+  saveAll(); renderProjectSections(p);
+}
+
+// ══════════════════════════════════════════════════════════════
 // EDIT MODE (project page)
 // ══════════════════════════════════════════════════════════════
 function toggleEditMode() {
@@ -1602,9 +1959,15 @@ function applyEditMode() {
   ['proj-series','proj-title','proj-desc','proj-meta'].forEach(id => {
     document.getElementById(id).contentEditable = editMode ? 'true' : 'false';
   });
+  // Toggle contenteditable on section text/captions
+  document.querySelectorAll('.sec-text,.sec-caption').forEach(el => {
+    el.contentEditable = editMode ? 'true' : 'false';
+  });
   if(!editMode) {
     document.querySelectorAll('.media-item.selected').forEach(x=>x.classList.remove('selected'));
-    selItem=null; document.getElementById('item-ctrl').classList.remove('vis');
+    selItem=null;
+    const ic = document.getElementById('item-ctrl'); if(ic) ic.classList.remove('vis');
+    closeSectionPicker();
     saveCurrentProject();
   }
 }
