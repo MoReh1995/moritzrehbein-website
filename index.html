@@ -438,9 +438,9 @@ body.editing [contenteditable]:empty::before { content:attr(data-placeholder); c
 
 /* ── FOOTER ── */
 footer { padding:52px 48px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #181818; }
-.footer-copy { font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--grey); }
+.footer-copy { font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--footer-color, var(--mid)); }
 .footer-links { display:flex; gap:28px; }
-.footer-links a { font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--grey); text-decoration:none; cursor:pointer; transition:color .2s; }
+.footer-links a { font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--footer-color, var(--mid)); text-decoration:none; cursor:pointer; transition:color .2s; }
 .footer-links a:hover { color:var(--fg); }
 
 /* ── DATENSCHUTZ-BANNER ── */
@@ -1036,6 +1036,16 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
         <div class="ls-row">
           <input type="range" min="3" max="14" value="6" id="ep-speed" step="1" oninput="updateSpeed(this.value)">
           <span class="ls-val" id="speed-display">6s</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="ep-col-title">Footer-Farbe</div>
+      <div class="ep-group">
+        <div class="blend-opts">
+          <div class="blend-opt footer-opt" onclick="setFooterColor(this,'var(--grey)')">Grau</div>
+          <div class="blend-opt footer-opt active" onclick="setFooterColor(this,'var(--mid)')">Hell</div>
+          <div class="blend-opt footer-opt" onclick="setFooterColor(this,'var(--fg)')">Weiß</div>
         </div>
       </div>
     </div>
@@ -1754,6 +1764,13 @@ function setBlend(el,mode) {
     nameBar.style.opacity = mode==='none' ? '1' : currentBlendOpacity;
   }
 }
+let currentFooterColor = 'var(--mid)';
+function setFooterColor(el, color) {
+  document.querySelectorAll('.footer-opt').forEach(x => x.classList.remove('active'));
+  el.classList.add('active');
+  currentFooterColor = color;
+  document.documentElement.style.setProperty('--footer-color', color === 'var(--grey)' ? '#444' : color === 'var(--mid)' ? '#888' : '#f0ede8');
+}
 function setBlendOpacity(val) {
   currentBlendOpacity = val/100;
   document.getElementById('blend-opacity-display').textContent = val + '%';
@@ -1974,6 +1991,7 @@ function saveAll() {
   state.site.nameLs    = barName.style.letterSpacing || '0.18em';
   state.site.blend        = currentBlend;
   state.site.blendOpacity = currentBlendOpacity;
+  state.site.footerColor  = currentFooterColor;
   state.site.slideSpeed= document.getElementById('ep-speed').value;
   ['nav-size','nav-ls','pt-size','pt-ls','sl-size','sl-ls','yr-size'].forEach(id=>{
     const el=document.getElementById(id); if(el) state.site[id]=el.value;
@@ -2010,6 +2028,14 @@ function loadAll() {
       const pct = Math.round(s.blendOpacity * 100);
       document.getElementById('blend-opacity').value = pct;
       document.getElementById('blend-opacity-display').textContent = pct + '%';
+    }
+    if(s.footerColor) {
+      currentFooterColor = s.footerColor;
+      const resolved = s.footerColor === 'var(--grey)' ? '#444' : s.footerColor === 'var(--mid)' ? '#888' : '#f0ede8';
+      document.documentElement.style.setProperty('--footer-color', resolved);
+      document.querySelectorAll('.footer-opt').forEach(x => {
+        x.classList.toggle('active', x.getAttribute('onclick').includes(s.footerColor));
+      });
     }
     if(s.slideSpeed) { document.getElementById('ep-speed').value=s.slideSpeed; slideSpeed=s.slideSpeed*1000; startSlideshow(); }
     ['nav-size','nav-ls','pt-size','pt-ls','sl-size','sl-ls','yr-size'].forEach(id=>{
