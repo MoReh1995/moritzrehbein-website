@@ -1514,7 +1514,7 @@ function renderProjects() {
     } else {
       div.innerHTML = `<div class="pm">${coverEl}</div><div class="ps">${secEl}</div>${piHTML}`;
     }
-    div.querySelector('.p-title').addEventListener('click', e => {
+    div.addEventListener('click', e => {
       e.preventDefault();
       navigate('project', p.id);
     });
