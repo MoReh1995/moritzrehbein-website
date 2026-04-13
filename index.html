@@ -2,7 +2,17 @@
 <html lang="de"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MORITZ REHBEIN</title>
+<title>Moritz Rehbein — Dokumentarischer und künstlerischer Fotograf</title>
+<meta name="description" content="Portfolio von Moritz Rehbein — dokumentarischer und künstlerischer Fotograf aus Hamburg.">
+<meta property="og:title" content="Moritz Rehbein — Fotograf">
+<meta property="og:description" content="Dokumentarischer und künstlerischer Fotograf aus Hamburg.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://moreh1995.github.io/moritzrehbein-website/">
+<meta property="og:image" content="https://moreh1995.github.io/moritzrehbein-website/bilder/hero/skulptur.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Moritz Rehbein — Fotograf">
+<meta name="twitter:description" content="Dokumentarischer und künstlerischer Fotograf aus Hamburg.">
+<meta name="twitter:image" content="https://moreh1995.github.io/moritzrehbein-website/bilder/hero/skulptur.jpg">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;1,300&amp;display=swap" rel="stylesheet">
 <style>
 @font-face {
@@ -581,7 +591,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
     <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
     <div class="footer-links">
       <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
-      <a href="#">Impressum</a>
+      <a onclick="navigate('impressum')" href="#">Impressum</a>
       <a href="#">Datenschutz</a>
     </div>
   </footer>
@@ -610,10 +620,61 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
       <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
       <div class="footer-links">
         <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
-        <a href="#">Impressum</a>
+        <a onclick="navigate('impressum')" href="#">Impressum</a>
       </div>
     </footer>
   </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: IMPRESSUM
+══════════════════════════════════════ -->
+<div class="page" id="page-impressum">
+  <div style="max-width:680px;margin:0 auto;padding:140px 48px 120px">
+    <div style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);margin-bottom:32px;cursor:pointer" onclick="navigate('home')">← Zurück</div>
+    <h1 style="font-family:'Druk Wide Super','Impact','Arial Black',sans-serif;font-weight:900;font-size:clamp(28px,4vw,52px);letter-spacing:-.01em;color:var(--fg);margin:0 0 56px">Impressum</h1>
+
+    <div style="font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.8;color:var(--mid);display:flex;flex-direction:column;gap:36px">
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Angaben gemäß § 5 TMG</div>
+        <p style="margin:0">Moritz Rehbein<br>
+        Professor-Brix-Weg 17<br>
+        22767 Hamburg<br>
+        Deutschland</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Kontakt</div>
+        <p style="margin:0">E-Mail: <a href="mailto:mail@moritzrehbein.de" style="color:var(--mid)">mail@moritzrehbein.de</a></p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Umsatzsteuer-ID</div>
+        <p style="margin:0">Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG:<br>
+        <span style="color:var(--fg)">[USt-IdNr. hier eintragen, z.&nbsp;B. DE123456789]</span></p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Verantwortlich für den Inhalt nach § 55 Abs. 2 MStV</div>
+        <p style="margin:0">Moritz Rehbein<br>
+        Professor-Brix-Weg 17<br>
+        22767 Hamburg</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Urheberrecht</div>
+        <p style="margin:0">Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
+      </div>
+
+    </div>
+  </div>
+  <footer>
+    <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
+    <div class="footer-links">
+      <a onclick="navigate('home')" href="#">← Zurück</a>
+    </div>
+  </footer>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -1147,6 +1208,11 @@ function navigate(target, projectId) {
   } else if (target === 'info') {
     document.getElementById('page-info').classList.add('active');
     document.getElementById('settings-toggle').style.display = 'block';
+    document.getElementById('edit-toggle').style.display = 'none';
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else if (target === 'impressum') {
+    document.getElementById('page-impressum').classList.add('active');
+    document.getElementById('settings-toggle').style.display = 'none';
     document.getElementById('edit-toggle').style.display = 'none';
     window.scrollTo({top:0,behavior:'smooth'});
   } else if (target === 'project') {
