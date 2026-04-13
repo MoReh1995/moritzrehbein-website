@@ -1896,9 +1896,11 @@ function promptVideoEmbed(sectionIdx) {
   if(!url) return;
   let src = url;
   // Convert YouTube watch URL to embed
-  src = src.replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/');
-  // Convert Vimeo URL to embed
-  src = src.replace('vimeo.com/','player.vimeo.com/video/');
+  // Parse and convert URLs properly
+  const ytMatch = src.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  const vmMatch = src.match(/vimeo\.com\/(\d+)/);
+  if (ytMatch) src = `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=1&loop=1&playlist=${ytMatch[1]}&rel=0`;
+  else if (vmMatch) src = `https://player.vimeo.com/video/${vmMatch[1]}?autoplay=1&muted=1&loop=1&background=1&color=c8b89a`;
   const p = state.projects.find(x => x.id === currentProjectId);
   if(!p || !p.sections[sectionIdx]) return;
   if(!p.sections[sectionIdx].imgs) p.sections[sectionIdx].imgs = [];
