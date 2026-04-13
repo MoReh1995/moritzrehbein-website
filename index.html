@@ -810,7 +810,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 <!-- ══════════════════════════════════════
      SETTINGS PANEL (home page only)
 ══════════════════════════════════════ -->
-<div id="privacy-banner">
+<div id="privacy-banner" class="hidden">
   <span>Diese Seite lädt Schriftarten von Google Fonts (Google LLC, USA). Dabei wird deine IP-Adresse übertragen. Es werden keine Tracking-Cookies gesetzt.</span>
   <button onclick="acceptPrivacy()">Verstanden</button>
 </div>
@@ -1728,8 +1728,8 @@ function acceptPrivacy() {
   document.getElementById('privacy-banner').classList.add('hidden');
 }
 function initPrivacyBanner() {
-  if (localStorage.getItem('privacyAccepted') === '1') {
-    document.getElementById('privacy-banner').classList.add('hidden');
+  if (localStorage.getItem('privacyAccepted') !== '1') {
+    document.getElementById('privacy-banner').classList.remove('hidden');
   }
 }
 
