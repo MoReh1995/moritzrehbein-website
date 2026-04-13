@@ -1075,7 +1075,7 @@ window.scrollTo(0, 0);
 // Name-Startposition sofort setzen (verhindert CSS→JS Sprung)
 (function(){
   var bn = document.getElementById('bar-name');
-  if (bn) bn.style.transform = 'translateY(' + (window.innerHeight * 0.70) + 'px)';
+  if (bn) bn.style.transform = 'translateY(' + (window.innerHeight * (window.innerWidth < 768 ? 0.60 : 0.70)) + 'px)';
 })();
 
 // Shift+E: Bearbeitungsmodus (passwortgeschützt, einmal pro Session)
@@ -1631,7 +1631,7 @@ function updateNameScroll() {
   const threshold = heroH * 0.80;   // längere Scroll-Strecke → sanftere Animation
   if (s < threshold) {
     const progress = s / threshold;
-    const startY = heroH * 0.70;
+    const startY = heroH * (window.innerWidth < 768 ? 0.60 : 0.70);
     const ty = startY * (1 - progress);
     barName.style.transform = `translateY(${ty}px)`;
     nameBar.style.mixBlendMode = 'normal';
