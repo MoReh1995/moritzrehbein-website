@@ -1075,7 +1075,9 @@ window.scrollTo(0, 0);
 // Name-Startposition sofort setzen (verhindert CSS→JS Sprung)
 (function(){
   var bn = document.getElementById('bar-name');
-  if (bn) bn.style.transform = 'translateY(' + (window.innerHeight * (window.innerWidth < 768 ? 0.60 : 0.70)) + 'px)';
+  var hero = document.getElementById('hero');
+  var h = (hero && hero.offsetHeight) ? hero.offsetHeight : window.innerHeight;
+  if (bn) bn.style.transform = 'translateY(' + (h * (window.innerWidth < 768 ? 0.60 : 0.70)) + 'px)';
 })();
 
 // Shift+E: Bearbeitungsmodus (passwortgeschützt, einmal pro Session)
