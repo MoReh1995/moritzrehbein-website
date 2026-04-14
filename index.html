@@ -361,17 +361,16 @@ body {
 .sec-t3 .sec-inner { display:grid; grid-template-columns:28fr 14fr 10fr 28fr; gap:3%; align-items:start; max-width:84%; margin:0 auto; }
 .sec-t3 .sec-slot:nth-child(2) { margin-top:46%; }
 .sec-t3 .sec-slot:nth-child(3) { grid-column:4; margin-top:8%; }
-/* D4 – diagonal: left top, right bottom */
-.sec-d4 .sec-inner { display:grid; grid-template-columns:42fr 42fr; gap:4%; align-items:start; max-width:82%; margin:0 auto; }
-.sec-d4 .sec-slot:last-child { margin-top:32%; }
-/* T4 – center dominant: small flanking + tall center */
-.sec-t4 .sec-inner { display:grid; grid-template-columns:18fr 50fr 18fr; gap:3%; align-items:start; max-width:88%; margin:0 auto; }
-.sec-t4 .sec-slot:first-child { margin-top:28%; }
-.sec-t4 .sec-slot:last-child { margin-top:14%; }
-/* T5 – staircase: three images stepping down left to right */
-.sec-t5 .sec-inner { display:grid; grid-template-columns:36fr 36fr 36fr; gap:3%; align-items:start; max-width:90%; margin:0 auto; }
-.sec-t5 .sec-slot:nth-child(2) { margin-top:18%; }
-.sec-t5 .sec-slot:nth-child(3) { margin-top:36%; }
+/* D4 – sehr unterschiedliche Größen, kleines Bild freischwebend mittig */
+.sec-d4 .sec-inner { display:grid; grid-template-columns:60fr 22fr; gap:5%; align-items:start; max-width:82%; margin:0 auto; }
+.sec-d4 .sec-slot:last-child { margin-top:36%; }
+/* T4 – zwei kleine nebeneinander links + großes rechts versetzt */
+.sec-t4 .sec-inner { display:grid; grid-template-columns:20fr 20fr 6fr 42fr; gap:3%; align-items:start; max-width:90%; margin:0 auto; }
+.sec-t4 .sec-slot:nth-child(3) { grid-column:4; margin-top:22%; }
+/* T5 – asymmetrische Reihe oben + ein Bild unten freischwebend */
+.sec-t5 .sec-inner { display:grid; grid-template-columns:54fr 34fr; column-gap:4%; row-gap:6%; align-items:start; max-width:86%; margin:0 auto; }
+.sec-t5 .sec-slot:nth-child(2) { margin-top:12%; }
+.sec-t5 .sec-slot:nth-child(3) { width:58%; margin-left:24%; }
 /* SV – video */
 .sec-sv .sec-slot { width:100%; }
 /* TX – text block */
@@ -635,8 +634,9 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   .sec-d2 .sec-slot:last-child { margin-bottom:0; }
   .sec-d4 .sec-slot:last-child { margin-top:0; }
   .sec-t3 .sec-slot:nth-child(2),.sec-t3 .sec-slot:nth-child(3) { margin-top:0; grid-column:auto; }
-  .sec-t4 .sec-slot:first-child,.sec-t4 .sec-slot:last-child { margin-top:0; }
-  .sec-t5 .sec-slot:nth-child(2),.sec-t5 .sec-slot:nth-child(3) { margin-top:0; }
+  .sec-t4 .sec-slot:nth-child(3) { grid-column:auto; margin-top:0; }
+  .sec-t5 .sec-slot:nth-child(2) { margin-top:0; }
+  .sec-t5 .sec-slot:nth-child(3) { width:100%; margin-left:0; }
   .sec-stack { display:contents; }
   .sec-text { max-width:100%; }
   #section-picker { padding:20px 20px 28px; }
@@ -930,27 +930,29 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
         <div class="sp-label">Groß–Klein<br>–Groß</div>
       </div>
       <div class="sp-item" onclick="selectLayout('d4')">
-        <div class="sp-thumb" style="gap:4px;align-items:flex-start">
-          <div style="width:48%;background:#3a3a3a;height:72%"></div>
-          <div style="width:48%;background:#3a3a3a;height:72%;margin-top:28%"></div>
+        <div class="sp-thumb" style="gap:5px;align-items:flex-start">
+          <div style="width:62%;background:#3a3a3a;height:100%"></div>
+          <div style="width:22%;background:#3a3a3a;height:52%;margin-top:34%"></div>
         </div>
-        <div class="sp-label">Diagonal<br>2 Bilder</div>
+        <div class="sp-label">Groß + winzig<br>freischwebend</div>
       </div>
       <div class="sp-item" onclick="selectLayout('t4')">
         <div class="sp-thumb" style="gap:3px;align-items:flex-start">
-          <div style="width:20%;background:#3a3a3a;height:55%;margin-top:30%"></div>
-          <div style="flex:1;background:#3a3a3a;height:100%"></div>
-          <div style="width:20%;background:#3a3a3a;height:55%;margin-top:15%"></div>
+          <div style="width:21%;background:#3a3a3a;height:60%"></div>
+          <div style="width:21%;background:#3a3a3a;height:60%"></div>
+          <div style="flex:1;background:#3a3a3a;height:86%;margin-top:14%;margin-left:4px"></div>
         </div>
-        <div class="sp-label">Mitte<br>dominant</div>
+        <div class="sp-label">2 klein +<br>groß rechts</div>
       </div>
       <div class="sp-item" onclick="selectLayout('t5')">
-        <div class="sp-thumb" style="gap:3px;align-items:flex-start">
-          <div style="flex:1;background:#3a3a3a;height:80%"></div>
-          <div style="flex:1;background:#3a3a3a;height:80%;margin-top:18%"></div>
-          <div style="flex:1;background:#3a3a3a;height:80%;margin-top:36%"></div>
+        <div class="sp-thumb" style="flex-direction:column;gap:4px;align-items:flex-start">
+          <div style="display:flex;gap:3px;width:100%;align-items:flex-start">
+            <div style="flex:1.6;background:#3a3a3a;height:28px"></div>
+            <div style="flex:1;background:#3a3a3a;height:28px;margin-top:5px"></div>
+          </div>
+          <div style="width:52%;background:#3a3a3a;height:20px;margin-left:22%"></div>
         </div>
-        <div class="sp-label">Treppe<br>3 Bilder</div>
+        <div class="sp-label">Reihe +<br>frei unten</div>
       </div>
       <div class="sp-item" onclick="selectLayout('tx')">
         <div class="sp-thumb" style="flex-direction:column;gap:5px;justify-content:center;align-items:flex-start">
