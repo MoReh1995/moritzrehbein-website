@@ -56,7 +56,7 @@ body {
   position:fixed; top:0; left:0; right:0; z-index:500;
   pointer-events:none;
 }
-#name-bar:not(.) { opacity:0; }
+#name-bar:not(.js-ready) { opacity:0; }
 #bar-bg { display:none; }
 /* Hintergrund bleibt transparent – mix-blend-mode Effekt */
 #bar-name {
@@ -2645,7 +2645,8 @@ function getCleanState() {
 function stripTransientClasses(html) {
   // Remove runtime-only classes that cause flash on next load
   html = html.replace(/(<nav id="bar-nav"[^>]+class=")[^"]*"/, '$1"');
-  html = html.replace(/\bjs-ready\b/g, '');
+  // Only strip js-ready from class attributes, not from CSS rules
+  html = html.replace(/(class="[^"]*)\bjs-ready\b\s*/g, '$1');
   return html;
 }
 
