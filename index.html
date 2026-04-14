@@ -1475,6 +1475,7 @@ function navigate(target, projectId) {
     document.getElementById('bar-nav').classList.add('visible');
     barName.style.transform = 'translateY(0)';
     nameBar.style.mixBlendMode = (state.site.blend && state.site.blend !== 'none') ? state.site.blend : 'normal';
+    fitName();
     // Show back button, hide Work (redundant with back), keep Info
     document.getElementById('bar-back').style.display = 'inline-block';
     document.querySelectorAll('.home-nav').forEach(el => el.style.display = 'none');
