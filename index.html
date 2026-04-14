@@ -293,7 +293,7 @@ body {
   background:none; border:none;
 }
 .proj-back:hover { color:var(--fg); }
-.proj-header { padding:190px 48px 60px; }
+.proj-header { padding:60px 48px 60px; }
 .proj-series-label {
   font-family:'DM Sans',sans-serif;
   font-size:9px; letter-spacing:.32em; text-transform:uppercase;
@@ -322,7 +322,7 @@ body {
 
 /* ── PROJECT SECTIONS ── */
 .proj-section { padding:0 48px 90px; position:relative; }
-.proj-section:first-child { padding-top:10px; }
+.proj-section:first-child { padding-top:190px; }
 .sec-inner { width:100%; }
 .sec-slot { overflow:hidden; position:relative; }
 .sec-slot img { width:100%; height:auto; display:block; }
@@ -837,13 +837,6 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 ══════════════════════════════════════ -->
 <div class="page" id="page-project">
 
-  <div class="proj-header">
-    <div class="proj-series-label" id="proj-series" contenteditable="false" data-placeholder="SERIE">SERIE</div>
-    <div class="proj-title-large" id="proj-title" contenteditable="false" data-placeholder="TITEL">TITEL</div>
-    <div class="proj-desc-text" id="proj-desc" contenteditable="false" data-placeholder="Beschreibung…"></div>
-    <div class="proj-meta-text" id="proj-meta" contenteditable="false" data-placeholder="Jahr / Ort">2024</div>
-  </div>
-
   <!-- FREE LAYOUT CANVAS -->
   <div id="proj-canvas"></div>
 
@@ -978,7 +971,14 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   <!-- Edit mode toggle for project page -->
   <div id="edit-toggle" onclick="toggleEditMode()" style="display: none;">✦ Bearbeiten</div>
 
-  <footer style="margin-top:80px">
+  <div class="proj-header">
+    <div class="proj-series-label" id="proj-series" contenteditable="false" data-placeholder="SERIE">SERIE</div>
+    <div class="proj-title-large" id="proj-title" contenteditable="false" data-placeholder="TITEL">TITEL</div>
+    <div class="proj-desc-text" id="proj-desc" contenteditable="false" data-placeholder="Beschreibung…"></div>
+    <div class="proj-meta-text" id="proj-meta" contenteditable="false" data-placeholder="Jahr / Ort">2024</div>
+  </div>
+
+  <footer>
     <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
     <button class="proj-back" onclick="navigate('home')" style="font-size:9px;letter-spacing:.14em">← Zurück</button>
   </footer>
