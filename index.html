@@ -628,8 +628,9 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   <div id="bar-bg"></div>
   <div id="bar-name" style="transform: translateY(0px); letter-spacing: 0.03em; font-size: 126px;">MORITZ REHBEIN</div>
   <nav id="bar-nav" class="visible">
-    <a class="nav-link" onclick="navigate('home')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Work</a>
-    <a class="nav-link" onclick="navigate('info')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Info</a>
+    <button id="bar-back" class="nav-link" onclick="navigate('home')" style="background:none;border:none;cursor:pointer;font-size:14px;letter-spacing:.26em;display:none;">← Alle Projekte</button>
+    <a class="nav-link home-nav" onclick="navigate('home')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Work</a>
+    <a class="nav-link home-nav" onclick="navigate('info')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Info</a>
   </nav>
 </div>
 
@@ -829,7 +830,6 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 <div class="page" id="page-project">
 
   <div class="proj-header">
-    <button class="proj-back" onclick="navigate('home')" style="margin-bottom:32px">← Alle Projekte</button>
     <div class="proj-series-label" id="proj-series" contenteditable="false" data-placeholder="SERIE">SERIE</div>
     <div class="proj-title-large" id="proj-title" contenteditable="false" data-placeholder="TITEL">TITEL</div>
     <div class="proj-desc-text" id="proj-desc" contenteditable="false" data-placeholder="Beschreibung…"></div>
@@ -1465,6 +1465,14 @@ function navigate(target, projectId) {
     document.getElementById('bar-nav').classList.add('visible');
     barName.style.transform = 'translateY(0)';
     nameBar.style.mixBlendMode = (state.site.blend && state.site.blend !== 'none') ? state.site.blend : 'normal';
+    // Show back button, hide Work/Info
+    document.getElementById('bar-back').style.display = 'inline-block';
+    document.querySelectorAll('.home-nav').forEach(el => el.style.display = 'none');
+  }
+  // Restore Work/Info when leaving project page
+  if (target !== 'project') {
+    document.getElementById('bar-back').style.display = 'none';
+    document.querySelectorAll('.home-nav').forEach(el => el.style.display = '');
   }
 }
 
