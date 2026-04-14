@@ -630,7 +630,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   <nav id="bar-nav" class="visible">
     <button id="bar-back" class="nav-link" onclick="navigate('home')" style="background:none;border:none;cursor:pointer;font-size:14px;letter-spacing:.26em;display:none;">← Alle Projekte</button>
     <a class="nav-link home-nav" onclick="navigate('home')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Work</a>
-    <a class="nav-link home-nav" onclick="navigate('info')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Info</a>
+    <a id="bar-nav-info" class="nav-link home-nav" onclick="navigate('info')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Info</a>
   </nav>
 </div>
 
@@ -1465,12 +1465,15 @@ function navigate(target, projectId) {
     document.getElementById('bar-nav').classList.add('visible');
     barName.style.transform = 'translateY(0)';
     nameBar.style.mixBlendMode = (state.site.blend && state.site.blend !== 'none') ? state.site.blend : 'normal';
-    // Show back button alongside Work/Info
+    // Show back button, hide Work (redundant with back), keep Info
     document.getElementById('bar-back').style.display = 'inline-block';
+    document.querySelectorAll('.home-nav').forEach(el => el.style.display = 'none');
+    document.getElementById('bar-nav-info').style.display = '';
   }
-  // Hide back button when leaving project page
+  // Restore all nav links when leaving project page
   if (target !== 'project') {
     document.getElementById('bar-back').style.display = 'none';
+    document.querySelectorAll('.home-nav').forEach(el => el.style.display = '');
   }
 }
 
