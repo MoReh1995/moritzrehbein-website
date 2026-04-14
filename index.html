@@ -635,7 +635,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 <div id="name-bar" class="loaded sticky" style="mix-blend-mode: normal; pointer-events: all;">
   <div id="bar-bg"></div>
   <div id="bar-name" style="transform: translateY(0px); letter-spacing: 0.03em; font-size: 126px;">MORITZ REHBEIN</div>
-  <nav id="bar-nav" class="visible">
+  <nav id="bar-nav" class="">
     <button id="bar-back" class="nav-link" onclick="navigate('home')" style="background:none;border:none;cursor:pointer;font-size:14px;letter-spacing:.26em;display:none;">← Alle Projekte</button>
     <a class="nav-link home-nav" onclick="navigate('home')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Work</a>
     <a id="bar-nav-info" class="nav-link home-nav" onclick="navigate('info')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Info</a>
@@ -2546,6 +2546,13 @@ function getCleanState() {
   return 'let state = ' + JSON.stringify(clean, null, 2) + ';';
 }
 
+function stripTransientClasses(html) {
+  // Remove runtime-only classes that cause flash on next load
+  html = html.replace(/(<nav id="bar-nav"[^>]+class=")[^"]*"/, '$1"');
+  html = html.replace(/\bjs-ready\b/g, '');
+  return html;
+}
+
 async function publishState() {
   const code = getCleanState();
   if (window.showOpenFilePicker) {
@@ -2559,7 +2566,7 @@ async function publishState() {
       }
       const file = await _fileHandle.getFile();
       const content = await file.text();
-      const newContent = content.replace(/let state = \{[\s\S]*?\n\};/, code);
+      const newContent = stripTransientClasses(content.replace(/let state = \{[\s\S]*?\n\};/, code));
       if (newContent === content) { notify('⚠ State-Block nicht gefunden — bitte manuell speichern.'); _fileHandle = null; return; }
       const writable = await _fileHandle.createWritable();
       await writable.write(newContent);
@@ -2573,7 +2580,7 @@ async function publishState() {
   } else {
     // Fallback: outerHTML mit neuem State als index.html herunterladen
     const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-    const updated = html.replace(/let state = \{[\s\S]*?\n\};/, code);
+    const updated = stripTransientClasses(html.replace(/let state = \{[\s\S]*?\n\};/, code));
     const blob = new Blob([updated], {type:'text/html'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
