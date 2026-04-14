@@ -1303,7 +1303,7 @@ window.scrollTo(0, 0);
   var h = (hero && hero.offsetHeight) ? hero.offsetHeight : window.innerHeight;
   if (bn) bn.style.transform = 'translateY(' + (h * (window.innerWidth < 768 ? 0.60 : 0.70)) + 'px)';
   if (nav) nav.classList.remove('visible');
-  if (nb) nb.classList.add('');
+  if (nb) nb.classList.add('js-ready');
 })();
 
 // Shift+E: Bearbeitungsmodus (passwortgeschützt, einmal pro Session)
