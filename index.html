@@ -53,11 +53,7 @@ body {
   position:fixed; top:0; left:0; right:0; z-index:500;
   pointer-events:none;
 }
-#bar-bg {
-  position:absolute; inset:0;
-  background:rgba(10,10,10,.0);
-  opacity:0; pointer-events:none; z-index:-1;
-}
+#bar-bg { display:none; }
 /* Hintergrund bleibt transparent – mix-blend-mode Effekt */
 #bar-name {
   display:block; width:100%;
@@ -285,11 +281,7 @@ body {
 
 /* ── PROJECT PAGE ── */
 #page-project { min-height:100vh; }
-.proj-nav {
-  position:fixed; top:0; left:0; right:0; z-index:600;
-  padding:22px 48px; display:flex; justify-content:space-between; align-items:center;
-  background:rgba(10,10,10,.92); border-bottom:1px solid rgba(255,255,255,.04);
-}
+.proj-nav { display:none; }
 .proj-back {
   font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:.22em;
   text-transform:uppercase; color:var(--mid); cursor:pointer;
@@ -297,7 +289,7 @@ body {
   background:none; border:none;
 }
 .proj-back:hover { color:var(--fg); }
-.proj-header { padding:120px 48px 60px; }
+.proj-header { padding:100px 48px 60px; }
 .proj-series-label {
   font-family:'DM Sans',sans-serif;
   font-size:9px; letter-spacing:.32em; text-transform:uppercase;
@@ -836,16 +828,8 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 ══════════════════════════════════════ -->
 <div class="page" id="page-project">
 
-  <!-- Project-specific nav (Back button) -->
-  <div class="proj-nav">
-    <button class="proj-back" onclick="navigate('home')">← Alle Projekte</button>
-    <div style="display:flex;gap:28px">
-      <a class="nav-link" onclick="navigate('home')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Work</a>
-      <a class="nav-link" onclick="navigate('info')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Info</a>
-    </div>
-  </div>
-
   <div class="proj-header">
+    <button class="proj-back" onclick="navigate('home')" style="margin-bottom:32px">← Alle Projekte</button>
     <div class="proj-series-label" id="proj-series" contenteditable="false" data-placeholder="SERIE">SERIE</div>
     <div class="proj-title-large" id="proj-title" contenteditable="false" data-placeholder="TITEL">TITEL</div>
     <div class="proj-desc-text" id="proj-desc" contenteditable="false" data-placeholder="Beschreibung…"></div>
