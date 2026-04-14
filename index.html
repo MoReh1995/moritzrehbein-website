@@ -357,10 +357,21 @@ body {
 .sec-stack { display:flex; flex-direction:column; gap:3%; }
 /* T2 – three equal */
 .sec-t2 .sec-inner { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2%; max-width:92%; margin:0 auto; }
-/* T3 – tall + small center + tall (asymmetric/editorial) */
-.sec-t3 .sec-inner { display:grid; grid-template-columns:28fr 14fr 28fr; gap:3%; align-items:start; max-width:78%; margin:0 auto; }
-.sec-t3 .sec-slot:nth-child(2) { margin-top:48%; }
-.sec-t3 .sec-slot:nth-child(3) { margin-top:10%; margin-left:14%; }
+/* T3 – tall + small center (off-center) + tall — 4-col grid for asymmetric gap */
+.sec-t3 .sec-inner { display:grid; grid-template-columns:28fr 14fr 10fr 28fr; gap:3%; align-items:start; max-width:84%; margin:0 auto; }
+.sec-t3 .sec-slot:nth-child(2) { margin-top:46%; }
+.sec-t3 .sec-slot:nth-child(3) { grid-column:4; margin-top:8%; }
+/* D4 – diagonal: left top, right bottom */
+.sec-d4 .sec-inner { display:grid; grid-template-columns:42fr 42fr; gap:4%; align-items:start; max-width:82%; margin:0 auto; }
+.sec-d4 .sec-slot:last-child { margin-top:32%; }
+/* T4 – center dominant: small flanking + tall center */
+.sec-t4 .sec-inner { display:grid; grid-template-columns:18fr 50fr 18fr; gap:3%; align-items:start; max-width:88%; margin:0 auto; }
+.sec-t4 .sec-slot:first-child { margin-top:28%; }
+.sec-t4 .sec-slot:last-child { margin-top:14%; }
+/* T5 – staircase: three images stepping down left to right */
+.sec-t5 .sec-inner { display:grid; grid-template-columns:36fr 36fr 36fr; gap:3%; align-items:start; max-width:90%; margin:0 auto; }
+.sec-t5 .sec-slot:nth-child(2) { margin-top:18%; }
+.sec-t5 .sec-slot:nth-child(3) { margin-top:36%; }
 /* SV – video */
 .sec-sv .sec-slot { width:100%; }
 /* TX – text block */
@@ -616,14 +627,16 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   /* Sections mobile */
   .proj-section { padding:0 20px 60px; }
   .sec-s1 .sec-slot { width:80%; }
-  .sec-d1 .sec-inner,.sec-d2 .sec-inner,.sec-d3 .sec-inner,
-  .sec-t1 .sec-inner,.sec-t2 .sec-inner,.sec-t3 .sec-inner {
+  .sec-d1 .sec-inner,.sec-d2 .sec-inner,.sec-d3 .sec-inner,.sec-d4 .sec-inner,
+  .sec-t1 .sec-inner,.sec-t2 .sec-inner,.sec-t3 .sec-inner,.sec-t4 .sec-inner,.sec-t5 .sec-inner {
     display:flex; flex-direction:column; gap:10px; max-width:100%;
   }
   .sec-d1 .sec-slot:first-child { margin-top:0; }
   .sec-d2 .sec-slot:last-child { margin-bottom:0; }
-  .sec-t3 .sec-slot:nth-child(2) { margin-top:0; }
-  .sec-t3 .sec-slot:nth-child(3) { margin-top:0; margin-left:0; }
+  .sec-d4 .sec-slot:last-child { margin-top:0; }
+  .sec-t3 .sec-slot:nth-child(2),.sec-t3 .sec-slot:nth-child(3) { margin-top:0; grid-column:auto; }
+  .sec-t4 .sec-slot:first-child,.sec-t4 .sec-slot:last-child { margin-top:0; }
+  .sec-t5 .sec-slot:nth-child(2),.sec-t5 .sec-slot:nth-child(3) { margin-top:0; }
   .sec-stack { display:contents; }
   .sec-text { max-width:100%; }
   #section-picker { padding:20px 20px 28px; }
@@ -915,6 +928,29 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
           <div style="flex:2;background:#3a3a3a;height:100%"></div>
         </div>
         <div class="sp-label">Groß–Klein<br>–Groß</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('d4')">
+        <div class="sp-thumb" style="gap:4px;align-items:flex-start">
+          <div style="width:48%;background:#3a3a3a;height:72%"></div>
+          <div style="width:48%;background:#3a3a3a;height:72%;margin-top:28%"></div>
+        </div>
+        <div class="sp-label">Diagonal<br>2 Bilder</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('t4')">
+        <div class="sp-thumb" style="gap:3px;align-items:flex-start">
+          <div style="width:20%;background:#3a3a3a;height:55%;margin-top:30%"></div>
+          <div style="flex:1;background:#3a3a3a;height:100%"></div>
+          <div style="width:20%;background:#3a3a3a;height:55%;margin-top:15%"></div>
+        </div>
+        <div class="sp-label">Mitte<br>dominant</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('t5')">
+        <div class="sp-thumb" style="gap:3px;align-items:flex-start">
+          <div style="flex:1;background:#3a3a3a;height:80%"></div>
+          <div style="flex:1;background:#3a3a3a;height:80%;margin-top:18%"></div>
+          <div style="flex:1;background:#3a3a3a;height:80%;margin-top:36%"></div>
+        </div>
+        <div class="sp-label">Treppe<br>3 Bilder</div>
       </div>
       <div class="sp-item" onclick="selectLayout('tx')">
         <div class="sp-thumb" style="flex-direction:column;gap:5px;justify-content:center;align-items:flex-start">
@@ -1786,7 +1822,7 @@ function expandCanvas() {
 // ══════════════════════════════════════════════════════════════
 // PROJECT SECTIONS
 // ══════════════════════════════════════════════════════════════
-const SEC_SLOTS = { s1:1, s2:1, sv:1, tx:0, d1:2, d2:2, d3:2, t1:3, t2:3, t3:3 };
+const SEC_SLOTS = { s1:1, s2:1, sv:1, tx:0, d1:2, d2:2, d3:2, d4:2, t1:3, t2:3, t3:3, t4:3, t5:3 };
 let _pickerSecIdx = null;
 
 function renderProjectSections(p) {
