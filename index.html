@@ -2,6 +2,9 @@
 <html lang="de"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Moritz Rehbein — Dokumentarischer und künstlerischer Fotograf</title>
 <meta name="description" content="Portfolio von Moritz Rehbein — dokumentarischer und künstlerischer Fotograf aus Hamburg.">
 <meta property="og:title" content="Moritz Rehbein — Fotograf">
@@ -53,6 +56,7 @@ body {
   position:fixed; top:0; left:0; right:0; z-index:500;
   pointer-events:none;
 }
+#name-bar:not(.js-ready) { opacity:0; }
 #bar-bg { display:none; }
 /* Hintergrund bleibt transparent – mix-blend-mode Effekt */
 #bar-name {
@@ -1245,10 +1249,12 @@ window.scrollTo(0, 0);
 
 // Name-Startposition sofort setzen (verhindert CSS→JS Sprung)
 (function(){
+  var nb = document.getElementById('name-bar');
   var bn = document.getElementById('bar-name');
   var hero = document.getElementById('hero');
   var h = (hero && hero.offsetHeight) ? hero.offsetHeight : window.innerHeight;
   if (bn) bn.style.transform = 'translateY(' + (h * (window.innerWidth < 768 ? 0.60 : 0.70)) + 'px)';
+  if (nb) nb.classList.add('js-ready');
 })();
 
 // Shift+E: Bearbeitungsmodus (passwortgeschützt, einmal pro Session)
