@@ -1465,14 +1465,12 @@ function navigate(target, projectId) {
     document.getElementById('bar-nav').classList.add('visible');
     barName.style.transform = 'translateY(0)';
     nameBar.style.mixBlendMode = (state.site.blend && state.site.blend !== 'none') ? state.site.blend : 'normal';
-    // Show back button, hide Work/Info
+    // Show back button alongside Work/Info
     document.getElementById('bar-back').style.display = 'inline-block';
-    document.querySelectorAll('.home-nav').forEach(el => el.style.display = 'none');
   }
-  // Restore Work/Info when leaving project page
+  // Hide back button when leaving project page
   if (target !== 'project') {
     document.getElementById('bar-back').style.display = 'none';
-    document.querySelectorAll('.home-nav').forEach(el => el.style.display = '');
   }
 }
 
