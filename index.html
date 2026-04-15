@@ -47,9 +47,13 @@ body {
 
 /* CURSOR */
 
-/* ── PAGES ── each .page is hidden by default */
-.page { display:none; }
-.page.active { display:block; }
+/* ── PAGES ── home always in flow; others as fixed overlay */
+#page-home { display:block; }
+#page-info, #page-impressum, #page-datenschutz, #page-project { display:none; }
+#page-info.active, #page-impressum.active, #page-datenschutz.active, #page-project.active {
+  display:block; position:fixed; inset:0; overflow-y:auto; z-index:200;
+  background:var(--bg); -webkit-overflow-scrolling:touch;
+}
 
 /* ── HEADER BAR ── */
 #name-bar {
@@ -126,7 +130,8 @@ body {
 }
 
 /* ── PROJECT ENTRIES ── */
-.project-entry { display:grid; margin-bottom:178px; cursor:pointer; gap:0; row-gap:16px; }
+.project-entry { display:grid; margin-bottom:178px; cursor:default; gap:0; row-gap:16px; }
+.project-entry .pm, .project-entry .ps, .project-entry .pt, .project-entry .p-title { cursor:pointer; }
 
 /* Layout A: großes Bild links (62%), Info + kleines Bild rechts */
 .project-entry.la { grid-template-columns:62% 1fr; grid-template-rows:1fr auto; min-height:65vh; }
@@ -624,12 +629,17 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   #edit-toolbar { flex-wrap:wrap; }
   #settings-toggle, #edit-toggle { bottom:16px; right:16px; }
   /* Sections mobile */
-  .proj-section { padding:0 20px 60px; }
+  .proj-header { padding:80px 20px 36px; }
+  #proj-canvas { padding:0 0 60px; }
+  .proj-section { padding:0 20px 20px; }
+  .proj-section:first-child { padding-top:20px; }
+  body:not(.editing) .sec-caption:empty { display:none; }
   .sec-s1 .sec-slot { width:80%; }
   .sec-d1 .sec-inner,.sec-d2 .sec-inner,.sec-d3 .sec-inner,.sec-d4 .sec-inner,
   .sec-t1 .sec-inner,.sec-t2 .sec-inner,.sec-t3 .sec-inner,.sec-t4 .sec-inner,.sec-t5 .sec-inner {
-    display:flex; flex-direction:column; gap:10px; max-width:100%;
+    display:flex; flex-direction:column; gap:20px; max-width:100%;
   }
+  .sec-stack { gap:20px; }
   .sec-d1 .sec-slot:first-child { margin-top:0; }
   .sec-d2 .sec-slot:last-child { margin-bottom:0; }
   .sec-d4 .sec-slot:last-child { margin-top:0; }
@@ -649,9 +659,9 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 
 
 <!-- ── STICKY NAME BAR (always present) ── -->
-<div id="name-bar" class="loaded sticky" style="mix-blend-mode: normal; pointer-events: all;">
+<div id="name-bar" class="" style="mix-blend-mode: normal; pointer-events: all;">
   <div id="bar-bg"></div>
-  <div id="bar-name" style="transform: translateY(0px); letter-spacing: 0.03em; font-size: 126px;">MORITZ REHBEIN</div>
+  <div id="bar-name" style="transform: translateY(0px); letter-spacing: 0.03em; ">MORITZ REHBEIN</div>
   <nav id="bar-nav" class="">
     <button id="bar-back" class="nav-link" onclick="navigate('home')" style="background:none;border:none;cursor:pointer;font-size:14px;letter-spacing:.26em;display:none;">← Alle Projekte</button>
     <a class="nav-link home-nav" onclick="navigate('home')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Work</a>
@@ -664,7 +674,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   var bn = document.getElementById('bar-name');
   var nav = document.getElementById('bar-nav');
   var h = window.innerHeight;
-  if (bn) bn.style.transform = 'translateY(' + (h * (window.innerWidth < 768 ? 0.60 : 0.70)) + 'px)';
+  if (bn) { bn.style.transform = 'translateY(' + (h * (window.innerWidth < 768 ? 0.60 : 0.70)) + 'px)'; bn.style.visibility = 'hidden'; bn.style.fontSize = '0px'; }
   if (nav) nav.classList.remove('visible');
   if (nb) nb.classList.add('js-ready');
 })();
@@ -1446,59 +1456,59 @@ let state = {
         {
           "type": "s2",
           "imgs": [
-            "bilder/projekte/what-was-i-looking-for/sec_00_00.jpg"
+            "bilder/projekte/What-was-i-looking-for/sec_00_00.jpg"
           ],
           "caption": ""
         },
         {
           "type": "d1",
           "imgs": [
-            "bilder/projekte/what-was-i-looking-for/sec_01_00.jpg",
-            "bilder/projekte/what-was-i-looking-for/sec_01_01.jpg"
+            "bilder/projekte/What-was-i-looking-for/sec_01_00.jpg",
+            "bilder/projekte/What-was-i-looking-for/sec_01_01.jpg"
           ],
           "caption": ""
         },
         {
           "type": "s1",
           "imgs": [
-            "bilder/projekte/what-was-i-looking-for/sec_02_00.jpg"
+            "bilder/projekte/What-was-i-looking-for/sec_02_00.jpg"
           ],
           "caption": ""
         },
         {
           "type": "s1",
           "imgs": [
-            "bilder/projekte/what-was-i-looking-for/sec_03_00.jpg"
+            "bilder/projekte/What-was-i-looking-for/sec_03_00.jpg"
           ],
           "caption": ""
         },
         {
           "type": "d2",
           "imgs": [
-            "bilder/projekte/what-was-i-looking-for/sec_04_00.jpg",
-            "bilder/projekte/what-was-i-looking-for/sec_04_01.jpg"
+            "bilder/projekte/What-was-i-looking-for/sec_04_00.jpg",
+            "bilder/projekte/What-was-i-looking-for/sec_04_01.jpg"
           ],
           "caption": ""
         },
         {
           "type": "s2",
           "imgs": [
-            "bilder/projekte/what-was-i-looking-for/sec_05_00.jpg"
+            "bilder/projekte/What-was-i-looking-for/sec_05_00.jpg"
           ],
           "caption": ""
         },
         {
           "type": "d3",
           "imgs": [
-            "bilder/projekte/what-was-i-looking-for/sec_06_00.jpg",
-            "bilder/projekte/what-was-i-looking-for/sec_06_01.jpg"
+            "bilder/projekte/What-was-i-looking-for/sec_06_00.jpg",
+            "bilder/projekte/What-was-i-looking-for/sec_06_01.jpg"
           ],
           "caption": ""
         },
         {
           "type": "s2",
           "imgs": [
-            "bilder/projekte/what-was-i-looking-for/sec_07_00.jpg"
+            "bilder/projekte/What-was-i-looking-for/sec_07_00.jpg"
           ],
           "caption": ""
         }
@@ -1703,43 +1713,45 @@ let canvasNextId = 1;
 // ══════════════════════════════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════════════════════════════
-let _homeScrollY = 0;
-
 function navigate(target, projectId) {
-  // Hide all pages
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Hide overlay pages (home stays in flow always)
+  ['page-info','page-impressum','page-datenschutz','page-project'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+  document.body.style.overflow = '';
   // Stop edit mode if leaving project page
   if (editMode && target !== 'project') { editMode=false; applyEditMode(); }
 
   if (target === 'home') {
-    document.getElementById('page-home').classList.add('active');
     document.getElementById('settings-toggle').style.display = 'block';
     document.getElementById('edit-toggle').style.display = 'none';
-    const restoreY = _homeScrollY;
-    setTimeout(() => { window.scrollTo(0, restoreY); updateNameScroll(); }, 20);
+    updateNameScroll();
   } else if (target === 'info') {
     document.getElementById('page-info').classList.add('active');
     document.getElementById('settings-toggle').style.display = 'block';
     document.getElementById('edit-toggle').style.display = 'none';
-    window.scrollTo({top:0,behavior:'smooth'});
+    document.getElementById('page-info').scrollTop = 0;
+    document.body.style.overflow = 'hidden';
   } else if (target === 'impressum') {
     document.getElementById('page-impressum').classList.add('active');
     document.getElementById('settings-toggle').style.display = 'none';
     document.getElementById('edit-toggle').style.display = 'none';
-    window.scrollTo({top:0,behavior:'smooth'});
+    document.getElementById('page-impressum').scrollTop = 0;
+    document.body.style.overflow = 'hidden';
   } else if (target === 'datenschutz') {
     document.getElementById('page-datenschutz').classList.add('active');
     document.getElementById('settings-toggle').style.display = 'none';
     document.getElementById('edit-toggle').style.display = 'none';
-    window.scrollTo({top:0,behavior:'smooth'});
+    document.getElementById('page-datenschutz').scrollTop = 0;
+    document.body.style.overflow = 'hidden';
   } else if (target === 'project') {
-    _homeScrollY = window.scrollY;
     currentProjectId = projectId;
     document.getElementById('page-project').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('page-project').scrollTop = 0;
     document.getElementById('settings-toggle').style.display = 'none';
     document.getElementById('edit-toggle').style.display = 'block';
     loadProjectPage(projectId);
-    window.scrollTo({top:0,behavior:'smooth'});
     // Keep name bar visible but don't animate for project pages
     document.getElementById('bar-bg').classList.add('visible');
     document.getElementById('bar-nav').classList.add('visible');
@@ -1789,8 +1801,11 @@ function renderProjects() {
       div.innerHTML = `<div class="pm">${coverEl}</div><div class="ps">${secEl}</div>${piHTML}`;
     }
     div.addEventListener('click', e => {
-      e.preventDefault();
-      navigate('project', p.id);
+      const t = e.target;
+      if (t.closest('.pm') || t.closest('.ps') || t.closest('.pt') || t.closest('.p-title')) {
+        e.preventDefault();
+        navigate('project', p.id);
+      }
     });
     grid.appendChild(div);
   });
@@ -2270,12 +2285,12 @@ const barName = document.getElementById('bar-name');
 const barNav  = document.getElementById('bar-nav');
 const barBg   = document.getElementById('bar-bg');
 const nameBar = document.getElementById('name-bar');
-let currentBlend = 'difference';
+let currentBlend = (state.site && state.site.blend) ? state.site.blend : 'difference';
 let currentBlendOpacity = 1;
 let nameIsSticky = false;
 let heroH = 0;
 
-function getHeroH() { heroH = document.getElementById('hero').offsetHeight; }
+function getHeroH() { heroH = document.getElementById('hero').offsetHeight || window.innerHeight; }
 getHeroH();
 window.addEventListener('resize', ()=>{ getHeroH(); fitName(); });
 
@@ -2780,11 +2795,19 @@ function init() {
   document.getElementById('edit-toggle').style.pointerEvents = '';
   document.getElementById('edit-toggle').classList.remove('visible');
   nameBar.style.mixBlendMode = 'normal';
+  // Save baked (published) blend before loadAll — stale localStorage must not override it
+  const _bakedBlend = (state.site && state.site.blend) || null;
+  const _bakedBlendOp = (state.site && state.site.blendOpacity != null) ? state.site.blendOpacity : null;
 
   loadAll();
+
+  // Restore baked blend as authoritative after loadAll may have overwritten from localStorage
+  if (_bakedBlend) { currentBlend = _bakedBlend; state.site.blend = _bakedBlend; }
+  if (_bakedBlendOp != null) { currentBlendOpacity = _bakedBlendOp; state.site.blendOpacity = _bakedBlendOp; }
   applyHeroImages();
   getHeroH();
   fitName();
+  barName.style.visibility = '';
   renderProjects();
   updateNameScroll();
   setTimeout(()=>{ document.getElementById('name-bar').classList.add('loaded'); }, 200);
@@ -2819,6 +2842,14 @@ function stripTransientClasses(html) {
   html = html.replace(/(<nav id="bar-nav"[^>]+class=")[^"]*"/, '$1"');
   // Only strip js-ready from class attributes, not from CSS rules
   html = html.replace(/(class="[^"]*)\bjs-ready\b\s*/g, '$1');
+  // Strip active from overlay pages so they don't show on reload
+  ['page-info','page-impressum','page-datenschutz','page-project'].forEach(id => {
+    html = html.replace(new RegExp(`(id="${id}"[^>]*class="[^"]*)\\bactive\\b\\s*`,'g'), '$1');
+  });
+  // Strip loaded/sticky from name-bar class — re-added by init after fitName
+  html = html.replace(/(<div id="name-bar"[^>]*class=")[^"]*"/, '$1"');
+  // Strip baked font-size from bar-name — CSS opacity:0 keeps it hidden until loaded is added
+  html = html.replace(/(<div id="bar-name"[^>]*style="[^"]*?)font-size:[^;";]*;?\s*/g, '$1');
   return html;
 }
 
