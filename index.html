@@ -2190,8 +2190,12 @@ function buildSlot(s, idx, slotIdx) {
 function uploadSecImg(sectionIdx, slotIdx) {
   const inp = document.createElement('input');
   inp.type = 'file'; inp.accept = 'image/*,video/mp4,video/webm';
+  inp.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+  document.body.appendChild(inp);
   inp.onchange = e => {
-    const f = e.target.files[0]; if(!f) return;
+    const f = e.target.files[0];
+    inp.remove();
+    if(!f) return;
     const r = new FileReader();
     r.onload = ev => {
       const p = state.projects.find(x => x.id === currentProjectId);
