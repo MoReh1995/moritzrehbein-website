@@ -2817,12 +2817,20 @@ function init() {
   document.getElementById('page-home').classList.add('active');
   document.getElementById('editor-panel').classList.remove('open');
   settingsOpen = false;
+  document.body.style.overflow = '';
+  document.body.classList.remove('editing');
+  editMode = false;
+  document.getElementById('settings-toggle').style.display = 'block';
   document.getElementById('settings-toggle').style.opacity = '';
   document.getElementById('settings-toggle').style.pointerEvents = '';
   document.getElementById('settings-toggle').classList.remove('visible');
+  document.getElementById('edit-toggle').style.display = 'none';
   document.getElementById('edit-toggle').style.opacity = '';
   document.getElementById('edit-toggle').style.pointerEvents = '';
   document.getElementById('edit-toggle').classList.remove('visible');
+  document.getElementById('edit-toolbar').style.display = 'none';
+  document.getElementById('bar-back').style.display = 'none';
+  document.querySelectorAll('.home-nav').forEach(el => el.style.display = '');
   nameBar.style.mixBlendMode = 'normal';
   // Save baked (published) blend before loadAll — stale localStorage must not override it
   const _bakedBlend = (state.site && state.site.blend) || null;
@@ -2879,6 +2887,17 @@ function stripTransientClasses(html) {
   html = html.replace(/(<div id="name-bar"[^>]*class=")[^"]*"/, '$1"');
   // Strip baked font-size from bar-name — CSS opacity:0 keeps it hidden until loaded is added
   html = html.replace(/(<div id="bar-name"[^>]*style="[^"]*?)font-size:[^;";]*;?\s*/g, '$1');
+  // Strip overflow:hidden from body (set when on project/overlay pages)
+  html = html.replace(/(<body\b[^>]*style="[^"]*?)overflow:\s*hidden;?\s*/g, '$1');
+  // Strip editing class from body
+  html = html.replace(/(<body\b[^>]*class="[^"]*)\bediting\b\s*/g, '$1');
+  // Reset navigation UI to home-page defaults
+  html = html.replace(/(<button id="bar-back"[^>]*style=")[^"]*"/, '$1display:none;"');
+  html = html.replace(/(<div id="edit-toolbar"[^>]*style=")[^"]*"/, '$1display:none;"');
+  html = html.replace(/(<[^>]*id="edit-toggle"[^>]*style=")[^"]*"/, '$1display:none;"');
+  html = html.replace(/(<[^>]*id="settings-toggle"[^>]*style=")[^"]*"/, '$1display:block;"');
+  // Strip display:none from home-nav links
+  html = html.replace(/(<a[^>]*\bhome-nav\b[^>]*style="[^"]*?)display:\s*none;?\s*/g, '$1');
   return html;
 }
 
