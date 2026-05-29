@@ -337,7 +337,7 @@ body {
 .media-item img,.media-item video { display:block; width:100%; height:100%; object-fit:cover; }
 
 /* ── PROJECT SECTIONS ── */
-.proj-section { padding:0 48px 45px; position:relative; }
+.proj-section { padding:0 48px 0; position:relative; }
 .proj-section:first-child { padding-top:190px; }
 .sec-inner { width:100%; }
 .sec-slot { overflow:hidden; position:relative; }
@@ -387,6 +387,20 @@ body {
 .sec-t5 .sec-inner { display:grid; grid-template-columns:54fr 34fr; column-gap:4%; row-gap:6%; align-items:start; max-width:86%; margin:0 auto; }
 .sec-t5 .sec-slot:nth-child(2) { margin-top:12%; }
 .sec-t5 .sec-slot:nth-child(3) { width:58%; margin-left:24%; }
+/* D5 – Portrait-Diptychon */
+.sec-d5 .sec-inner { display:grid; grid-template-columns:1fr 1fr; gap:3px; max-width:56%; margin:0 auto; }
+/* D6 – Schweres Offset */
+.sec-d6 .sec-inner { display:grid; grid-template-columns:22fr 5fr 54fr; align-items:start; max-width:88%; margin:0 auto; }
+.sec-d6 .sec-slot:first-child { margin-bottom:18%; }
+.sec-d6 .sec-slot:last-child { grid-column:3; }
+/* T6 – Duo oben + Solo unten */
+.sec-t6 .sec-inner { display:grid; grid-template-columns:1fr 1fr; gap:3%; row-gap:4%; max-width:88%; margin:0 auto; }
+.sec-t6 .sec-slot:nth-child(3) { grid-column:1/3; max-width:55%; margin:0 auto; }
+/* T7 – Vertikale Spalte */
+.sec-t7 .sec-inner { display:flex; flex-direction:column; gap:3%; max-width:42%; margin:0 auto; }
+/* S3 – Kinematisch (3:1 ratio) */
+.sec-s3 .sec-slot { width:100%; overflow:hidden; }
+.sec-s3 .sec-slot img { width:100%; height:34vw; object-fit:cover; display:block; }
 /* SV – video */
 .sec-sv .sec-slot { width:100%; }
 /* TX – text block */
@@ -468,6 +482,44 @@ body.editing [contenteditable]:empty::before { content:attr(data-placeholder); c
 .tb-btn:hover { color:var(--fg); background:rgba(255,255,255,.04); }
 .tb-btn.ac { color:var(--accent); }
 .tb-btn.ac:hover { color:var(--fg); }
+
+
+/* ── SECTION SPACING SLIDER ── */
+.sec-spacing-slider { cursor:ew-resize; }
+
+/* ── SLOT TOGGLE BUTTON ── */
+.slot-toggle {
+  display:none; position:absolute; top:5px; left:5px; z-index:10;
+  background:rgba(10,10,10,.92); border:1px solid #333; color:var(--accent);
+  font-family:'DM Sans',sans-serif; font-size:8px; letter-spacing:.08em;
+  padding:3px 7px; cursor:pointer; line-height:1; transition:border-color .2s;
+}
+.slot-toggle:hover { border-color:var(--accent); color:var(--fg); }
+body.editing .slot-toggle { display:block; }
+
+/* ── TEXT CARD ── */
+.sec-txtcard {
+  font-family:'DM Sans',sans-serif; display:flex; flex-direction:column;
+  justify-content:center; width:100%; min-height:200px; box-sizing:border-box;
+}
+.sec-txtcard p { margin:0 0 .8em; }
+.sec-txtcard:focus { outline:1px dashed rgba(200,184,154,.35); }
+
+/* ── TEXT CARD CONTROL PANEL ── */
+#txt-card-ctrl {
+  position:fixed; bottom:80px; right:28px;
+  background:rgba(14,14,14,.97); border:1px solid #2a2a2a;
+  padding:14px 16px; display:none; flex-direction:column; gap:10px;
+  z-index:3002; width:228px;
+}
+.tc-group { display:flex; flex-direction:column; gap:4px; }
+.tc-label { font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--grey); }
+.tc-swatches { display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+.tc-clr { width:20px; height:20px; border-radius:3px; border:1px solid #333; cursor:pointer; flex-shrink:0; transition:transform .15s, border-color .15s; }
+.tc-clr:hover { transform:scale(1.2); border-color:#888; }
+.tc-range-row { display:flex; align-items:center; gap:8px; }
+.tc-range-row input[type=range] { flex:1; accent-color:var(--accent); cursor:pointer; }
+.tc-range-val { font-family:'DM Sans',sans-serif; font-size:9px; color:var(--grey); min-width:34px; text-align:right; }
 
 /* ── TEXT FORMAT TOOLBAR ── */
 #txt-fmt {
@@ -677,6 +729,14 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   .sec-t4 .sec-slot:nth-child(3) { grid-column:auto; margin-top:0; }
   .sec-t5 .sec-slot:nth-child(2) { margin-top:0; }
   .sec-t5 .sec-slot:nth-child(3) { width:100%; margin-left:0; }
+  .sec-d5 .sec-inner { max-width:88%; }
+  .sec-d6 .sec-inner { display:flex; flex-direction:column; gap:20px; max-width:100%; }
+  .sec-d6 .sec-slot:first-child { margin-bottom:0; }
+  .sec-d6 .sec-slot:last-child { grid-column:auto; }
+  .sec-t6 .sec-inner { display:flex; flex-direction:column; gap:16px; max-width:100%; }
+  .sec-t6 .sec-slot:nth-child(3) { max-width:100%; }
+  .sec-t7 .sec-inner { max-width:85%; }
+  .sec-s3 .sec-slot img { height:56vw; }
   .sec-stack { display:contents; }
   .sec-text { max-width:100%; }
   #section-picker { padding:20px 20px 28px; }
@@ -873,9 +933,8 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
       </div>
 
       <div>
-        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Google Fonts</div>
-        <p style="margin:0">Diese Website verwendet Google Fonts (Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA), um Schriftarten einzubinden. Beim Laden der Seite wird eine Verbindung zu Google-Servern hergestellt, dabei wird die IP-Adresse des Nutzers übertragen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einheitlicher Darstellung).<br><br>
-        Datenschutzerklärung von Google: <a href="https://policies.google.com/privacy" target="_blank" style="color:var(--mid)">policies.google.com/privacy</a></p>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Schriftarten</div>
+        <p style="margin:0">Diese Website verwendet ausschließlich lokal eingebundene Schriftarten. Es wird keine Verbindung zu externen Font-Servern hergestellt und dabei keine IP-Adresse an Dritte übertragen.</p>
       </div>
 
       <div>
@@ -956,6 +1015,54 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
     <div class="tf-sep"></div>
     <button class="tf-btn" onclick="applyTxtBold()" title="Fett">B</button>
     <button class="tf-btn" onclick="applyTxtItalic()" title="Kursiv" style="font-style:italic">I</button>
+  </div>
+
+  <!-- Text card control panel -->
+  <div id="txt-card-ctrl">
+    <div class="ic-title">Textblock-Stil</div>
+    <div class="tc-group">
+      <span class="tc-label">Hintergrundfarbe</span>
+      <div class="tc-swatches">
+        <div class="tc-clr" style="background:#0a0a0a" data-bg="#0a0a0a" title="Schwarz"></div>
+        <div class="tc-clr" style="background:#141414" data-bg="#141414" title="Dunkel"></div>
+        <div class="tc-clr" style="background:#1a1510" data-bg="#1a1510" title="Warm dunkel"></div>
+        <div class="tc-clr" style="background:#0d1520" data-bg="#0d1520" title="Dunkelblau"></div>
+        <div class="tc-clr" style="background:#2a2420" data-bg="#2a2420" title="Warmbraun"></div>
+        <div class="tc-clr" style="background:#c8b89a" data-bg="#c8b89a" title="Akzent"></div>
+        <div class="tc-clr" style="background:#f0ede8" data-bg="#f0ede8" title="Creme"></div>
+        <div class="tc-clr" style="background:#ffffff" data-bg="#ffffff" title="Weiß"></div>
+        <input type="color" id="tc-bg-custom" value="#141414" title="Eigene Farbe" style="width:20px;height:20px;border:1px solid #333;padding:0;cursor:pointer;border-radius:3px">
+      </div>
+    </div>
+    <div class="tc-group">
+      <span class="tc-label">Deckkraft: <span id="tc-bgo-val">85%</span></span>
+      <div class="tc-range-row">
+        <input type="range" min="0" max="100" value="85" id="tc-bgo" oninput="applyTcBgo(this.value)">
+      </div>
+    </div>
+    <div class="tc-group">
+      <span class="tc-label">Textfarbe</span>
+      <div class="tc-swatches">
+        <div class="tc-clr" style="background:#f0ede8" data-col="#f0ede8" title="Creme"></div>
+        <div class="tc-clr" style="background:#999" data-col="#999" title="Grau"></div>
+        <div class="tc-clr" style="background:#c8b89a" data-col="#c8b89a" title="Akzent"></div>
+        <div class="tc-clr" style="background:#0a0a0a;border-color:#555" data-col="#0a0a0a" title="Schwarz"></div>
+        <div class="tc-clr" style="background:#fff;border-color:#555" data-col="#ffffff" title="Weiß"></div>
+        <input type="color" id="tc-col-custom" value="#f0ede8" title="Eigene Farbe" style="width:20px;height:20px;border:1px solid #333;padding:0;cursor:pointer;border-radius:3px">
+      </div>
+    </div>
+    <div class="tc-group">
+      <span class="tc-label">Schriftgröße: <span id="tc-fs-val">15px</span></span>
+      <div class="tc-range-row">
+        <input type="range" min="10" max="48" value="15" id="tc-fs" oninput="applyTcFs(this.value)">
+      </div>
+    </div>
+    <div class="tc-group">
+      <span class="tc-label">Zeilenabstand: <span id="tc-lh-val">1.8</span></span>
+      <div class="tc-range-row">
+        <input type="range" min="10" max="28" value="18" id="tc-lh" oninput="applyTcLh(this.value)">
+      </div>
+    </div>
   </div>
 
   <!-- Section layout picker -->
@@ -1066,6 +1173,44 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
         </div>
         <div class="sp-label">Video /<br>Embed</div>
       </div>
+      <div class="sp-item" onclick="selectLayout('d5')">
+        <div class="sp-thumb" style="gap:3px;justify-content:center">
+          <div style="width:42%;background:#3a3a3a;height:100%"></div>
+          <div style="width:42%;background:#3a3a3a;height:100%"></div>
+        </div>
+        <div class="sp-label">Portrait-<br>Diptychon</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('d6')">
+        <div class="sp-thumb" style="gap:5px;align-items:flex-start">
+          <div style="width:20%;background:#3a3a3a;height:65%;margin-top:35%"></div>
+          <div style="width:60%;background:#3a3a3a;height:100%"></div>
+        </div>
+        <div class="sp-label">Schweres<br>Offset</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('t6')">
+        <div class="sp-thumb" style="flex-direction:column;gap:4px;align-items:center">
+          <div style="display:flex;gap:3px;width:100%;height:55%">
+            <div style="flex:1;background:#3a3a3a"></div>
+            <div style="flex:1;background:#3a3a3a"></div>
+          </div>
+          <div style="width:52%;background:#3a3a3a;height:38%"></div>
+        </div>
+        <div class="sp-label">Duo oben,<br>Solo unten</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('t7')">
+        <div class="sp-thumb" style="flex-direction:column;gap:4px;align-items:center;justify-content:space-around">
+          <div style="width:66%;background:#3a3a3a;height:28%"></div>
+          <div style="width:66%;background:#3a3a3a;height:28%"></div>
+          <div style="width:66%;background:#3a3a3a;height:28%"></div>
+        </div>
+        <div class="sp-label">Vertikale<br>Spalte</div>
+      </div>
+      <div class="sp-item" onclick="selectLayout('s3')">
+        <div class="sp-thumb" style="align-items:center">
+          <div style="width:100%;height:38%;background:#3a3a3a"></div>
+        </div>
+        <div class="sp-label">Kino-<br>matisch</div>
+      </div>
     </div>
   </div>
 
@@ -1126,7 +1271,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 ══════════════════════════════════════ -->
 <div id="save-toast" class="">✓ Gespeichert</div>
 <div id="privacy-banner" class="hidden">
-  <span>Diese Seite lädt Schriftarten von Google Fonts (Google LLC, USA). Dabei wird deine IP-Adresse übertragen. Es werden keine Tracking-Cookies gesetzt.</span>
+  <span>Diese Website wird über GitHub Pages (GitHub Inc., USA) gehostet. Beim Aufruf werden Zugriffsdaten an GitHub übertragen. Keine Tracking-Cookies, kein externes Font-Laden.</span>
   <button onclick="acceptPrivacy()">Verstanden</button>
 </div>
 
@@ -1280,7 +1425,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
         </div></div><div style="position: relative; aspect-ratio: 3 / 2; background: rgb(15, 15, 15); display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden;"><img src="bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-02.jpg" style="width:100%;height:100%;object-fit:cover;display:block">
         <div style="position:absolute;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s">
           <span style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg)">Ändern</span>
-        </div></div><div style="position: relative; aspect-ratio: 5 / 1; background: rgb(13, 13, 13); display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; grid-column-start: 1; grid-column-end: 3;"><img src="bilder/projekte/gil-gelpi/gil-gelpi_03.jpg" style="width:100%;height:100%;object-fit:cover;display:block">
+        </div></div><div style="position: relative; aspect-ratio: 5 / 1; background: rgb(13, 13, 13); display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; grid-column-start: 1; grid-column-end: 3;"><img src="bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-03.jpg" style="width:100%;height:100%;object-fit:cover;display:block">
         <div style="position:absolute;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s">
           <span style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg)">Ändern</span>
         </div></div></div><div style="padding: 10px 14px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; border-top-width: 1px; border-top-style: solid; border-top-color: rgb(30, 30, 30);"><span style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-right:4px">Layout</span>
@@ -1459,7 +1604,7 @@ let state = {
       "layout": "lg",
       "cover": "bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-01.jpg",
       "secondary": "bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-02.jpg",
-      "tertiary": "bilder/projekte/gil-gelpi/gil-gelpi_03.jpg",
+      "tertiary": "bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -1523,7 +1668,7 @@ let state = {
       "layout": "lh",
       "cover": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-01.jpg",
       "secondary": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-02.jpg",
-      "tertiary": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for_03.jpg",
+      "tertiary": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -1589,7 +1734,7 @@ let state = {
       "meta": "2023",
       "layout": "li",
       "cover": "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-01.jpg",
-      "secondary": "bilder/projekte/felipe-hera/felipe-hera_02.jpg",
+      "secondary": "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-02.jpg",
       "tertiary": "",
       "canvas": [],
       "sections": [
@@ -1647,7 +1792,7 @@ let state = {
       "layout": "lg",
       "cover": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-03.jpg",
       "secondary": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-02.jpg",
-      "tertiary": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez_03.jpg",
+      "tertiary": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -1967,7 +2112,7 @@ let state = {
       "layout": "lg",
       "cover": "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-03.jpg",
       "secondary": "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-01.jpg",
-      "tertiary": "bilder/projekte/samuel-salcedo/samuel-salcedo_03.jpg",
+      "tertiary": "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -2201,6 +2346,14 @@ function saveCurrentProject() {
       if (txt) p.sections[idx].text = txt.innerHTML;
       const cap = el.querySelector('.sec-caption');
       if (cap) p.sections[idx].caption = cap.textContent;
+      const pb = parseInt(el.style.paddingBottom);
+      if (!isNaN(pb)) p.sections[idx].spacing = pb;
+      el.querySelectorAll('.sec-txtcard').forEach(cardEl => {
+        const sl = parseInt(cardEl.dataset.slot);
+        if (!isNaN(sl) && p.sections[idx].imgs && typeof p.sections[idx].imgs[sl] === 'object' && p.sections[idx].imgs[sl]._t) {
+          p.sections[idx].imgs[sl].html = cardEl.innerHTML;
+        }
+      });
     });
   } else {
     p.canvas = canvasItems.map(d => ({...d}));
@@ -2213,29 +2366,6 @@ function saveCurrentProject() {
 // FREE CANVAS
 // ══════════════════════════════════════════════════════════════
 let canvasItems = [];
-
-function triggerUpload(type) {
-  const inp = document.createElement('input');
-  inp.type='file'; inp.multiple=true;
-  inp.accept = type==='video' ? 'video/mp4,video/webm' : 'image/*';
-  inp.onchange = e => Array.from(e.target.files).forEach(f => {
-    const r = new FileReader();
-    r.onload = ev => {
-      const isGif = f.type.includes('gif');
-      const isVid = f.type.includes('video');
-      const pos = defaultPos();
-      const id = 'ci-' + (canvasNextId++);
-      const d = { id, type: isVid ? 'video' : (isGif ? 'gif' : 'image'),
-        src: ev.target.result, mimeType: f.type,
-        ...pos, fit:'cover' };
-      canvasItems.push(d);
-      renderCanvasItem(d);
-      expandCanvas();
-    };
-    r.readAsDataURL(f);
-  });
-  inp.click();
-}
 
 function defaultPos() {
   const cw = document.getElementById('proj-canvas').offsetWidth;
@@ -2363,44 +2493,6 @@ function dupeSel() {
   const copy={...d,id:'ci-'+(canvasNextId++),left:d.left+30,top:d.top+30};
   canvasItems.push(copy); renderCanvasItem(copy);
 }
-function addEmbed() {
-  const raw = prompt('Vimeo oder YouTube URL einfügen:');
-  if (!raw) return;
-  let src = '';
-  const yt = raw.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([A-Za-z0-9_-]{11})/);
-  const vm = raw.match(/vimeo\.com\/(\d+)/);
-  if (yt) src = `https://www.youtube.com/embed/${yt[1]}?autoplay=0&rel=0`;
-  else if (vm) src = `https://player.vimeo.com/video/${vm[1]}?color=c8b89a&title=0&byline=0`;
-  else { alert('URL nicht erkannt. Bitte eine YouTube oder Vimeo URL eingeben.'); return; }
-  const id = 'ci'+(canvasNextId++);
-  const d = { id, type:'embed', src, x:40, y:40, w:70, h:500, z:1, fit:'cover' };
-  canvasItems.push(d);
-  const wrap = document.createElement('div');
-  wrap.className = 'media-item';
-  wrap.id = d.id;
-  wrap.style.cssText = `position:absolute;left:${d.x}px;top:${d.y}px;width:${d.w}%;height:${d.h}px;z-index:${d.z}`;
-  wrap.innerHTML = `<iframe src="${src}" style="width:100%;height:100%;border:none;" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-  const rh = document.createElement('div'); rh.className='resize-handle'; wrap.appendChild(rh);
-  document.getElementById('proj-canvas').appendChild(wrap);
-  makeDraggable(wrap, d);
-  saveCurrentProject();
-}
-
-function autoLayout() {
-  const cw=document.getElementById('proj-canvas').offsetWidth;
-  const pad=48, gap=4; let y=40;
-  canvasItems.forEach((item,i)=>{
-    const full = (i%3===2) || canvasItems.length===1;
-    const w = full ? cw-pad*2 : Math.floor((cw-pad*2-gap)/2);
-    const x = (!full && i%2===1) ? pad+w+gap : pad;
-    const h = full ? Math.floor(w*.55) : Math.floor(w*.75);
-    item.left=x; item.top=y; item.width=w; item.height=h;
-    const el=document.getElementById(item.id);
-    if(el){ el.style.left=x+'px'; el.style.top=y+'px'; el.style.width=w+'px'; el.style.height=h+'px'; }
-    if(i%2===1||full) y+=h+gap;
-  });
-  expandCanvas();
-}
 function expandCanvas() {
   let max=0;
   canvasItems.forEach(d=>{ const b=d.top+d.height; if(b>max) max=b; });
@@ -2410,8 +2502,17 @@ function expandCanvas() {
 // ══════════════════════════════════════════════════════════════
 // PROJECT SECTIONS
 // ══════════════════════════════════════════════════════════════
-const SEC_SLOTS = { s1:1, s2:1, sv:1, tx:0, d1:2, d2:2, d3:2, d4:2, t1:3, t2:3, t3:3, t4:3, t5:3 };
+const SEC_SLOTS = { s1:1, s2:1, s3:1, sv:1, tx:0, d1:2, d2:2, d3:2, d4:2, d5:2, d6:2, t1:3, t2:3, t3:3, t4:3, t5:3, t6:3, t7:3 };
 let _pickerSecIdx = null;
+
+function setSecSpacing(idx, val, el) {
+  const p = state.projects.find(x => x.id === currentProjectId);
+  if(!p || !p.sections[idx]) return;
+  p.sections[idx].spacing = parseInt(val);
+  const secs = document.querySelectorAll('#proj-canvas .proj-section');
+  if(secs[idx]) secs[idx].style.paddingBottom = val + 'px';
+  if(el) el.title = 'Abstand (' + val + 'px)';
+}
 
 function renderProjectSections(p) {
   const canvas = document.getElementById('proj-canvas');
@@ -2424,6 +2525,7 @@ function buildSectionEl(s, idx) {
   const wrap = document.createElement('div');
   wrap.className = `proj-section sec-${s.type}`;
   wrap.dataset.idx = idx;
+  wrap.style.paddingBottom = (s.spacing ?? 45) + 'px';
 
   // Controls
   const ctrl = document.createElement('div');
@@ -2432,7 +2534,8 @@ function buildSectionEl(s, idx) {
     <button class="sec-ctrl-btn" onclick="moveSec(${idx},-1)" title="Nach oben">↑</button>
     <button class="sec-ctrl-btn" onclick="moveSec(${idx},1)" title="Nach unten">↓</button>
     <button class="sec-ctrl-btn" onclick="openSectionPicker(${idx})" title="Layout ändern">⊞</button>
-    <button class="sec-ctrl-btn del" onclick="removeSec(${idx})" title="Löschen">✕</button>`;
+    <button class="sec-ctrl-btn del" onclick="removeSec(${idx})" title="Löschen">✕</button>
+    <input type="range" class="sec-spacing-slider" min="0" max="300" value="${s.spacing??45}" title="Abstand (${s.spacing??45}px)" oninput="setSecSpacing(${idx},this.value,this)" style="width:58px;accent-color:var(--accent);cursor:ew-resize;vertical-align:middle">`;
   wrap.appendChild(ctrl);
 
   const inner = document.createElement('div');
@@ -2497,13 +2600,35 @@ function buildSlot(s, idx, slotIdx) {
   const slot = document.createElement('div');
   slot.className = 'sec-slot';
   const url = s.imgs && s.imgs[slotIdx];
-  if (url) {
+  if (url && typeof url === 'object' && url._t) {
+    const card = document.createElement('div');
+    card.className = 'sec-txtcard';
+    card.contentEditable = editMode ? 'true' : 'false';
+    card.innerHTML = url.html || '<p>Text…</p>';
+    card.dataset.sidx = idx; card.dataset.slot = slotIdx;
+    const hx = (url.bg||'#141414').replace('#','');
+    const r=parseInt(hx.slice(0,2),16), g=parseInt(hx.slice(2,4),16), b=parseInt(hx.slice(4,6),16);
+    card.style.cssText = 'background:rgba('+r+','+g+','+b+','+(url.bgo??0.85)+');color:'+(url.col||'#f0ede8')+';font-size:'+(url.fs||15)+'px;line-height:'+(url.lh||1.8)+';padding:8%;box-sizing:border-box;width:100%;min-height:200px;outline:none';
+    card.addEventListener('click', e => { e.stopPropagation(); if(editMode) activateTxtCard(idx, slotIdx, card); });
+    slot.appendChild(card);
+    slot.style.cursor = editMode ? 'text' : 'default';
+  } else if (url) {
     const img = document.createElement('img'); img.src = url; img.alt = '';
     slot.appendChild(img);
   } else {
     const ph = document.createElement('div'); ph.className = 'sec-empty'; slot.appendChild(ph);
   }
-  slot.addEventListener('click', () => { if(editMode) uploadSecImg(idx, slotIdx); });
+  const tog = document.createElement('button');
+  tog.className = 'slot-toggle';
+  tog.textContent = (url && typeof url === 'object' && url._t) ? 'Bild' : 'Text';
+  tog.title = (url && typeof url === 'object' && url._t) ? 'Zu Bild wechseln' : 'Zu Textblock wechseln';
+  tog.addEventListener('click', e => { e.stopPropagation(); if(editMode) toggleSlotType(idx, slotIdx); });
+  slot.appendChild(tog);
+  slot.addEventListener('click', () => {
+    if(!editMode) return;
+    if (url && typeof url === 'object' && url._t) return;
+    uploadSecImg(idx, slotIdx);
+  });
   return slot;
 }
 
@@ -2589,10 +2714,11 @@ function applyEditMode() {
     document.getElementById(id).contentEditable = editMode ? 'true' : 'false';
   });
   // Toggle contenteditable on section text/captions
-  document.querySelectorAll('.sec-text,.sec-caption').forEach(el => {
+  document.querySelectorAll('.sec-text,.sec-caption,.sec-txtcard').forEach(el => {
     el.contentEditable = editMode ? 'true' : 'false';
   });
   if(!editMode) {
+    hideTxtCardCtrl();
     document.querySelectorAll('.media-item.selected').forEach(x=>x.classList.remove('selected'));
     selItem=null;
     const ic = document.getElementById('item-ctrl'); if(ic) ic.classList.remove('vis');
@@ -2669,6 +2795,91 @@ document.addEventListener('mouseup', e => {
 document.addEventListener('keyup', e => {
   if (!editMode) return;
   if (e.target.closest('.sec-text')) { saveTxtRange(); showTxtFmt(); }
+});
+
+// ── TEXT CARD FUNCTIONS ─────────────────────────────────────
+let _activeTxtCard = null;
+
+function hexToRgba(hex, op) {
+  const h = hex.replace('#','');
+  return 'rgba('+parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)+','+op+')';
+}
+function toggleSlotType(sectionIdx, slotIdx) {
+  const p = state.projects.find(x => x.id === currentProjectId);
+  if(!p || !p.sections[sectionIdx]) return;
+  if(!p.sections[sectionIdx].imgs) p.sections[sectionIdx].imgs = [];
+  const cur = p.sections[sectionIdx].imgs[slotIdx];
+  if(cur && typeof cur === 'object' && cur._t) {
+    p.sections[sectionIdx].imgs[slotIdx] = cur._prev || '';
+  } else {
+    p.sections[sectionIdx].imgs[slotIdx] = {_t:true, html:'<p>Text…</p>', bg:'#141414', bgo:0.85, col:'#f0ede8', fs:15, lh:1.8, _prev: typeof cur==='string'?cur:''};
+  }
+  saveAll(); renderProjectSections(p);
+}
+function activateTxtCard(sectionIdx, slotIdx) {
+  _activeTxtCard = {sectionIdx, slotIdx};
+  const p = state.projects.find(x => x.id === currentProjectId);
+  if(!p) return;
+  const d = p.sections[sectionIdx].imgs[slotIdx];
+  if(!d||!d._t) return;
+  const ctrl = document.getElementById('txt-card-ctrl');
+  if(!ctrl) return;
+  document.getElementById('tc-bgo').value = Math.round((d.bgo??0.85)*100);
+  document.getElementById('tc-bgo-val').textContent = Math.round((d.bgo??0.85)*100)+'%';
+  document.getElementById('tc-fs').value = d.fs||15;
+  document.getElementById('tc-fs-val').textContent = (d.fs||15)+'px';
+  document.getElementById('tc-lh').value = Math.round((d.lh||1.8)*10);
+  document.getElementById('tc-lh-val').textContent = (d.lh||1.8).toFixed(1);
+  document.getElementById('tc-bg-custom').value = d.bg||'#141414';
+  document.getElementById('tc-col-custom').value = d.col||'#f0ede8';
+  ctrl.style.display = 'flex';
+}
+function hideTxtCardCtrl() {
+  const c = document.getElementById('txt-card-ctrl');
+  if(c) c.style.display = 'none';
+  _activeTxtCard = null;
+}
+function _tcData() {
+  if(!_activeTxtCard) return null;
+  const p = state.projects.find(x => x.id === currentProjectId);
+  if(!p) return null;
+  return p.sections[_activeTxtCard.sectionIdx].imgs[_activeTxtCard.slotIdx];
+}
+function _tcCard() {
+  if(!_activeTxtCard) return null;
+  return document.querySelector('.sec-txtcard[data-sidx="'+_activeTxtCard.sectionIdx+'"][data-slot="'+_activeTxtCard.slotIdx+'"]');
+}
+function _tcSync(d,card) {
+  if(!card) return;
+  card.style.background = hexToRgba(d.bg||'#141414', d.bgo??0.85);
+  card.style.color = d.col||'#f0ede8';
+  card.style.fontSize = (d.fs||15)+'px';
+  card.style.lineHeight = d.lh||1.8;
+}
+function applyTcBg(hex) { const d=_tcData(); if(!d) return; d.bg=hex; _tcSync(d,_tcCard()); saveAll(); }
+function applyTcBgo(val) { const d=_tcData(); if(!d) return; d.bgo=val/100; document.getElementById('tc-bgo-val').textContent=val+'%'; _tcSync(d,_tcCard()); saveAll(); }
+function applyTcCol(hex) { const d=_tcData(); if(!d) return; d.col=hex; const c=_tcCard(); if(c) c.style.color=hex; saveAll(); }
+function applyTcFs(val) { const d=_tcData(); if(!d) return; d.fs=parseInt(val); document.getElementById('tc-fs-val').textContent=val+'px'; const c=_tcCard(); if(c) c.style.fontSize=val+'px'; saveAll(); }
+function applyTcLh(val) { const d=_tcData(); if(!d) return; d.lh=val/10; document.getElementById('tc-lh-val').textContent=(val/10).toFixed(1); const c=_tcCard(); if(c) c.style.lineHeight=d.lh; saveAll(); }
+
+document.addEventListener('mousedown', e => {
+  if(!_activeTxtCard) return;
+  const ctrl = document.getElementById('txt-card-ctrl');
+  if(ctrl && !ctrl.contains(e.target) && !e.target.closest('.sec-txtcard')) hideTxtCardCtrl();
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const ctrl = document.getElementById('txt-card-ctrl');
+  if(!ctrl) return;
+  ctrl.addEventListener('click', e => {
+    const clr = e.target.closest('.tc-clr');
+    if(!clr) return;
+    if(clr.dataset.bg) applyTcBg(clr.dataset.bg);
+    if(clr.dataset.col) applyTcCol(clr.dataset.col);
+  });
+  const bgC = document.getElementById('tc-bg-custom');
+  const colC = document.getElementById('tc-col-custom');
+  if(bgC) bgC.addEventListener('input', e => applyTcBg(e.target.value));
+  if(colC) colC.addEventListener('input', e => applyTcCol(e.target.value));
 });
 
 // Keyboard shortcuts on project page
@@ -3280,6 +3491,8 @@ function stripTransientClasses(html) {
   html = html.replace(/(<[^>]*id="settings-toggle"[^>]*style=")[^"]*"/, '$1display:block;"');
   // Strip display:none from home-nav links
   html = html.replace(/(<a[^>]*\bhome-nav\b[^>]*style="[^"]*?)display:\s*none;?\s*/g, '$1');
+  // Strip runtime font-measurement spans baked by fitName
+  html = html.replace(/<span style="position: absolute; top: -9999px[^>]+>[^<]*<\/span>/g, '');
   return html;
 }
 
