@@ -59,8 +59,8 @@ body {
 
 /* ── PAGES ── home always in flow; others as fixed overlay */
 #page-home { display:block; }
-#page-info, #page-impressum, #page-datenschutz, #page-project { display:none; }
-#page-info.active, #page-impressum.active, #page-datenschutz.active, #page-project.active {
+#page-info, #page-impressum, #page-datenschutz, #page-agb, #page-project { display:none; }
+#page-info.active, #page-impressum.active, #page-datenschutz.active, #page-agb.active, #page-project.active {
   display:block; position:fixed; inset:0; overflow-y:auto; z-index:200;
   background:var(--bg); -webkit-overflow-scrolling:touch;
 }
@@ -285,13 +285,14 @@ body {
   font-family:'Druk Wide Super','Impact','Arial Black',sans-serif;
   font-weight:900; font-size:clamp(36px,4.5vw,68px);
   color:var(--fg); letter-spacing:.06em; margin-bottom:32px; line-height:1;
+  text-transform:uppercase;
 }
 .info-bio {
   font-family:'DM Sans',sans-serif; font-size:17px; font-weight:300; font-style:italic;
   color:#999; line-height:1.9; margin-bottom:40px; max-width:480px;
 }
 .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; }
-.info-img-ph { min-height:560px; max-width:420px; background:#141414; }
+.info-img-ph { min-height:560px; max-width:420px; }
 .info-contact { display:flex; flex-direction:column; gap:14px; }
 .info-contact a,.info-contact span {
   font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:.2em; text-transform:uppercase;
@@ -319,6 +320,7 @@ body {
   font-family:'Druk Wide Super','Impact','Arial Black',sans-serif;
   font-weight:900; font-size:clamp(24px,3vw,38px);
   line-height:.92; letter-spacing:.03em; color:var(--fg); margin-bottom:36px;
+  text-transform:uppercase;
 }
 .proj-desc-text {
   font-family:'DM Sans',sans-serif; font-size:17px; font-style:italic; font-weight:300;
@@ -345,9 +347,10 @@ body {
 .sec-slot video { width:100%; height:auto; display:block; }
 .sec-slot iframe { width:100%; aspect-ratio:16/9; display:block; border:none; }
 .sec-empty { background:#161616; aspect-ratio:4/5; width:100%; }
+body:not(.editing) .sec-empty { display:none; }
 .sec-caption {
   font-family:'DM Sans',sans-serif; font-size:11px;
-  letter-spacing:.08em; color:var(--grey); margin-top:12px;
+  letter-spacing:.08em; color:var(--mid); margin-top:12px;
   outline:none;
 }
 .sec-text {
@@ -408,6 +411,7 @@ body {
 
 /* Section edit controls */
 .sec-ctrl { display:none; position:absolute; top:10px; right:56px; gap:4px; z-index:20; }
+.proj-section:first-child .sec-ctrl { top:200px; }
 body.editing .sec-ctrl { display:flex; }
 .sec-ctrl-btn {
   background:rgba(10,10,10,.94); border:1px solid #333; color:var(--mid);
@@ -486,13 +490,21 @@ body.editing [contenteditable]:empty::before { content:attr(data-placeholder); c
 
 /* ── SECTION SPACING SLIDER ── */
 .sec-spacing-slider { cursor:ew-resize; }
+.sec-spacing-band {
+  position:absolute; bottom:0; left:48px; right:48px;
+  display:flex; align-items:center; justify-content:center;
+  border-top:1px dashed rgba(200,180,140,.25); pointer-events:none;
+  font-family:'DM Sans',sans-serif; font-size:9px; color:rgba(200,180,140,.5);
+  letter-spacing:.08em;
+}
+body:not(.editing) .sec-spacing-band { display:none; }
 
 /* ── SLOT TOGGLE BUTTON ── */
 .slot-toggle {
-  display:none; position:absolute; top:5px; left:5px; z-index:10;
-  background:rgba(10,10,10,.92); border:1px solid #333; color:var(--accent);
-  font-family:'DM Sans',sans-serif; font-size:8px; letter-spacing:.08em;
-  padding:3px 7px; cursor:pointer; line-height:1; transition:border-color .2s;
+  display:none; position:absolute; top:8px; left:8px; z-index:10;
+  background:rgba(10,10,10,.92); border:1px solid #444; color:var(--accent);
+  font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:.08em;
+  padding:5px 10px; cursor:pointer; line-height:1; transition:border-color .2s, background .2s;
 }
 .slot-toggle:hover { border-color:var(--accent); color:var(--fg); }
 body.editing .slot-toggle { display:block; }
@@ -501,42 +513,30 @@ body.editing .slot-toggle { display:block; }
 .sec-txtcard {
   font-family:'DM Sans',sans-serif; display:flex; flex-direction:column;
   justify-content:center; width:100%; min-height:200px; box-sizing:border-box;
+  padding:8%; outline:none; color:var(--fg); font-size:15px; line-height:1.5;
 }
 .sec-txtcard p { margin:0 0 .8em; }
-.sec-txtcard:focus { outline:1px dashed rgba(200,184,154,.35); }
-
-/* ── TEXT CARD CONTROL PANEL ── */
-#txt-card-ctrl {
-  position:fixed; bottom:80px; right:28px;
-  background:rgba(14,14,14,.97); border:1px solid #2a2a2a;
-  padding:14px 16px; display:none; flex-direction:column; gap:10px;
-  z-index:3002; width:228px;
-}
-.tc-group { display:flex; flex-direction:column; gap:4px; }
-.tc-label { font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--grey); }
-.tc-swatches { display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
-.tc-clr { width:20px; height:20px; border-radius:3px; border:1px solid #333; cursor:pointer; flex-shrink:0; transition:transform .15s, border-color .15s; }
-.tc-clr:hover { transform:scale(1.2); border-color:#888; }
-.tc-range-row { display:flex; align-items:center; gap:8px; }
-.tc-range-row input[type=range] { flex:1; accent-color:var(--accent); cursor:pointer; }
-.tc-range-val { font-family:'DM Sans',sans-serif; font-size:9px; color:var(--grey); min-width:34px; text-align:right; }
+.sec-txtcard:focus-within { outline:1px dashed rgba(200,184,154,.35); }
 
 /* ── TEXT FORMAT TOOLBAR ── */
 #txt-fmt {
   position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
   background:rgba(14,14,14,.97); border:1px solid #2a2a2a;
-  display:none; align-items:center; z-index:3001; gap:0;
+  display:none; align-items:center; z-index:3001; gap:0; white-space:nowrap;
 }
-.tf-btn {
-  padding:8px 13px; background:none; border:none; border-right:1px solid #2a2a2a;
+.tf-fw {
+  padding:8px 11px; background:none; border:none; border-right:1px solid #2a2a2a;
   color:var(--mid); font-family:'DM Sans',sans-serif;
-  font-size:10px; letter-spacing:.1em; cursor:pointer;
+  font-size:10px; letter-spacing:.06em; cursor:pointer;
   transition:color .2s, background .2s; white-space:nowrap;
 }
-.tf-btn:last-child { border-right:none; }
-.tf-btn:hover { color:var(--fg); background:rgba(255,255,255,.04); }
-.tf-sep { width:1px; background:#2a2a2a; align-self:stretch; }
-.tf-clr { width:14px; height:14px; border-radius:50%; border:1px solid #444; cursor:pointer; margin:0 5px; flex-shrink:0; }
+.tf-fw:hover { color:var(--fg); background:rgba(255,255,255,.04); }
+.tf-fw.active { color:var(--accent); background:rgba(200,184,154,.06); }
+.tf-sep { width:1px; background:#2a2a2a; align-self:stretch; flex-shrink:0; }
+.tf-label { font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:.12em; color:var(--grey); padding:0 5px 0 9px; user-select:none; }
+.tf-range { width:65px; accent-color:var(--accent); cursor:pointer; margin:0 3px; flex-shrink:0; }
+.tf-val { font-family:'DM Sans',sans-serif; font-size:9px; color:var(--grey); min-width:28px; padding-right:6px; user-select:none; }
+.tf-clr { width:14px; height:14px; border-radius:50%; border:1px solid #444; cursor:pointer; margin:0 4px; flex-shrink:0; }
 .tf-clr:hover { transform:scale(1.2); }
 
 /* ── ITEM CONTROLS PANEL ── */
@@ -777,16 +777,16 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 
   <!-- HERO -->
   <section id="hero">
-    <div class="hero-slide" id="slide-0" style="background-image: url(&quot;bilder/hero/skulptur.jpg&quot;);"></div>
+    <div class="hero-slide active" id="slide-0" style="background-image: url(&quot;bilder/hero/skulptur.jpg&quot;);"></div>
     <div class="hero-slide" id="slide-1" style="background-image: url(&quot;bilder/hero/kupfersee.jpg&quot;);"></div>
-    <div class="hero-slide active" id="slide-2" style="background-image: url(&quot;bilder/hero/slide2.jpg&quot;);"></div>
+    <div class="hero-slide" id="slide-2" style="background-image: url(&quot;bilder/hero/slide2.jpg&quot;);"></div>
     <div id="hero-name-wrap">
       <div id="hero-name-clone"></div>
     </div>
     <div class="slide-dots">
-      <div class="slide-dot" id="dot-0"></div>
+      <div class="slide-dot active" id="dot-0"></div>
       <div class="slide-dot" id="dot-1"></div>
-      <div class="slide-dot active" id="dot-2"></div>
+      <div class="slide-dot" id="dot-2"></div>
     </div>
   </section>
 
@@ -824,6 +824,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
       <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
       <a onclick="navigate('impressum')" href="#">Impressum</a>
       <a onclick="navigate('datenschutz')" href="#">Datenschutz</a>
+      <a onclick="navigate('agb')" href="#">AGB</a>
     </div>
   </footer>
 </div>
@@ -841,8 +842,8 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
         <div class="info-name">Moritz Rehbein</div>
         <div class="info-bio" id="infoBio">Dokumentarischer und künstlerischer Fotograf aus Hamburg. Ich fotografiere Menschen, Orte und Momente, die eine Geschichte erzählen wollen.</div>
         <div class="info-contact">
-          <span>Based in Hamburg</span>
-          <a id="infoEmail" href="/cdn-cgi/l/email-protection#167b777f7a567b79647f626c64737e74737f78387273"><span class="__cf_email__" data-cfemail="533e323a3f133e3c213a272921363b31363a3d7d3736">[email&nbsp;protected]</span></a>
+          <a id="infoEmail" href="mailto:info@moritzrehbein.de">info@moritzrehbein.de</a>
+          <a href="tel:+491771421897">+49 177 1421897</a>
           <a id="infoInsta" href="https://instagram.com/moritzrehbein">@moritzrehbein</a>
         </div>
       </div>
@@ -852,6 +853,8 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
       <div class="footer-links">
         <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
         <a onclick="navigate('impressum')" href="#">Impressum</a>
+        <a onclick="navigate('datenschutz')" href="#">Datenschutz</a>
+        <a onclick="navigate('agb')" href="#">AGB</a>
       </div>
     </footer>
   </div>
@@ -862,8 +865,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 ══════════════════════════════════════ -->
 <div class="page" id="page-impressum">
   <div style="max-width:680px;margin:0 auto;padding:140px 48px 120px">
-    <div style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);margin-bottom:32px;cursor:pointer" onclick="navigate('home')">← Zurück</div>
-    <h1 style="font-family:'Druk Wide Super','Impact','Arial Black',sans-serif;font-weight:900;font-size:clamp(28px,4vw,52px);letter-spacing:-.01em;color:var(--fg);margin:0 0 56px">Impressum</h1>
+    <h1 style="font-family:'Druk Wide Super','Impact','Arial Black',sans-serif;font-weight:900;font-size:clamp(28px,4vw,52px);letter-spacing:-.01em;color:var(--fg);margin:0 0 56px;text-transform:uppercase">Impressum</h1>
 
     <div style="font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.8;color:var(--mid);display:flex;flex-direction:column;gap:36px">
 
@@ -877,13 +879,14 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 
       <div>
         <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Kontakt</div>
-        <p style="margin:0">E-Mail: <a href="mailto:mail@moritzrehbein.de" style="color:var(--mid)">mail@moritzrehbein.de</a></p>
+        <p style="margin:0">E-Mail: <a href="mailto:info@moritzrehbein.de" style="color:var(--mid)">info@moritzrehbein.de</a></p>
       </div>
 
       <div>
-        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Steuernummer</div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Steuer­angaben</div>
         <p style="margin:0">Steuernummer: 41/194/01734<br>
-        Finanzamt Hamburg-Altona</p>
+        Finanzamt Hamburg-Altona<br>
+        Umsatzsteuer-Identifikationsnummer: DE327947937</p>
       </div>
 
       <div>
@@ -903,6 +906,9 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   <footer>
     <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
     <div class="footer-links">
+      <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
+      <a onclick="navigate('datenschutz')" href="#">Datenschutz</a>
+      <a onclick="navigate('agb')" href="#">AGB</a>
       <a onclick="navigate('home')" href="#">← Zurück</a>
     </div>
   </footer>
@@ -913,8 +919,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 ══════════════════════════════════════ -->
 <div class="page" id="page-datenschutz">
   <div style="max-width:680px;margin:0 auto;padding:140px 48px 120px">
-    <div style="font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);margin-bottom:32px;cursor:pointer" onclick="navigate('home')">← Zurück</div>
-    <h1 style="font-family:'Druk Wide Super','Impact','Arial Black',sans-serif;font-weight:900;font-size:clamp(28px,4vw,52px);letter-spacing:-.01em;color:var(--fg);margin:0 0 56px">Datenschutz</h1>
+    <h1 style="font-family:'Druk Wide Super','Impact','Arial Black',sans-serif;font-weight:900;font-size:clamp(28px,4vw,52px);letter-spacing:-.01em;color:var(--fg);margin:0 0 56px;text-transform:uppercase">Datenschutz</h1>
 
     <div style="font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.8;color:var(--mid);display:flex;flex-direction:column;gap:36px">
 
@@ -923,7 +928,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
         <p style="margin:0">Moritz Rehbein<br>
         Professor-Brix-Weg 17<br>
         22767 Hamburg<br>
-        E-Mail: <a href="mailto:mail@moritzrehbein.de" style="color:var(--mid)">mail@moritzrehbein.de</a></p>
+        E-Mail: <a href="mailto:info@moritzrehbein.de" style="color:var(--mid)">info@moritzrehbein.de</a></p>
       </div>
 
       <div>
@@ -943,8 +948,13 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
       </div>
 
       <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Kontaktaufnahme per Telefon / WhatsApp</div>
+        <p style="margin:0">Wenn du per Telefon oder WhatsApp Kontakt aufnimmst, werden die dabei übermittelten personenbezogenen Daten (z.&nbsp;B. Name, Telefonnummer, Nachrichteninhalt) ausschließlich zur Bearbeitung deiner Anfrage verwendet und nicht an Dritte weitergegeben. WhatsApp wird von Meta Platforms Ireland Ltd. betrieben; deren Datenschutzinformationen findest du unter <a href="https://www.whatsapp.com/legal/privacy-policy" target="_blank" style="color:var(--mid)">whatsapp.com/legal/privacy-policy</a>. Rechtsgrundlage der Verarbeitung ist Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung) bzw. lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen).</p>
+      </div>
+
+      <div>
         <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">Deine Rechte</div>
-        <p style="margin:0">Du hast das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung deiner personenbezogenen Daten sowie das Recht auf Datenübertragbarkeit. Anfragen richten bitte an: <a href="mailto:mail@moritzrehbein.de" style="color:var(--mid)">mail@moritzrehbein.de</a><br><br>
+        <p style="margin:0">Du hast das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung deiner personenbezogenen Daten sowie das Recht auf Datenübertragbarkeit. Anfragen richten bitte an: <a href="mailto:info@moritzrehbein.de" style="color:var(--mid)">info@moritzrehbein.de</a><br><br>
         Außerdem hast du das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren, z.&nbsp;B. beim Hamburgischen Beauftragten für Datenschutz und Informationsfreiheit (HmbBfDI).</p>
       </div>
 
@@ -953,6 +963,108 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   <footer>
     <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
     <div class="footer-links">
+      <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
+      <a onclick="navigate('impressum')" href="#">Impressum</a>
+      <a onclick="navigate('agb')" href="#">AGB</a>
+      <a onclick="navigate('home')" href="#">← Zurück</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: AGB
+══════════════════════════════════════ -->
+<div class="page" id="page-agb">
+  <div style="max-width:680px;margin:0 auto;padding:340px 48px 120px">
+    <h1 style="font-family:'Druk Wide Super','Impact','Arial Black',sans-serif;font-weight:900;font-size:clamp(28px,4vw,52px);letter-spacing:-.01em;color:var(--fg);margin:0 0 56px;text-transform:uppercase">AGB</h1>
+
+    <div style="font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.8;color:var(--mid);display:flex;flex-direction:column;gap:36px">
+
+      <div>
+        <p style="margin:0">Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen Moritz Rehbein, Professor-Brix-Weg 17, 22767 Hamburg (nachfolgend „Auftragnehmer") und dem Auftraggeber über fotografische Leistungen.<br><br>
+        <strong style="color:var(--fg)">Hinweis B2B/B2C:</strong> Diese AGB gelten vorrangig im geschäftlichen Verkehr (B2B). Für Verbraucher im Sinne des § 13 BGB (Privatpersonen, die nicht in Ausübung einer gewerblichen oder selbständigen beruflichen Tätigkeit handeln) gelten die gesetzlichen Vorschriften vorrangig, soweit einzelne Klauseln davon abweichen.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 1 Geltungsbereich</div>
+        <p style="margin:0">Diese AGB gelten für alle gegenwärtigen und zukünftigen Verträge zwischen dem Auftragnehmer und dem Auftraggeber über fotografische Leistungen, sofern nicht ausdrücklich schriftlich etwas anderes vereinbart wurde. Abweichende Bedingungen des Auftraggebers werden nur anerkannt, wenn der Auftragnehmer diesen ausdrücklich schriftlich zugestimmt hat.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 2 Angebote und Vertragsschluss</div>
+        <p style="margin:0">Angebote des Auftragnehmers sind freibleibend und unverbindlich. Ein Vertrag kommt durch schriftliche Auftragsbestätigung oder durch den Beginn der Leistungserbringung zustande. Der Auftraggeber trägt die Verantwortung für die Richtigkeit der von ihm übermittelten Auftragsdaten.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 3 Leistungen</div>
+        <p style="margin:0">Der Auftragnehmer erbringt die im Angebot oder in der Auftragsbestätigung beschriebenen fotografischen Leistungen. Sofern nicht anders vereinbart, entscheidet der Auftragnehmer über künstlerisch-handwerkliche Mittel wie Bildausschnitt, Beleuchtung, Nachbearbeitung und Bildauswahl nach eigenem professionellem Ermessen. Ein Anspruch auf eine bestimmte Anzahl von Aufnahmen besteht nur, wenn dieser ausdrücklich schriftlich vereinbart wurde.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 4 Mitwirkungspflichten des Auftraggebers</div>
+        <p style="margin:0">Der Auftraggeber stellt sicher, dass alle für die Durchführung des Auftrags notwendigen Genehmigungen vorliegen (z.&nbsp;B. Drehgenehmigungen, Hausrechte, Einwilligungen abgebildeter Personen gemäß § 22 KUG). Er unterstützt den Auftragnehmer bei der Auftragserfüllung und stellt rechtzeitig alle erforderlichen Informationen, Zugänge und Materialien zur Verfügung. Verzögerungen, die aus unzureichender Mitwirkung des Auftraggebers entstehen, gehen zu dessen Lasten.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 5 Lieferung und Abnahme</div>
+        <p style="margin:0">Die Lieferung der Bilddateien erfolgt digital (z.&nbsp;B. per Download-Link), sofern nicht schriftlich anders vereinbart. Lieferfristen sind unverbindlich, soweit sie nicht ausdrücklich als verbindlich zugesichert wurden. Mängel sind unverzüglich, spätestens binnen 14 Tagen nach Lieferung schriftlich zu melden. Nach Ablauf dieser Frist gilt die Leistung als abgenommen.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 6 Nutzungsrechte</div>
+        <p style="margin:0">Der Auftragnehmer räumt dem Auftraggeber nach vollständiger Bezahlung ein einfaches, zeitlich und räumlich unbeschränktes Nutzungsrecht an den gelieferten Bildwerken im vertraglich vereinbarten Umfang ein. Weitergehende Nutzungsrechte (z.&nbsp;B. exklusive Rechte, Übertragung an Dritte, kommerzielle Nutzung über den vereinbarten Rahmen hinaus) bedürfen einer gesonderten schriftlichen Vereinbarung und werden gesondert vergütet. Eine Abtretung von Nutzungsrechten an Dritte ist ohne ausdrückliche schriftliche Zustimmung des Auftragnehmers unzulässig.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 7 Urheberrecht und Eigentümerschaft</div>
+        <p style="margin:0">Das Urheberrecht an den erstellten Aufnahmen verbleibt stets beim Auftragnehmer (§ 2 Abs. 1 Nr. 5 UrhG). Die Originaldateien (RAW-Dateien) bleiben Eigentum des Auftragnehmers. Der Auftraggeber erhält ausschließlich die vertraglich vereinbarten Nutzungsrechte an den gelieferten Dateien. Bildmanipulationen oder Bearbeitungen, die das Werk entstellen oder den künstlerischen Charakter wesentlich verändern, sind ohne schriftliche Zustimmung des Auftragnehmers unzulässig. Bei jeder Veröffentlichung ist der Auftragnehmer als Urheber zu nennen, sofern nichts anderes vereinbart wurde.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 8 Veröffentlichung und Referenzrechte</div>
+        <p style="margin:0">Der Auftragnehmer ist berechtigt, Aufnahmen aus dem Auftrag in seinem Portfolio, auf seiner Website sowie in sozialen Medien als Referenz zu veröffentlichen, sofern keine schutzwürdigen Interessen des Auftraggebers entgegenstehen. Auf schriftlichen Wunsch des Auftraggebers kann auf eine Veröffentlichung verzichtet werden; dieser Wunsch ist vor Auftragserteilung mitzuteilen.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 9 Vergütung und Zahlungsbedingungen</div>
+        <p style="margin:0">Die Vergütung richtet sich nach dem jeweils vereinbarten Angebot. Rechnungen sind innerhalb von 14 Tagen nach Rechnungsdatum ohne Abzug zu begleichen, sofern nichts anderes vereinbart wurde. Bei Zahlungsverzug sind Verzugszinsen in Höhe von 9 Prozentpunkten über dem Basiszinssatz (gegenüber Unternehmern) bzw. 5 Prozentpunkten über dem Basiszinssatz (gegenüber Verbrauchern) fällig. Reisekosten, Übernachtungen und sonstige Auslagen werden nach Aufwand berechnet, sofern nicht pauschal vereinbart. Alle Preise verstehen sich zzgl. der gesetzlichen Umsatzsteuer.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 10 Stornierung und Absage</div>
+        <p style="margin:0">Bei Stornierung durch den Auftraggeber werden folgende Ausfallpauschalen fällig:<br>
+        – Stornierung bis 30 Tage vor dem vereinbarten Termin: 30 % der vereinbarten Vergütung<br>
+        – Stornierung 15–29 Tage vor dem Termin: 50 %<br>
+        – Stornierung 7–14 Tage vor dem Termin: 70 %<br>
+        – Stornierung weniger als 7 Tage vor dem Termin: 100 %<br><br>
+        Bereits entstandene Kosten (z.&nbsp;B. Reisekosten, Materialkosten) werden in jedem Fall erstattet. Dem Auftraggeber bleibt der Nachweis vorbehalten, dass kein oder ein geringerer Schaden entstanden ist. Bei Absage durch den Auftragnehmer aus Gründen, die nicht vom Auftraggeber zu vertreten sind, wird keine Vergütung berechnet.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 11 Umsatzsteuer</div>
+        <p style="margin:0">Der Auftragnehmer ist umsatzsteuerpflichtig. Alle ausgewiesenen Preise verstehen sich als Nettopreise zuzüglich der jeweils gültigen gesetzlichen Umsatzsteuer. Die Umsatzsteuer wird auf der Rechnung gesondert ausgewiesen.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 12 Haftung</div>
+        <p style="margin:0">Der Auftragnehmer haftet für Schäden nur bei Vorsatz und grober Fahrlässigkeit. Bei einfacher Fahrlässigkeit haftet der Auftragnehmer nur bei Verletzung wesentlicher Vertragspflichten (Kardinalpflichten), und auch dann nur in Höhe des typischen, vorhersehbaren Schadens. Eine Haftung für Datenverlust ist auf den typischen Wiederherstellungsaufwand beschränkt. Die Haftung für entgangenen Gewinn und mittelbare Schäden ist ausgeschlossen, soweit gesetzlich zulässig. Ansprüche nach dem Produkthaftungsgesetz sowie Ansprüche wegen Verletzung von Leben, Körper oder Gesundheit bleiben unberührt.</p>
+      </div>
+
+      <div>
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:10px">§ 13 Streitbeilegung und anwendbares Recht</div>
+        <p style="margin:0">Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts. Gerichtsstand für Kaufleute, juristische Personen des öffentlichen Rechts und öffentlich-rechtliche Sondervermögen ist Hamburg.<br><br>
+        Die EU-Kommission stellt eine Plattform zur Online-Streitbeilegung bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank" style="color:var(--mid)">ec.europa.eu/consumers/odr</a>. Der Auftragnehmer ist nicht verpflichtet und nicht bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen (§ 36 VSBG).<br><br>
+        Stand: Mai 2026</p>
+      </div>
+
+    </div>
+  </div>
+  <footer>
+    <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
+    <div class="footer-links">
+      <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
+      <a onclick="navigate('impressum')" href="#">Impressum</a>
+      <a onclick="navigate('datenschutz')" href="#">Datenschutz</a>
       <a onclick="navigate('home')" href="#">← Zurück</a>
     </div>
   </footer>
@@ -962,7 +1074,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
      PAGE: PROJECT (single template,
      reused for all projects)
 ══════════════════════════════════════ -->
-<div class="page active" id="page-project">
+<div class="page" id="page-project">
 
   <!-- FREE LAYOUT CANVAS -->
   <div id="proj-canvas"><div class="proj-section sec-s2" data-idx="0"><div class="sec-ctrl">
@@ -1004,65 +1116,29 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 
   <!-- Text format toolbar -->
   <div id="txt-fmt">
-    <button class="tf-btn" onclick="applyTxtSize('12px')" title="Klein">S</button>
-    <button class="tf-btn" onclick="applyTxtSize('15px')" title="Normal">M</button>
-    <button class="tf-btn" onclick="applyTxtSize('22px')" title="Groß">L</button>
-    <button class="tf-btn" onclick="applyTxtSize('34px')" title="Extra groß">XL</button>
+    <button class="tf-fw" data-fw="300" onclick="applyTxtFw(300)" title="Light">Light</button>
+    <button class="tf-fw" data-fw="400" onclick="applyTxtFw(400)" title="Regular">Regular</button>
+    <button class="tf-fw" onclick="applyTxtFw('italic')" title="Kursiv" style="font-style:italic">Italic</button>
+    <button class="tf-fw" data-fw="700" onclick="applyTxtFw(700)" title="Bold">Bold</button>
     <div class="tf-sep"></div>
-    <div class="tf-clr" style="background:#f0f0f0;" onclick="applyTxtColor('#f0f0f0')" title="Weiß"></div>
-    <div class="tf-clr" style="background:#888;" onclick="applyTxtColor('#888')" title="Grau"></div>
-    <div class="tf-clr" style="background:var(--accent);" onclick="applyTxtColor('var(--accent)')" title="Akzent"></div>
+    <span class="tf-label">Gr</span>
+    <input type="range" class="tf-range" id="tf-fs" min="10" max="60" value="15" oninput="applyTxtFs(this.value)">
+    <span class="tf-val" id="tf-fs-val">15</span>
     <div class="tf-sep"></div>
-    <button class="tf-btn" onclick="applyTxtBold()" title="Fett">B</button>
-    <button class="tf-btn" onclick="applyTxtItalic()" title="Kursiv" style="font-style:italic">I</button>
-  </div>
-
-  <!-- Text card control panel -->
-  <div id="txt-card-ctrl">
-    <div class="ic-title">Textblock-Stil</div>
-    <div class="tc-group">
-      <span class="tc-label">Hintergrundfarbe</span>
-      <div class="tc-swatches">
-        <div class="tc-clr" style="background:#0a0a0a" data-bg="#0a0a0a" title="Schwarz"></div>
-        <div class="tc-clr" style="background:#141414" data-bg="#141414" title="Dunkel"></div>
-        <div class="tc-clr" style="background:#1a1510" data-bg="#1a1510" title="Warm dunkel"></div>
-        <div class="tc-clr" style="background:#0d1520" data-bg="#0d1520" title="Dunkelblau"></div>
-        <div class="tc-clr" style="background:#2a2420" data-bg="#2a2420" title="Warmbraun"></div>
-        <div class="tc-clr" style="background:#c8b89a" data-bg="#c8b89a" title="Akzent"></div>
-        <div class="tc-clr" style="background:#f0ede8" data-bg="#f0ede8" title="Creme"></div>
-        <div class="tc-clr" style="background:#ffffff" data-bg="#ffffff" title="Weiß"></div>
-        <input type="color" id="tc-bg-custom" value="#141414" title="Eigene Farbe" style="width:20px;height:20px;border:1px solid #333;padding:0;cursor:pointer;border-radius:3px">
-      </div>
-    </div>
-    <div class="tc-group">
-      <span class="tc-label">Deckkraft: <span id="tc-bgo-val">85%</span></span>
-      <div class="tc-range-row">
-        <input type="range" min="0" max="100" value="85" id="tc-bgo" oninput="applyTcBgo(this.value)">
-      </div>
-    </div>
-    <div class="tc-group">
-      <span class="tc-label">Textfarbe</span>
-      <div class="tc-swatches">
-        <div class="tc-clr" style="background:#f0ede8" data-col="#f0ede8" title="Creme"></div>
-        <div class="tc-clr" style="background:#999" data-col="#999" title="Grau"></div>
-        <div class="tc-clr" style="background:#c8b89a" data-col="#c8b89a" title="Akzent"></div>
-        <div class="tc-clr" style="background:#0a0a0a;border-color:#555" data-col="#0a0a0a" title="Schwarz"></div>
-        <div class="tc-clr" style="background:#fff;border-color:#555" data-col="#ffffff" title="Weiß"></div>
-        <input type="color" id="tc-col-custom" value="#f0ede8" title="Eigene Farbe" style="width:20px;height:20px;border:1px solid #333;padding:0;cursor:pointer;border-radius:3px">
-      </div>
-    </div>
-    <div class="tc-group">
-      <span class="tc-label">Schriftgröße: <span id="tc-fs-val">15px</span></span>
-      <div class="tc-range-row">
-        <input type="range" min="10" max="48" value="15" id="tc-fs" oninput="applyTcFs(this.value)">
-      </div>
-    </div>
-    <div class="tc-group">
-      <span class="tc-label">Zeilenabstand: <span id="tc-lh-val">1.8</span></span>
-      <div class="tc-range-row">
-        <input type="range" min="10" max="28" value="18" id="tc-lh" oninput="applyTcLh(this.value)">
-      </div>
-    </div>
+    <span class="tf-label">ZA</span>
+    <input type="range" class="tf-range" id="tf-lh" min="10" max="30" value="15" oninput="applyTxtLh(this.value)">
+    <span class="tf-val" id="tf-lh-val">1.5</span>
+    <div class="tf-sep"></div>
+    <span class="tf-label">TA</span>
+    <input type="range" class="tf-range" id="tf-ls" min="-5" max="30" value="0" oninput="applyTxtLs(this.value)">
+    <span class="tf-val" id="tf-ls-val">0em</span>
+    <div class="tf-sep"></div>
+    <div class="tf-clr" style="background:#f0ede8;" onclick="applyTxtBlockColor('#f0ede8')" title="Creme"></div>
+    <div class="tf-clr" style="background:#888;" onclick="applyTxtBlockColor('#888')" title="Grau"></div>
+    <div class="tf-clr" style="background:var(--accent);" onclick="applyTxtBlockColor('var(--accent)')" title="Akzent"></div>
+    <div class="tf-clr" style="background:#0a0a0a;border-color:#555;" onclick="applyTxtBlockColor('#0a0a0a')" title="Schwarz"></div>
+    <div class="tf-clr" style="background:#fff;border-color:#555;" onclick="applyTxtBlockColor('#ffffff')" title="Weiß"></div>
+    <input type="color" id="tf-col-custom" value="#f0ede8" title="Eigene Farbe" style="width:20px;height:20px;border:1px solid #333;padding:0;cursor:pointer;border-radius:3px;margin:0 5px;flex-shrink:0">
   </div>
 
   <!-- Section layout picker -->
@@ -1262,7 +1338,12 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 
   <footer>
     <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
-    <button class="proj-back" onclick="navigate('home')" style="font-size:9px;letter-spacing:.14em">← Zurück</button>
+    <div class="footer-links">
+      <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
+      <a onclick="navigate('impressum')" href="#">Impressum</a>
+      <a onclick="navigate('datenschutz')" href="#">Datenschutz</a>
+      <a onclick="navigate('agb')" href="#">AGB</a>
+    </div>
   </footer>
 </div>
 
@@ -1497,7 +1578,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
       </div>
       <div class="ep-group">
         <label class="ep-label">E-Mail</label>
-        <input class="ep-input" id="ep-email" value="mail@moritzrehbein.de">
+        <input class="ep-input" id="ep-email" value="info@moritzrehbein.de">
       </div>
     </div>
     <div>
@@ -1564,7 +1645,7 @@ let state = {
   "site": {
     "name": "MORITZ REHBEIN",
     "bio": "Dokumentarischer und künstlerischer Fotograf aus Hamburg.",
-    "email": "mail@moritzrehbein.de",
+    "email": "info@moritzrehbein.de",
     "instagram": "@moritzrehbein",
     "nameSize": "100",
     "nameLs": "0.03em",
@@ -1604,7 +1685,7 @@ let state = {
       "layout": "lg",
       "cover": "bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-01.jpg",
       "secondary": "bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-02.jpg",
-      "tertiary": "bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-03.jpg",
+      "tertiary": "bilder/projekte/gil-gelpi/gil-gelpi_03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -1612,7 +1693,9 @@ let state = {
           "imgs": [
             "bilder/projekte/gil-gelpi/sec_00_00.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "d1",
@@ -1620,7 +1703,9 @@ let state = {
             "bilder/projekte/gil-gelpi/sec_01_00.jpg",
             "bilder/projekte/gil-gelpi/sec_01_01.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "t2",
@@ -1629,7 +1714,9 @@ let state = {
             "bilder/projekte/gil-gelpi/sec_02_01.jpg",
             "bilder/projekte/gil-gelpi/sec_02_02.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "d2",
@@ -1637,7 +1724,9 @@ let state = {
             "bilder/projekte/gil-gelpi/sec_03_00.jpg",
             "bilder/projekte/gil-gelpi/sec_03_01.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 148,
+          "captionStyle": ""
         },
         {
           "type": "t4",
@@ -1646,7 +1735,9 @@ let state = {
             "bilder/projekte/gil-gelpi/sec_04_01.jpg",
             "bilder/projekte/gil-gelpi/sec_04_02.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "captionStyle": "",
+          "spacing": 45
         },
         {
           "type": "d2",
@@ -1654,7 +1745,9 @@ let state = {
             "bilder/projekte/gil-gelpi/sec_05_00.jpg",
             "bilder/projekte/gil-gelpi/sec_05_01.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "captionStyle": "",
+          "spacing": 45
         }
       ]
     },
@@ -1668,7 +1761,7 @@ let state = {
       "layout": "lh",
       "cover": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-01.jpg",
       "secondary": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-02.jpg",
-      "tertiary": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-03.jpg",
+      "tertiary": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for_03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -1676,7 +1769,24 @@ let state = {
           "imgs": [
             "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-05.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
+        },
+        {
+          "type": "d1",
+          "imgs": [
+            "",
+            {
+              "_t": true,
+              "html": "<p>Rohstoffgewinnung formt Landschaften. Sie gräbt sich in die Erde, verschiebt Schichten, hinterlässt Narben und erschafft zugleich neue, surreale Welten.</p><p>„What Was I Looking For?“ bewegt sich in diesem Spannungsfeld zwischen industrieller Nutzung und visueller Anziehungskraft, zwischen Fortschritt und unwiderruflicher Veränderung.</p><p>Die Fotografien zeigen Orte des extraktiven Wandels in Europa. Hier werden Rohstoffe wie Bauxit, Kupfer und Braunkohle gewonnen, verarbeitet und gelagert. Materialien, die unseren Alltag ermöglichen und zugleich tief in natürliche Systeme eingreifen. Sie stehen für Mobilität, Komfort und Wachstum, aber auch für Verlust, Risiko und Abhängigkeit.</p><p>Aus der Vogelperspektive lösen sich diese Landschaften von ihrer gewohnten Lesbarkeit. Maßstäbe verschwimmen, Orte werden zu Flächen, Eingriffe zu Mustern. Was sichtbar wird, sind abstrakte Kompositionen aus Farbe, Struktur und Fragment. Böden färben sich in leuchtendem Blau, Wasser schimmert in toxischem Rot, künstliche Seen glänzen in unnatürlichen Tönen. Was zunächst wie abstrakte Malerei erscheint, sind reale Hinterlassenschaften industrieller Prozesse. Relikte eines Systems, das Natur in Ressource verwandelt.</p><p>Zwischen Faszination und Irritation entsteht ein Spannungsfeld. Die Bilder ziehen an und stoßen zugleich ab. Sie verweisen auf Prozesse, von denen wir profitieren und an denen wir beteiligt sind. In dieser Ambivalenz liegt der Ausgangspunkt des Projekts: im gleichzeitigen Staunen und Zweifeln, im Gefühl von Anziehung und Mitverantwortung, von Beobachtung und Verstrickung.</p><p>„What Was I Looking For?“ versteht sich als Einladung zur Reflexion über unseren Blick, unsere Erwartungen und unsere Rolle innerhalb dieser Landschaften.</p>",
+              "style": "",
+              "_prev": ""
+            }
+          ],
+          "caption": "",
+          "captionStyle": "",
+          "spacing": 150
         },
         {
           "type": "d1",
@@ -1684,21 +1794,27 @@ let state = {
             "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-06.jpg",
             "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-07.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-10.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "captionStyle": "",
+          "spacing": 45
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-03.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "d2",
@@ -1706,14 +1822,18 @@ let state = {
             "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-09.jpg",
             "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-14.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 300,
+          "captionStyle": ""
         },
         {
           "type": "s2",
           "imgs": [
             "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-01.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 300,
+          "captionStyle": ""
         },
         {
           "type": "d3",
@@ -1721,7 +1841,9 @@ let state = {
             "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-12.jpg",
             "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-17.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "captionStyle": "",
+          "spacing": 45
         }
       ]
     },
@@ -1734,7 +1856,7 @@ let state = {
       "meta": "2023",
       "layout": "li",
       "cover": "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-01.jpg",
-      "secondary": "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-02.jpg",
+      "secondary": "bilder/projekte/felipe-hera/felipe-hera_02.jpg",
       "tertiary": "",
       "canvas": [],
       "sections": [
@@ -1745,14 +1867,18 @@ let state = {
             "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-04.jpg",
             "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-05.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 190,
+          "captionStyle": ""
         },
         {
           "type": "s2",
           "imgs": [
             "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-06.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 190,
+          "captionStyle": ""
         },
         {
           "type": "t2",
@@ -1761,7 +1887,9 @@ let state = {
             "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-08.jpg",
             "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-09.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "d2",
@@ -1769,7 +1897,9 @@ let state = {
             "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-10.jpg",
             "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-11.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "t3",
@@ -1778,7 +1908,9 @@ let state = {
             "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-13.jpg",
             "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-14.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "captionStyle": "",
+          "spacing": 45
         }
       ]
     },
@@ -1792,7 +1924,7 @@ let state = {
       "layout": "lg",
       "cover": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-03.jpg",
       "secondary": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-02.jpg",
-      "tertiary": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-03.jpg",
+      "tertiary": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez_03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -1800,7 +1932,9 @@ let state = {
           "imgs": [
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-04.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "d2",
@@ -1808,7 +1942,9 @@ let state = {
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-05.jpg",
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-06.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 200,
+          "captionStyle": ""
         },
         {
           "type": "d1",
@@ -1816,7 +1952,9 @@ let state = {
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-07.jpg",
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-08.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "d3",
@@ -1824,7 +1962,9 @@ let state = {
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-09.jpg",
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-10.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 200,
+          "captionStyle": ""
         },
         {
           "type": "d1",
@@ -1832,7 +1972,9 @@ let state = {
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-11.jpg",
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-12.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "d1",
@@ -1840,7 +1982,9 @@ let state = {
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-13.jpg",
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-14.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 201,
+          "captionStyle": ""
         },
         {
           "type": "d3",
@@ -1848,14 +1992,18 @@ let state = {
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-15.jpg",
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-16.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-17.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "captionStyle": "",
+          "spacing": 45
         }
       ]
     },
@@ -1877,14 +2025,18 @@ let state = {
           "imgs": [
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-04.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-05.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "d3",
@@ -1892,7 +2044,9 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-06.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-07.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "d1",
@@ -1900,14 +2054,18 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-08.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-09.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 300,
+          "captionStyle": ""
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-10.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 300,
+          "captionStyle": ""
         },
         {
           "type": "d2",
@@ -1915,28 +2073,36 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-11.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-12.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-13.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 200,
+          "captionStyle": ""
         },
         {
           "type": "s2",
           "imgs": [
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-14.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 300,
+          "captionStyle": ""
         },
         {
           "type": "s2",
           "imgs": [
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-15.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "d3",
@@ -1944,14 +2110,18 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-16.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-17.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 85,
+          "captionStyle": ""
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-18.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "d2",
@@ -1959,7 +2129,9 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-19.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-20.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "d1",
@@ -1967,7 +2139,9 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-21.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-22.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "d2",
@@ -1975,7 +2149,9 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-23.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-24.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "d3",
@@ -1983,7 +2159,9 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-25.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-26.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "d1",
@@ -1991,14 +2169,18 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-28.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-27.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-29.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "captionStyle": "",
+          "spacing": 45
         },
         {
           "type": "d2",
@@ -2006,7 +2188,9 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-30.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-31.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 75,
+          "captionStyle": ""
         },
         {
           "type": "d1",
@@ -2014,14 +2198,18 @@ let state = {
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-32.jpg",
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-33.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/i-dont-care/i-dont-care-moritz-rehbein-34.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 0,
+          "captionStyle": ""
         }
       ]
     },
@@ -2044,21 +2232,26 @@ let state = {
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-04.jpg",
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-15.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "sv",
           "imgs": [
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-22.mp4"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 300
         },
         {
           "type": "s2",
           "imgs": [
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-14.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 151,
+          "captionStyle": ""
         },
         {
           "type": "d3",
@@ -2066,14 +2259,18 @@ let state = {
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-05.jpg",
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-13.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-10.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "t1",
@@ -2082,7 +2279,9 @@ let state = {
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-12.jpg",
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-19.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "t5",
@@ -2091,14 +2290,18 @@ let state = {
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-21.jpg",
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-03.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "s1",
           "imgs": [
             "bilder/projekte/ismet-dogan/ismet-dogan-moritz-rehbein-01.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "captionStyle": "",
+          "spacing": 45
         }
       ]
     },
@@ -2112,7 +2315,7 @@ let state = {
       "layout": "lg",
       "cover": "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-03.jpg",
       "secondary": "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-01.jpg",
-      "tertiary": "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-03.jpg",
+      "tertiary": "bilder/projekte/samuel-salcedo/samuel-salcedo_03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -2120,7 +2323,9 @@ let state = {
           "imgs": [
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-05.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 150,
+          "captionStyle": ""
         },
         {
           "type": "d1",
@@ -2128,7 +2333,9 @@ let state = {
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-09.jpg",
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-01.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "d3",
@@ -2136,14 +2343,18 @@ let state = {
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-12.jpg",
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-04.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 200,
+          "captionStyle": ""
         },
         {
           "type": "s2",
           "imgs": [
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-06.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 151,
+          "captionStyle": ""
         },
         {
           "type": "t3",
@@ -2152,7 +2363,9 @@ let state = {
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-02.jpg",
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-10.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 100,
+          "captionStyle": ""
         },
         {
           "type": "d3",
@@ -2160,14 +2373,18 @@ let state = {
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-13.jpg",
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-08.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "spacing": 149,
+          "captionStyle": ""
         },
         {
           "type": "s2",
           "imgs": [
             "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-11.jpg"
           ],
-          "caption": ""
+          "caption": "",
+          "captionStyle": "",
+          "spacing": 45
         }
       ]
     },
@@ -2200,12 +2417,17 @@ let canvasNextId = 1;
 // ══════════════════════════════════════════════════════════════
 function navigate(target, projectId) {
   // Hide overlay pages (home stays in flow always)
-  ['page-info','page-impressum','page-datenschutz','page-project'].forEach(id => {
+  ['page-info','page-impressum','page-datenschutz','page-agb','page-project'].forEach(id => {
     document.getElementById(id).classList.remove('active');
   });
   document.body.style.overflow = '';
   // Stop edit mode if leaving project page
   if (editMode && target !== 'project') { editMode=false; applyEditMode(); }
+  // Update URL so direct links and refresh work (replaceState avoids popstate conflicts)
+  const _h = target === 'home' ? '' : target === 'project' ? 'project/' + (projectId||'') : target;
+  history.replaceState(null, '', _h ? '#' + _h : location.pathname);
+  // href="#" on links resets hash to # after onclick — restore it after a tick
+  if (_h) setTimeout(() => { if (location.hash.slice(1) !== _h) history.replaceState(null, '', '#' + _h); }, 50);
 
   if (target === 'home') {
     document.getElementById('settings-toggle').style.display = 'block';
@@ -2217,18 +2439,44 @@ function navigate(target, projectId) {
     document.getElementById('edit-toggle').style.display = 'none';
     document.getElementById('page-info').scrollTop = 0;
     document.body.style.overflow = 'hidden';
+    barName.style.transform = 'translateY(0)';
+    barNav.classList.add('visible');
+    nameBar.style.mixBlendMode = (state.site.blend && state.site.blend !== 'none') ? state.site.blend : 'normal';
+    nameBar.style.opacity = '1';
+    nameBar.style.pointerEvents = 'all';
   } else if (target === 'impressum') {
     document.getElementById('page-impressum').classList.add('active');
     document.getElementById('settings-toggle').style.display = 'none';
     document.getElementById('edit-toggle').style.display = 'none';
     document.getElementById('page-impressum').scrollTop = 0;
     document.body.style.overflow = 'hidden';
+    barName.style.transform = 'translateY(0)';
+    barNav.classList.add('visible');
+    nameBar.style.mixBlendMode = (state.site.blend && state.site.blend !== 'none') ? state.site.blend : 'normal';
+    nameBar.style.opacity = '1';
+    nameBar.style.pointerEvents = 'all';
   } else if (target === 'datenschutz') {
     document.getElementById('page-datenschutz').classList.add('active');
     document.getElementById('settings-toggle').style.display = 'none';
     document.getElementById('edit-toggle').style.display = 'none';
     document.getElementById('page-datenschutz').scrollTop = 0;
     document.body.style.overflow = 'hidden';
+    barName.style.transform = 'translateY(0)';
+    barNav.classList.add('visible');
+    nameBar.style.mixBlendMode = (state.site.blend && state.site.blend !== 'none') ? state.site.blend : 'normal';
+    nameBar.style.opacity = '1';
+    nameBar.style.pointerEvents = 'all';
+  } else if (target === 'agb') {
+    document.getElementById('page-agb').classList.add('active');
+    document.getElementById('settings-toggle').style.display = 'none';
+    document.getElementById('edit-toggle').style.display = 'none';
+    document.getElementById('page-agb').scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+    barName.style.transform = 'translateY(0)';
+    barNav.classList.add('visible');
+    nameBar.style.mixBlendMode = (state.site.blend && state.site.blend !== 'none') ? state.site.blend : 'normal';
+    nameBar.style.opacity = '1';
+    nameBar.style.pointerEvents = 'all';
   } else if (target === 'project') {
     currentProjectId = projectId;
     document.getElementById('page-project').classList.add('active');
@@ -2343,15 +2591,16 @@ function saveCurrentProject() {
     document.querySelectorAll('#proj-canvas .proj-section').forEach((el, idx) => {
       if (!p.sections[idx]) return;
       const txt = el.querySelector('.sec-text');
-      if (txt) p.sections[idx].text = txt.innerHTML;
+      if (txt) { p.sections[idx].text = txt.innerHTML; p.sections[idx].textStyle = txt.getAttribute('style') || ''; }
       const cap = el.querySelector('.sec-caption');
-      if (cap) p.sections[idx].caption = cap.textContent;
+      if (cap) { p.sections[idx].caption = cap.innerHTML; p.sections[idx].captionStyle = cap.getAttribute('style') || ''; }
       const pb = parseInt(el.style.paddingBottom);
       if (!isNaN(pb)) p.sections[idx].spacing = pb;
       el.querySelectorAll('.sec-txtcard').forEach(cardEl => {
         const sl = parseInt(cardEl.dataset.slot);
         if (!isNaN(sl) && p.sections[idx].imgs && typeof p.sections[idx].imgs[sl] === 'object' && p.sections[idx].imgs[sl]._t) {
           p.sections[idx].imgs[sl].html = cardEl.innerHTML;
+          p.sections[idx].imgs[sl].style = cardEl.getAttribute('style') || '';
         }
       });
     });
@@ -2510,8 +2759,16 @@ function setSecSpacing(idx, val, el) {
   if(!p || !p.sections[idx]) return;
   p.sections[idx].spacing = parseInt(val);
   const secs = document.querySelectorAll('#proj-canvas .proj-section');
-  if(secs[idx]) secs[idx].style.paddingBottom = val + 'px';
-  if(el) el.title = 'Abstand (' + val + 'px)';
+  if(secs[idx]) {
+    secs[idx].style.paddingBottom = val + 'px';
+    const band = secs[idx].querySelector('.sec-spacing-band');
+    if(band) { band.style.height = val + 'px'; band.textContent = val + 'px'; }
+  }
+  if(el) {
+    el.title = 'Abstand (' + val + 'px)';
+    const valSpan = el.parentElement && el.parentElement.querySelector('.sec-spacing-val');
+    if(valSpan) valSpan.textContent = val + 'px';
+  }
 }
 
 function renderProjectSections(p) {
@@ -2535,8 +2792,16 @@ function buildSectionEl(s, idx) {
     <button class="sec-ctrl-btn" onclick="moveSec(${idx},1)" title="Nach unten">↓</button>
     <button class="sec-ctrl-btn" onclick="openSectionPicker(${idx})" title="Layout ändern">⊞</button>
     <button class="sec-ctrl-btn del" onclick="removeSec(${idx})" title="Löschen">✕</button>
-    <input type="range" class="sec-spacing-slider" min="0" max="300" value="${s.spacing??45}" title="Abstand (${s.spacing??45}px)" oninput="setSecSpacing(${idx},this.value,this)" style="width:58px;accent-color:var(--accent);cursor:ew-resize;vertical-align:middle">`;
+    <input type="range" class="sec-spacing-slider" min="0" max="300" value="${s.spacing??45}" oninput="setSecSpacing(${idx},this.value,this)" onchange="setSecSpacing(${idx},this.value,this)" style="width:68px;accent-color:var(--accent);cursor:ew-resize;vertical-align:middle">
+    <span class="sec-spacing-val" style="font-size:9px;color:var(--accent);min-width:30px;text-align:right">${s.spacing??45}px</span>`;
   wrap.appendChild(ctrl);
+
+  // Spacing band — shows the gap area visually in edit mode
+  const band = document.createElement('div');
+  band.className = 'sec-spacing-band';
+  band.style.height = (s.spacing ?? 45) + 'px';
+  band.textContent = (s.spacing ?? 45) + 'px';
+  wrap.appendChild(band);
 
   const inner = document.createElement('div');
   inner.className = 'sec-inner';
@@ -2546,6 +2811,7 @@ function buildSectionEl(s, idx) {
     txt.className = 'sec-text';
     txt.contentEditable = editMode ? 'true' : 'false';
     txt.innerHTML = s.text || '<p>Textblock – im Bearbeitungsmodus klicken zum Bearbeiten.</p>';
+    if (s.textStyle) txt.style.cssText = s.textStyle;
     inner.appendChild(txt);
     wrap.appendChild(inner);
     return wrap;
@@ -2589,7 +2855,8 @@ function buildSectionEl(s, idx) {
     const cap = document.createElement('div');
     cap.className = 'sec-caption';
     cap.contentEditable = editMode ? 'true' : 'false';
-    cap.textContent = s.caption || '';
+    cap.innerHTML = s.caption || '';
+    if (s.captionStyle) cap.style.cssText = s.captionStyle;
     if (!s.caption && editMode) cap.setAttribute('data-placeholder','Caption (optional)…');
     wrap.appendChild(cap);
   }
@@ -2606,10 +2873,11 @@ function buildSlot(s, idx, slotIdx) {
     card.contentEditable = editMode ? 'true' : 'false';
     card.innerHTML = url.html || '<p>Text…</p>';
     card.dataset.sidx = idx; card.dataset.slot = slotIdx;
-    const hx = (url.bg||'#141414').replace('#','');
-    const r=parseInt(hx.slice(0,2),16), g=parseInt(hx.slice(2,4),16), b=parseInt(hx.slice(4,6),16);
-    card.style.cssText = 'background:rgba('+r+','+g+','+b+','+(url.bgo??0.85)+');color:'+(url.col||'#f0ede8')+';font-size:'+(url.fs||15)+'px;line-height:'+(url.lh||1.8)+';padding:8%;box-sizing:border-box;width:100%;min-height:200px;outline:none';
-    card.addEventListener('click', e => { e.stopPropagation(); if(editMode) activateTxtCard(idx, slotIdx, card); });
+    if (url.style) {
+      card.style.cssText = url.style;
+    } else if (url.col || url.fs || url.lh) {
+      card.style.cssText = 'color:'+(url.col||'#f0ede8')+';font-size:'+(url.fs||15)+'px;line-height:'+(url.lh||1.8)+';';
+    }
     slot.appendChild(card);
     slot.style.cursor = editMode ? 'text' : 'default';
   } else if (url) {
@@ -2718,7 +2986,6 @@ function applyEditMode() {
     el.contentEditable = editMode ? 'true' : 'false';
   });
   if(!editMode) {
-    hideTxtCardCtrl();
     document.querySelectorAll('.media-item.selected').forEach(x=>x.classList.remove('selected'));
     selItem=null;
     const ic = document.getElementById('item-ctrl'); if(ic) ic.classList.remove('vis');
@@ -2728,78 +2995,123 @@ function applyEditMode() {
   }
 }
 
-// ── TEXT FORMAT TOOLBAR ─────────────────────────────────────────
-let _savedRange = null;
+// ── UNIFIED TEXT FORMAT TOOLBAR ─────────────────────────────────────────
+let _activeTxtEl = null;
 
-function saveTxtRange() {
-  const sel = window.getSelection();
-  if (sel && sel.rangeCount) _savedRange = sel.getRangeAt(0).cloneRange();
-}
-function restoreTxtRange() {
-  if (!_savedRange) return;
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(_savedRange);
-}
-function showTxtFmt() {
+function showTxtFmt(el) {
+  _activeTxtEl = el;
   const bar = document.getElementById('txt-fmt');
   if (bar) bar.style.display = 'flex';
+  _updateTxtFmtUI(el);
 }
 function hideTxtFmt() {
   const bar = document.getElementById('txt-fmt');
   if (bar) bar.style.display = 'none';
-  _savedRange = null;
+  _activeTxtEl = null;
 }
-function applyTxtSize(size) {
-  restoreTxtRange();
-  document.execCommand('styleWithCSS', false, true);
-  document.execCommand('fontSize', false, '7');
-  document.querySelectorAll('font[size="7"]').forEach(el => {
-    const span = document.createElement('span');
-    span.style.fontSize = size;
-    span.innerHTML = el.innerHTML;
-    el.replaceWith(span);
+function _updateTxtFmtUI(el) {
+  if (!el) return;
+  const cs = window.getComputedStyle(el);
+  const fsVal = parseFloat(cs.fontSize) || 15;
+  const lhRaw = cs.lineHeight;
+  const lhNum = lhRaw === 'normal' ? 1.5 : parseFloat(lhRaw) / fsVal;
+  const lsRaw = cs.letterSpacing;
+  const lsEm = (lsRaw === 'normal' || !lsRaw) ? 0 : parseFloat(lsRaw) / fsVal;
+  const fwVal = parseInt(cs.fontWeight) || 400;
+  const isItalic = cs.fontStyle === 'italic';
+
+  const fsEl = document.getElementById('tf-fs');
+  const lhEl = document.getElementById('tf-lh');
+  const lsEl = document.getElementById('tf-ls');
+  if (fsEl) { fsEl.value = Math.round(fsVal); document.getElementById('tf-fs-val').textContent = Math.round(fsVal); }
+  if (lhEl) { lhEl.value = Math.round(lhNum * 10); document.getElementById('tf-lh-val').textContent = lhNum.toFixed(1); }
+  if (lsEl) { lsEl.value = Math.round(lsEm * 100); document.getElementById('tf-ls-val').textContent = lsEm.toFixed(2) + 'em'; }
+
+  document.querySelectorAll('#txt-fmt .tf-fw').forEach(btn => {
+    if (btn.dataset.fw) btn.classList.toggle('active', !isItalic && parseInt(btn.dataset.fw) === fwVal);
+    else btn.classList.toggle('active', isItalic);
   });
-  saveTxtRange();
+
+  const colPicker = document.getElementById('tf-col-custom');
+  if (colPicker) {
+    const m = cs.color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+    if (m) colPicker.value = '#' + [1,2,3].map(i => parseInt(m[i]).toString(16).padStart(2,'0')).join('');
+  }
+}
+function applyTxtFs(val) {
+  if (!_activeTxtEl) return;
+  _activeTxtEl.style.fontSize = val + 'px';
+  document.getElementById('tf-fs-val').textContent = val;
   saveCurrentProject();
 }
-function applyTxtColor(color) {
-  restoreTxtRange();
-  document.execCommand('styleWithCSS', false, true);
-  document.execCommand('foreColor', false, color === 'var(--accent)' ?
-    getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : color);
-  saveTxtRange();
+function applyTxtLh(val) {
+  if (!_activeTxtEl) return;
+  const lh = (val / 10).toFixed(1);
+  _activeTxtEl.style.lineHeight = lh;
+  document.getElementById('tf-lh-val').textContent = lh;
   saveCurrentProject();
 }
-function applyTxtBold() {
-  restoreTxtRange();
-  document.execCommand('styleWithCSS', false, true);
-  document.execCommand('bold', false, null);
-  saveTxtRange();
+function applyTxtLs(val) {
+  if (!_activeTxtEl) return;
+  const ls = (val / 100).toFixed(3);
+  _activeTxtEl.style.letterSpacing = ls + 'em';
+  document.getElementById('tf-ls-val').textContent = parseFloat(ls).toFixed(2) + 'em';
   saveCurrentProject();
 }
-function applyTxtItalic() {
-  restoreTxtRange();
-  document.execCommand('styleWithCSS', false, true);
-  document.execCommand('italic', false, null);
-  saveTxtRange();
+function applyTxtFw(fw) {
+  if (!_activeTxtEl) return;
+  if (fw === 'italic') {
+    _activeTxtEl.style.fontStyle = _activeTxtEl.style.fontStyle === 'italic' ? '' : 'italic';
+    _activeTxtEl.style.fontWeight = '';
+  } else {
+    _activeTxtEl.style.fontWeight = fw;
+    _activeTxtEl.style.fontStyle = '';
+  }
+  _updateTxtFmtUI(_activeTxtEl);
+  saveCurrentProject();
+}
+function applyTxtBlockColor(color) {
+  if (!_activeTxtEl) return;
+  const actual = color === 'var(--accent)' ?
+    getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : color;
+  _activeTxtEl.style.color = actual;
   saveCurrentProject();
 }
 
-document.addEventListener('mouseup', e => {
+document.addEventListener('focusin', e => {
   if (!editMode) return;
-  const txtEl = e.target.closest('.sec-text');
-  if (txtEl) { saveTxtRange(); showTxtFmt(); return; }
-  if (!e.target.closest('#txt-fmt')) hideTxtFmt();
+  const el = e.target.closest('.sec-text,.sec-caption,.sec-txtcard,#proj-desc,#proj-title,#proj-series,#proj-meta');
+  if (el) showTxtFmt(el);
 });
-document.addEventListener('keyup', e => {
+document.addEventListener('paste', e => {
   if (!editMode) return;
-  if (e.target.closest('.sec-text')) { saveTxtRange(); showTxtFmt(); }
+  const el = e.target.closest('.sec-text,.sec-caption,.sec-txtcard,#proj-desc,#proj-title,#proj-series,#proj-meta');
+  if (!el) return;
+  e.preventDefault();
+  const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+  document.execCommand('insertText', false, text);
 });
+document.addEventListener('mousedown', e => {
+  if (!editMode) return;
+  if (e.target.closest('#txt-fmt')) return;
+  const el = e.target.closest('.sec-text,.sec-caption,.sec-txtcard,#proj-desc,#proj-title,#proj-series,#proj-meta');
+  if (!el) hideTxtFmt();
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const colPicker = document.getElementById('tf-col-custom');
+  if (colPicker) colPicker.addEventListener('input', e => applyTxtBlockColor(e.target.value));
+
+  // Deep-link: read hash so e.g. moritzrehbein.de/#agb opens directly
+  const initHash = location.hash.slice(1);
+  if (initHash.startsWith('project/')) {
+    navigate('project', initHash.split('/')[1]);
+  } else if (['info','impressum','datenschutz','agb'].includes(initHash)) {
+    navigate(initHash);
+  }
+});
+
 
 // ── TEXT CARD FUNCTIONS ─────────────────────────────────────
-let _activeTxtCard = null;
-
 function hexToRgba(hex, op) {
   const h = hex.replace('#','');
   return 'rgba('+parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)+','+op+')';
@@ -2812,75 +3124,10 @@ function toggleSlotType(sectionIdx, slotIdx) {
   if(cur && typeof cur === 'object' && cur._t) {
     p.sections[sectionIdx].imgs[slotIdx] = cur._prev || '';
   } else {
-    p.sections[sectionIdx].imgs[slotIdx] = {_t:true, html:'<p>Text…</p>', bg:'#141414', bgo:0.85, col:'#f0ede8', fs:15, lh:1.8, _prev: typeof cur==='string'?cur:''};
+    p.sections[sectionIdx].imgs[slotIdx] = {_t:true, html:'<p>Text…</p>', style:'', _prev: typeof cur==='string'?cur:''};
   }
   saveAll(); renderProjectSections(p);
 }
-function activateTxtCard(sectionIdx, slotIdx) {
-  _activeTxtCard = {sectionIdx, slotIdx};
-  const p = state.projects.find(x => x.id === currentProjectId);
-  if(!p) return;
-  const d = p.sections[sectionIdx].imgs[slotIdx];
-  if(!d||!d._t) return;
-  const ctrl = document.getElementById('txt-card-ctrl');
-  if(!ctrl) return;
-  document.getElementById('tc-bgo').value = Math.round((d.bgo??0.85)*100);
-  document.getElementById('tc-bgo-val').textContent = Math.round((d.bgo??0.85)*100)+'%';
-  document.getElementById('tc-fs').value = d.fs||15;
-  document.getElementById('tc-fs-val').textContent = (d.fs||15)+'px';
-  document.getElementById('tc-lh').value = Math.round((d.lh||1.8)*10);
-  document.getElementById('tc-lh-val').textContent = (d.lh||1.8).toFixed(1);
-  document.getElementById('tc-bg-custom').value = d.bg||'#141414';
-  document.getElementById('tc-col-custom').value = d.col||'#f0ede8';
-  ctrl.style.display = 'flex';
-}
-function hideTxtCardCtrl() {
-  const c = document.getElementById('txt-card-ctrl');
-  if(c) c.style.display = 'none';
-  _activeTxtCard = null;
-}
-function _tcData() {
-  if(!_activeTxtCard) return null;
-  const p = state.projects.find(x => x.id === currentProjectId);
-  if(!p) return null;
-  return p.sections[_activeTxtCard.sectionIdx].imgs[_activeTxtCard.slotIdx];
-}
-function _tcCard() {
-  if(!_activeTxtCard) return null;
-  return document.querySelector('.sec-txtcard[data-sidx="'+_activeTxtCard.sectionIdx+'"][data-slot="'+_activeTxtCard.slotIdx+'"]');
-}
-function _tcSync(d,card) {
-  if(!card) return;
-  card.style.background = hexToRgba(d.bg||'#141414', d.bgo??0.85);
-  card.style.color = d.col||'#f0ede8';
-  card.style.fontSize = (d.fs||15)+'px';
-  card.style.lineHeight = d.lh||1.8;
-}
-function applyTcBg(hex) { const d=_tcData(); if(!d) return; d.bg=hex; _tcSync(d,_tcCard()); saveAll(); }
-function applyTcBgo(val) { const d=_tcData(); if(!d) return; d.bgo=val/100; document.getElementById('tc-bgo-val').textContent=val+'%'; _tcSync(d,_tcCard()); saveAll(); }
-function applyTcCol(hex) { const d=_tcData(); if(!d) return; d.col=hex; const c=_tcCard(); if(c) c.style.color=hex; saveAll(); }
-function applyTcFs(val) { const d=_tcData(); if(!d) return; d.fs=parseInt(val); document.getElementById('tc-fs-val').textContent=val+'px'; const c=_tcCard(); if(c) c.style.fontSize=val+'px'; saveAll(); }
-function applyTcLh(val) { const d=_tcData(); if(!d) return; d.lh=val/10; document.getElementById('tc-lh-val').textContent=(val/10).toFixed(1); const c=_tcCard(); if(c) c.style.lineHeight=d.lh; saveAll(); }
-
-document.addEventListener('mousedown', e => {
-  if(!_activeTxtCard) return;
-  const ctrl = document.getElementById('txt-card-ctrl');
-  if(ctrl && !ctrl.contains(e.target) && !e.target.closest('.sec-txtcard')) hideTxtCardCtrl();
-});
-document.addEventListener('DOMContentLoaded', () => {
-  const ctrl = document.getElementById('txt-card-ctrl');
-  if(!ctrl) return;
-  ctrl.addEventListener('click', e => {
-    const clr = e.target.closest('.tc-clr');
-    if(!clr) return;
-    if(clr.dataset.bg) applyTcBg(clr.dataset.bg);
-    if(clr.dataset.col) applyTcCol(clr.dataset.col);
-  });
-  const bgC = document.getElementById('tc-bg-custom');
-  const colC = document.getElementById('tc-col-custom');
-  if(bgC) bgC.addEventListener('input', e => applyTcBg(e.target.value));
-  if(colC) colC.addEventListener('input', e => applyTcCol(e.target.value));
-});
 
 // Keyboard shortcuts on project page
 document.addEventListener('keydown', e=>{
@@ -2914,7 +3161,10 @@ getHeroH();
 window.addEventListener('resize', ()=>{ getHeroH(); fitName(); });
 
 function updateNameScroll() {
-  if (!document.getElementById('page-home').classList.contains('active')) return;
+  // Don't animate when an overlay page is open
+  if (['page-info','page-impressum','page-datenschutz','page-agb','page-project'].some(
+    id => document.getElementById(id).classList.contains('active')
+  )) return;
   if (heroH === 0) { getHeroH(); }
   if (heroH === 0) return;
   const s = window.scrollY;
@@ -3432,6 +3682,16 @@ function init() {
   if (_bakedBlend) { currentBlend = _bakedBlend; state.site.blend = _bakedBlend; }
   if (_bakedBlendOp != null) { currentBlendOpacity = _bakedBlendOp; state.site.blendOpacity = _bakedBlendOp; }
   applyHeroImages();
+  // Reset to slide 0 without transition (avoids flash if baked state has wrong active slide)
+  document.querySelectorAll('.hero-slide').forEach(s => s.style.transition = 'none');
+  document.querySelectorAll('.hero-slide').forEach((s,i) => s.classList.toggle('active', i===0));
+  document.querySelectorAll('.slide-dot').forEach((d,i) => d.classList.toggle('active', i===0));
+  curSlide = 0;
+  // Re-enable transition after layout paint
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('.hero-slide').forEach(s => s.style.transition = '');
+    startSlideshow();
+  }));
   getHeroH();
   fitName();
   barName.style.visibility = '';
@@ -3473,8 +3733,12 @@ function stripTransientClasses(html) {
   // Only strip js-ready from class attributes, not from CSS rules
   html = html.replace(/(class="[^"]*)\bjs-ready\b\s*/g, '$1');
   // Strip active from overlay pages so they don't show on reload
-  ['page-info','page-impressum','page-datenschutz','page-project'].forEach(id => {
-    html = html.replace(new RegExp(`(id="${id}"[^>]*class="[^"]*)\\bactive\\b\\s*`,'g'), '$1');
+  // Use lookahead so it works whether class= comes before or after id=
+  ['page-info','page-impressum','page-datenschutz','page-agb','page-project'].forEach(id => {
+    html = html.replace(
+      new RegExp(`(<div\\b(?=[^>]*\\bid="${id}"\\b)[^>]*class=")([^"]*)\\bactive\\b\\s*`, 'g'),
+      '$1$2'
+    );
   });
   // Strip loaded/sticky from name-bar class — re-added by init after fitName
   html = html.replace(/(<div id="name-bar"[^>]*class=")[^"]*"/, '$1"');
@@ -3493,6 +3757,11 @@ function stripTransientClasses(html) {
   html = html.replace(/(<a[^>]*\bhome-nav\b[^>]*style="[^"]*?)display:\s*none;?\s*/g, '$1');
   // Strip runtime font-measurement spans baked by fitName
   html = html.replace(/<span style="position: absolute; top: -9999px[^>]+>[^<]*<\/span>/g, '');
+  // Reset hero slideshow to slide 0: remove active from all slides/dots, then add to index 0
+  html = html.replace(/(<div class="hero-slide)(?: active)?(" id="slide-)/g, '$1$2');
+  html = html.replace(/(<div class="hero-slide)(" id="slide-0")/, '$1 active$2');
+  html = html.replace(/(<div class="slide-dot)(?: active)?(" id="dot-)/g, '$1$2');
+  html = html.replace(/(<div class="slide-dot)(" id="dot-0")/, '$1 active$2');
   return html;
 }
 
@@ -3532,6 +3801,6 @@ async function publishState() {
     notify('✓ index.html heruntergeladen — alte Datei ersetzen.');
   }
 }
-</script><span style="position: absolute; top: -9999px; left: -9999px; visibility: hidden; white-space: nowrap; font-family: &quot;Druk Wide Super&quot;, Impact, &quot;Arial Black&quot;, sans-serif; font-weight: 900; text-transform: uppercase; line-height: 1; letter-spacing: 0.03em; font-size: 126.204997px;">MORITZ REHBEIN</span><span style="position: absolute; top: -9999px; left: -9999px; visibility: hidden; white-space: nowrap; font-family: &quot;Druk Wide Super&quot;, Impact, &quot;Arial Black&quot;, sans-serif; font-weight: 900; text-transform: uppercase; line-height: 1; letter-spacing: 0.03em; font-size: 126.204997px;">MORITZ REHBEIN</span><span style="position: absolute; top: -9999px; left: -9999px; visibility: hidden; white-space: nowrap; font-family: &quot;Druk Wide Super&quot;, Impact, &quot;Arial Black&quot;, sans-serif; font-weight: 900; text-transform: uppercase; line-height: 1; letter-spacing: 0.03em; font-size: 126.204997px;">MORITZ REHBEIN</span><span style="position: absolute; top: -9999px; left: -9999px; visibility: hidden; white-space: nowrap; font-family: &quot;Druk Wide Super&quot;, Impact, &quot;Arial Black&quot;, sans-serif; font-weight: 900; text-transform: uppercase; line-height: 1; letter-spacing: 0.03em; font-size: 126.204997px;">MORITZ REHBEIN</span>
+</script>
 
 <div style="position: fixed; bottom: 80px; right: 28px; background: var(--accent); color: rgb(10, 10, 10); padding: 10px 18px; font-family: &quot;DM Sans&quot;, sans-serif; font-size: 10px; letter-spacing: 0.14em; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none;">Projekt gespeichert ✓</div></body></html>
