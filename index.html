@@ -291,8 +291,9 @@ body {
   font-family:'DM Sans',sans-serif; font-size:17px; font-weight:300; font-style:italic;
   color:#999; line-height:1.9; margin-bottom:40px; max-width:480px;
 }
-.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; }
+.info-grid { display:grid; grid-template-columns:1fr; max-width:560px; }
 .info-img-ph { min-height:560px; max-width:420px; }
+#info-portrait { display:none; }
 .info-contact { display:flex; flex-direction:column; gap:14px; }
 .info-contact a,.info-contact span {
   font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:.2em; text-transform:uppercase;
@@ -702,7 +703,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   .project-entry { margin-bottom:80px; }
   .p-title { font-size:clamp(20px,5vw,36px); }
 
-  .info-grid { grid-template-columns:1fr; gap:40px; }
+  .info-grid { grid-template-columns:1fr; gap:0; max-width:100%; }
   #page-info { padding:80px 20px 80px; }
   .ep-pane { grid-template-columns:1fr; }
   #editor-panel { width:100vw; left:0; right:0; }
@@ -712,7 +713,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   /* Sections mobile */
   .proj-header { padding:40px 20px 18px; }
   #proj-canvas { padding:0 0 60px; }
-  .proj-section { padding:0 20px 20px; }
+  .proj-section { padding:0 20px 24px !important; }
   .proj-section:first-child { padding-top:60px; }
   body:not(.editing) .sec-caption:empty { display:none; }
   .sec-s1 .sec-inner { justify-content:flex-start; }
@@ -1685,7 +1686,7 @@ let state = {
       "layout": "lg",
       "cover": "bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-01.jpg",
       "secondary": "bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-02.jpg",
-      "tertiary": "bilder/projekte/gil-gelpi/gil-gelpi_03.jpg",
+      "tertiary": "bilder/projekte/gil-gelpi/gil-gelpi-moritz-rehbein-03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -1761,7 +1762,7 @@ let state = {
       "layout": "lh",
       "cover": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-01.jpg",
       "secondary": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-02.jpg",
-      "tertiary": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for_03.jpg",
+      "tertiary": "bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -1856,7 +1857,7 @@ let state = {
       "meta": "2023",
       "layout": "li",
       "cover": "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-01.jpg",
-      "secondary": "bilder/projekte/felipe-hera/felipe-hera_02.jpg",
+      "secondary": "bilder/projekte/felipe-hera/felipe-hera-moritz-rehbein-02.jpg",
       "tertiary": "",
       "canvas": [],
       "sections": [
@@ -1924,7 +1925,7 @@ let state = {
       "layout": "lg",
       "cover": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-03.jpg",
       "secondary": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-02.jpg",
-      "tertiary": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez_03.jpg",
+      "tertiary": "bilder/projekte/jordi-diez-fernandez/jordi-diez-fernandez-moritz-rehbein-03.jpg",
       "canvas": [],
       "sections": [
         {
@@ -2315,7 +2316,7 @@ let state = {
       "layout": "lg",
       "cover": "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-03.jpg",
       "secondary": "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-01.jpg",
-      "tertiary": "bilder/projekte/samuel-salcedo/samuel-salcedo_03.jpg",
+      "tertiary": "bilder/projekte/samuel-salcedo/samuel-salcedo-moritz-rehbein-03.jpg",
       "canvas": [],
       "sections": [
         {
