@@ -1178,7 +1178,7 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
 <div class="page" id="page-project">
 
   <!-- FREE LAYOUT CANVAS -->
-  <div id="proj-canvas"><div class="proj-section sec-s2" data-idx="0"><div class="sec-inner"><div class="sec-slot"><img src="bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-05.jpg" alt=""></div></div><div class="sec-caption" contenteditable="true" data-placeholder="Caption (optional)…"></div></div><div class="proj-section sec-d1" data-idx="1"><div class="sec-inner"><div class="sec-slot"><img src="bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-06.jpg" alt=""></div><div class="sec-slot"><img src="bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-07.jpg" alt=""></div></div><div class="sec-caption" contenteditable="true" data-placeholder="Caption (optional)…"></div></div><div class="proj-section sec-s1" data-idx="2"><div class="sec-inner"><div class="sec-slot"><img src="bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-10.jpg" alt=""></div></div><div class="sec-caption" contenteditable="true" data-placeholder="Caption (optional)…"></div></div><div class="proj-section sec-s1" data-idx="3"><div class="sec-inner"><div class="sec-slot"><img src="bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-03.jpg" alt=""></div></div><div class="sec-caption" contenteditable="true" data-placeholder="Caption (optional)…"></div></div><div class="proj-section sec-d2" data-idx="4"><div class="sec-inner"><div class="sec-slot"><img src="bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-09.jpg" alt=""></div><div class="sec-slot"><img src="bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-14.jpg" alt=""></div></div><div class="sec-caption" contenteditable="true" data-placeholder="Caption (optional)…"></div></div><div class="proj-section sec-s2" data-idx="5"><div class="sec-inner"><div class="sec-slot"><img src="bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-01.jpg" alt=""></div></div><div class="sec-caption" contenteditable="true" data-placeholder="Caption (optional)…"></div></div><div class="proj-section sec-d3" data-idx="6"><div class="sec-inner"><div class="sec-slot"><img src="bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-12.jpg" alt=""></div><div class="sec-slot"><img src="bilder/projekte/What-was-i-looking-for/What-was-i-looking-for-moritz-rehbein-17.jpg" alt=""></div></div><div class="sec-caption" contenteditable="true" data-placeholder="Caption (optional)…"></div></div></div>
+  <div id="proj-canvas"></div>
 
   <!-- Canvas edit toolbar -->
   <div id="edit-toolbar" style="display:none;"></div>
@@ -3585,6 +3585,9 @@ function getPublishedHTML(html) {
   html = html.replace(/(data-idx="\d+">)<div class="sec-ctrl">[\s\S]*?<\/div>/g, '$1');
   // Remove the password-gated edit-mode trigger entirely
   html = html.replace(/\/\/ EDITOR:AUTH:START[\s\S]*?\/\/ EDITOR:AUTH:END\n/, '');
+  // Empty the project canvas — otherwise whichever project was last open in
+  // the editor gets baked into the home page and its images preload on every visit
+  html = html.replace(/<div id="proj-canvas">[\s\S]*<\/div><\/div>\n\n  <!-- Canvas edit toolbar -->/, '<div id="proj-canvas"></div>\n\n  <!-- Canvas edit toolbar -->');
   return html;
 }
 
