@@ -2681,6 +2681,7 @@ function buildSlot(s, idx, slotIdx) {
     slot.style.cursor = editMode ? 'text' : 'default';
   } else if (url) {
     const img = document.createElement('img'); img.src = url; img.alt = '';
+    if (idx > 0) img.loading = 'lazy';
     slot.appendChild(img);
   } else {
     const ph = document.createElement('div'); ph.className = 'sec-empty'; slot.appendChild(ph);
