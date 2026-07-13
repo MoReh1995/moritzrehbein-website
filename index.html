@@ -2215,7 +2215,7 @@ let canvasNextId = 1;
 // ══════════════════════════════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════════════════════════════
-function navigate(target, projectId) {
+function navigate(target, projectId, _noHistory) {
   // Hide overlay pages (home stays in flow always)
   ['page-info','page-impressum','page-datenschutz','page-agb','page-project'].forEach(id => {
     document.getElementById(id).classList.remove('active');
@@ -2223,9 +2223,13 @@ function navigate(target, projectId) {
   document.body.style.overflow = '';
   // Stop edit mode if leaving project page
   if (editMode && target !== 'project') { editMode=false; applyEditMode(); }
-  // Update URL so direct links and refresh work (replaceState avoids popstate conflicts)
+  // Update URL: pushState so browser back-button works within the site
   const _h = target === 'home' ? '' : target === 'project' ? 'project/' + (projectId||'') : target;
-  history.replaceState(null, '', _h ? '#' + _h : location.pathname);
+  if (!_noHistory) {
+    const newUrl = _h ? '#' + _h : location.pathname;
+    if (location.hash.replace(/^#/,'') !== _h) history.pushState(null, '', newUrl);
+    else history.replaceState(null, '', newUrl);
+  }
   // href="#" on links resets hash to # after onclick — restore it after a tick
   if (_h) setTimeout(() => { if (location.hash.slice(1) !== _h) history.replaceState(null, '', '#' + _h); }, 50);
 
@@ -2904,10 +2908,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Deep-link: read hash so e.g. moritzrehbein.de/#agb opens directly
   const initHash = location.hash.slice(1);
   if (initHash.startsWith('project/')) {
-    navigate('project', initHash.split('/')[1]);
+    navigate('project', initHash.split('/')[1], true);
   } else if (['info','impressum','datenschutz','agb'].includes(initHash)) {
-    navigate(initHash);
+    navigate(initHash, null, true);
   }
+});
+
+// Browser back/forward: restore correct view without pushing a new history entry
+window.addEventListener('popstate', () => {
+  const h = location.hash.slice(1);
+  if (h.startsWith('project/')) navigate('project', h.split('/')[1], true);
+  else if (['info','impressum','datenschutz','agb'].includes(h)) navigate(h, null, true);
+  else navigate('home', null, true);
 });
 
 
