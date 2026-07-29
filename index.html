@@ -795,8 +795,8 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
   <div id="bar-name" style="transform: translateY(0px); letter-spacing: 0.03em; ">MORITZ REHBEIN</div>
   <nav id="bar-nav" class="">
     <button id="bar-back" class="nav-link" onclick="navigate('home')" style="display:none;">← Alle Projekte</button>
-    <a class="nav-link home-nav" onclick="navigate('home')" href="#" style="font-size: 14px; letter-spacing: 0.26em; ">Work</a>
-    <a id="bar-nav-info" class="nav-link home-nav" onclick="navigate('info')" href="#" style="font-size: 14px; letter-spacing: 0.26em;">Info</a>
+    <a class="nav-link home-nav" onclick="navigate('home')" href="javascript:void(0)" style="font-size: 14px; letter-spacing: 0.26em; ">Work</a>
+    <a id="bar-nav-info" class="nav-link home-nav" onclick="navigate('info')" href="javascript:void(0)" style="font-size: 14px; letter-spacing: 0.26em;">Info</a>
   </nav>
 </div>
 <script>
@@ -863,8 +863,8 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
     <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
     <div class="footer-links">
       <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
-      <a onclick="navigate('impressum')" href="#">Impressum</a>
-      <a onclick="navigate('datenschutz')" href="#">Datenschutz</a>
+      <a onclick="navigate('impressum')" href="javascript:void(0)">Impressum</a>
+      <a onclick="navigate('datenschutz')" href="javascript:void(0)">Datenschutz</a>
     </div>
   </footer>
 </div>
@@ -956,9 +956,9 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
       <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
       <div class="footer-links">
         <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
-        <a onclick="navigate('impressum')" href="#">Impressum</a>
-        <a onclick="navigate('datenschutz')" href="#">Datenschutz</a>
-        <a onclick="navigate('agb')" href="#">AGB</a>
+        <a onclick="navigate('impressum')" href="javascript:void(0)">Impressum</a>
+        <a onclick="navigate('datenschutz')" href="javascript:void(0)">Datenschutz</a>
+        <a onclick="navigate('agb')" href="javascript:void(0)">AGB</a>
       </div>
     </footer>
   </div>
@@ -1011,8 +1011,8 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
     <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
     <div class="footer-links">
       <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
-      <a onclick="navigate('datenschutz')" href="#">Datenschutz</a>
-      <a onclick="navigate('home')" href="#">← Zurück</a>
+      <a onclick="navigate('datenschutz')" href="javascript:void(0)">Datenschutz</a>
+      <a onclick="navigate('home')" href="javascript:void(0)">← Zurück</a>
     </div>
   </footer>
 </div>
@@ -1067,8 +1067,8 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
     <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
     <div class="footer-links">
       <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
-      <a onclick="navigate('impressum')" href="#">Impressum</a>
-      <a onclick="navigate('home')" href="#">← Zurück</a>
+      <a onclick="navigate('impressum')" href="javascript:void(0)">Impressum</a>
+      <a onclick="navigate('home')" href="javascript:void(0)">← Zurück</a>
     </div>
   </footer>
 </div>
@@ -1165,9 +1165,9 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
     <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
     <div class="footer-links">
       <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
-      <a onclick="navigate('impressum')" href="#">Impressum</a>
-      <a onclick="navigate('datenschutz')" href="#">Datenschutz</a>
-      <a onclick="navigate('home')" href="#">← Zurück</a>
+      <a onclick="navigate('impressum')" href="javascript:void(0)">Impressum</a>
+      <a onclick="navigate('datenschutz')" href="javascript:void(0)">Datenschutz</a>
+      <a onclick="navigate('home')" href="javascript:void(0)">← Zurück</a>
     </div>
   </footer>
 </div>
@@ -1410,8 +1410,8 @@ footer { padding:52px 48px; display:flex; justify-content:space-between; align-i
     <div class="footer-copy">© <span class="fyear">2026</span> Moritz Rehbein</div>
     <div class="footer-links">
       <a href="https://instagram.com/moritzrehbein" target="_blank">Instagram</a>
-      <a onclick="navigate('impressum')" href="#">Impressum</a>
-      <a onclick="navigate('datenschutz')" href="#">Datenschutz</a>
+      <a onclick="navigate('impressum')" href="javascript:void(0)">Impressum</a>
+      <a onclick="navigate('datenschutz')" href="javascript:void(0)">Datenschutz</a>
     </div>
   </footer>
 </div>
@@ -2230,8 +2230,6 @@ function navigate(target, projectId, _noHistory) {
     if (location.hash.replace(/^#/,'') !== _h) history.pushState(null, '', newUrl);
     else history.replaceState(null, '', newUrl);
   }
-  // href="#" on links resets hash to # after onclick — restore it after a tick
-  if (_h) setTimeout(() => { if (location.hash.slice(1) !== _h) history.replaceState(null, '', '#' + _h); }, 50);
 
   if (target === 'home') {
     document.getElementById('settings-toggle').style.display = 'block';
@@ -2310,6 +2308,7 @@ function navigate(target, projectId, _noHistory) {
     barName.style.cursor = '';
     barName.onclick = null;
   }
+  return false; // prevent href="javascript:void(0)" default so it doesn't trigger popstate
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -2921,6 +2920,12 @@ window.addEventListener('popstate', () => {
   else if (['info','impressum','datenschutz','agb'].includes(h)) navigate(h, null, true);
   else navigate('home', null, true);
 });
+
+// Prevent href="javascript:void(0)" from firing a hash-navigation (and spurious popstate) after onclick
+document.addEventListener('click', e => {
+  const a = e.target.closest('a');
+  if (a && /\bnavigate\(/.test(a.getAttribute('onclick') || '')) e.preventDefault();
+}, true);
 
 
 // ── TEXT CARD FUNCTIONS ─────────────────────────────────────
